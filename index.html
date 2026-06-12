@@ -98,16 +98,16 @@ const DOMAIN = "@innovsoftware.com.br";
   }
 
 const sounds = [
-  { src: "sons/1.mp3", answers: ["cachorro"] },
-  { src: "sons/2.mp3", answers: ["gato"] },
-  { src: "sons/3.mp3", answers: ["buzina"] },
-  { src: "sons/4.mp3", answers: ["chuva"] },
-  { src: "sons/5.mp3", answers: ["vento"] },
-  { src: "sons/6.mp3", answers: ["porta"] },
-  { src: "sons/7.mp3", answers: ["motor"] },
-  { src: "sons/8.mp3", answers: ["sirene"] },
-  { src: "sons/9.mp3", answers: ["telefone"] },
-  { src: "sons/10.mp3", answers: ["touro", "boi"] }
+  { src: "Fogueira.mp3", answers: ["Fogueira","Fogo"] },
+  { src: "FogosArtificio.mp3", answers: ["Fogos de Artificio", "Fogos de Artifício", "buscapé", "buscape", "foguete"] },
+  { src: "Cobra Cascavel.mp3", answers: ["Cobra Cascavel", "Cobra", "Cascavel"] },
+  { src: "Sanfona.mp3", answers: ["Sanfona"] },
+  { src: "striangulo.mp3", answers: ["Triangulo"] },
+  { src: "Boi.mp3", answers: ["Boi"] },
+  { src: "URNA ELETRÔNICA.mp3", answers: ["URNA ELETRÔNICA", ""URNA ELETRONICA"] },
+  { src: "Hino Nacional Brasil.mp3", answers: ["Hino Nacional Brasileiro", "Hino Nacional do Brasil", "Hino Nacional"] },
+  { src: "Pato.mp3", answers: ["Pato"] },
+  { src: "Pipoca estourando.mp3", answers: ["Pipoca estourando", "Pipoca"] }
 ];
 
 let index = 0;
@@ -126,6 +126,15 @@ function startGame() {
     return;
   }
 
+  
+function normalize(text) {
+  return text
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim();
+}
+  
   const used = JSON.parse(localStorage.getItem("usedEmails") || "[]");
 
   if (used.includes(email)) {
@@ -153,10 +162,12 @@ function playSound() {
 function checkAnswer() {
   if (finished) return;
 
-  const guess = document.getElementById("answer").value.toLowerCase().trim();
+  const guess = normalize(document.getElementById("answer").value);
 
-  if (sounds[index].answers.includes(guess)) {
-    score++;
+  const correctAnswers = sounds[index].answers.map(a => normalize(a));
+
+  if (correctAnswers.includes(guess)) {
+      score++;
     document.getElementById("msg").textContent = "🎉 Acertou!";
     next();
   } else {
