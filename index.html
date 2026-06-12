@@ -113,10 +113,18 @@ let extraTime = 0;
 let startTime = null;
 let emailUsed = "";
 let finished = false;
-
-function startGame() {
-  const DOMAINS = ["@teamsix.tech", "@innovsoftware.com.br", "@yahoo.com.br"];
   
+function startGame() {
+  const email = document.getElementById("email").value.toLowerCase();
+
+  // ✅ valida domínio
+
+  if (!DOMAINS.some(domain => email.endsWith(domain))) {
+    alert("Email inválido! Use um email corporativo válido.");
+    return;
+  }
+
+  // ✅ verifica se já jogou
   const used = JSON.parse(localStorage.getItem("usedEmails") || "[]");
 
   if (used.includes(email)) {
@@ -139,22 +147,6 @@ function normalize(text) {
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .trim();
-}
-  
-  const used = JSON.parse(localStorage.getItem("usedEmails") || "[]");
-
-  if (used.includes(email)) {
-    alert("Você já jogou!");
-    return;
-  }
-
-  emailUsed = email;
-  startTime = Date.now();
-
-  document.getElementById("startScreen").style.display = "none";
-  document.getElementById("gameScreen").style.display = "block";
-
-  playSound();
 }
 
 function playSound() {
