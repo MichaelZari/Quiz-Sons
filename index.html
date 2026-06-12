@@ -93,13 +93,6 @@ button, input {
   
 const DOMAINS = ["@teamsix.tech", "@innovsoftware.com.br", "@yahoo.com.br"];
 
-const email = document.getElementById("email").value.toLowerCase();
-
-if (!DOMAINS.some(domain => email.endsWith(domain))) {
-  alert("Email inválido! Use um email corporativo válido.");
-  return;
-}
-
 const sounds = [
   { src: "Fogueira.mp3", answers: ["Fogueira","Fogo"] },
   { src: "FogosArtificio.mp3", answers: ["Fogos de Artificio", "Fogos de Artifício", "buscapé", "buscape", "foguete"] },
@@ -107,7 +100,7 @@ const sounds = [
   { src: "Sanfona.mp3", answers: ["Sanfona"] },
   { src: "striangulo.mp3", answers: ["Triangulo"] },
   { src: "Boi.mp3", answers: ["Boi"] },
-  { src: "URNA ELETRÔNICA.mp3", answers: ["URNA ELETRÔNICA", ""URNA ELETRONICA"] },
+  { src: "URNA ELETRÔNICA.mp3", answers: ["URNA ELETRÔNICA", "URNA ELETRONICA"] },
   { src: "Hino Nacional Brasil.mp3", answers: ["Hino Nacional Brasileiro", "Hino Nacional do Brasil", "Hino Nacional"] },
   { src: "Pato.mp3", answers: ["Pato"] },
   { src: "Pipoca estourando.mp3", answers: ["Pipoca estourando", "Pipoca"] }
@@ -122,13 +115,30 @@ let emailUsed = "";
 let finished = false;
 
 function startGame() {
-  const email = document.getElementById("email").value;
+  const DOMAINS = ["@teamsix.tech", "@innovsoftware.com.br", "@yahoo.com.br"];
 
-  if (!email.endsWith(DOMAIN)) {
-    alert("Use email corporativo válido!");
+  const email = document.getElementById("email").value.toLowerCase();
+
+  if (!DOMAINS.some(domain => email.endsWith(domain))) {
+    alert("Email inválido! Use um email corporativo válido.");
     return;
   }
 
+  const used = JSON.parse(localStorage.getItem("usedEmails") || "[]");
+
+  if (used.includes(email)) {
+    alert("Você já jogou!");
+    return;
+  }
+
+  emailUsed = email;
+  startTime = Date.now();
+
+  document.getElementById("startScreen").style.display = "none";
+  document.getElementById("gameScreen").style.display = "block";
+
+  playSound();
+}
   
 function normalize(text) {
   return text
