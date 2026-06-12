@@ -90,12 +90,14 @@ button, input {
 </div>
 
 <script>
-const DOMAIN = "@innovsoftware.com.br";
-  if (!DOMAIN.some(domain =>
-    email.endswith(domain))) {
-    alert("Email inválido! - Email da Innov Software!");
-    return;
-  }
+const DOMAINS = ["@teamsix.tech", "@innovsoftware.com.br", "@yahoo.com.br"];
+
+const email = document.getElementById("email").value.toLowerCase();
+
+if (!DOMAINS.some(domain => email.endsWith(domain))) {
+  alert("Email inválido! Use um email corporativo válido.");
+  return;
+}
 
 const sounds = [
   { src: "Fogueira.mp3", answers: ["Fogueira","Fogo"] },
