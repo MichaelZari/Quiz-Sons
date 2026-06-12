@@ -90,7 +90,12 @@ button, input {
 </div>
 
 <script>
-const DOMAIN = "@empresa.com";
+const DOMAIN = "@innovsoftware.com.br";
+  if (!DOMAIN.some(domain =>
+    email.endswith(domain))) {
+    alert("Email inválido! - Email da Innov Software!");
+    return;
+  }
 
 const sounds = [
   { src: "sons/1.mp3", answers: ["cachorro"] },
