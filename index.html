@@ -116,14 +116,7 @@ let finished = false;
 
 function startGame() {
   const DOMAINS = ["@teamsix.tech", "@innovsoftware.com.br", "@yahoo.com.br"];
-
-  const email = document.getElementById("email").value.toLowerCase();
-
-  if (!DOMAINS.some(domain => email.endsWith(domain))) {
-    alert("Email inválido! Use um email corporativo válido.");
-    return;
-  }
-
+  
   const used = JSON.parse(localStorage.getItem("usedEmails") || "[]");
 
   if (used.includes(email)) {
