@@ -84,6 +84,8 @@ button, input {
     <div id="gameScreen" style="display:none">
       <h3>Som</h3>
 
+      <p id="progress"></p>
+
       <audio id="audio"></audio>
 
       <!-- INPUT + BOTÃO RESPONDER -->
@@ -179,6 +181,10 @@ function playSound() {
 
   audio.src = sounds[index].src;
 
+  //Progresso
+  document.getElementById("progress").textContent =
+  `🎯 Som ${index + 1} de ${sounds.length}`;
+
   audio.onerror = () => {
     document.getElementById("msg").textContent =
       "⚠️ Não foi possível reproduzir esse som. Você pode pular ou tentar novamente.";
@@ -194,20 +200,26 @@ function playSound() {
 function checkAnswer() {
   if (finished) return;
 
+  const msg = document.getElementById("msg");
+
   const guess = normalize(document.getElementById("answer").value);
 
   const correctAnswers = sounds[index].answers.map(a => normalize(a));
 
   if (correctAnswers.includes(guess)) {
-      score++;
-    document.getElementById("msg").textContent = "🎉 Acertou!";
+    score++;
+    msg.style.color = "green";
+    msg.textContent = "🎉 Acertou!";
+
+    document.getElementById("answer").value = "";
+
     next();
   } else {
-    document.getElementById("msg").textContent =
-      "💪 Continue tentando!";
+    msg.style.color = "orange";
+    msg.textContent = "💪 Continue tentando!";
   }
 }
-
+  
 function skip() {
   next();
 }
@@ -274,19 +286,49 @@ function loadRanking() {
 
   let ranking = JSON.parse(localStorage.getItem("ranking") || "[]");
 
-  ranking.forEach(p => {
+  ranking.forEach((p, i) => {
+
+    let medal = "";
+    if (i === 0) medal = "🥇";
+    else if (i === 1) medal = "🥈";
+    else if (i === 2) medal = "🥉";
+
     const li = document.createElement("li");
+
     li.textContent =
-      `${p.name} | ${p.score} acertos | ${p.skips} desist. | ${p.totalTime}s`;
+      `${medal} ${p.name} | ${p.score} acertos | ${p.skips} desist. | ${p.totalTime}s`;
+
     list.appendChild(li);
   });
 }
 
 loadRanking();
+  
 </script>
 
-<footer style="position: fixed; bottom: 5px; right: 10px; font-size: 12px; color: gray;">
-  Versão 1.0.3
+<!-- ✅ LOGO CENTRAL -->
+<footer style="
+  position: fixed; 
+  bottom: 10px; 
+  left: 50%; 
+  transform: translateX(-50%);
+">
+  <img 
+    src="Logotipo Original Completo Preto e Verde.png" 
+    style="height: 40px; opacity: 0.8;"
+  >
+</footer>
+
+<!-- ✅ VERSÃO NO CANTO DIREITO -->
+<footer style="
+  position: fixed;
+  bottom: 5px;
+  right: 10px;
+  font-size: 12px;
+  color: gray;
+  opacity: 0.7;
+">
+  Versão 1.0.4
 </footer>
 
 </body>
