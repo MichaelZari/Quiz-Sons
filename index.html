@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Quiz de Sons</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  display: flex;
+}
+
+.left {
+  width: 250px;
+  background: #222;
+  color: white;
+  padding: 15px;
+}
+
+.right {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f3f3f3;
+}
+
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 300px;
+  text-align: center;
+}
+
+button, input {
+  width: 100%;
+  margin-top: 10px;
+  padding: 8px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- ESQUERDA -->
+<div class="left">
+  <h3>🏆 Ranking</h3>
+  <ul id="ranking"></ul>
+
+  <hr>
+
+  <h3>📜 Regras</h3>
+  <p>
+    - Identifique 10 sons<br>
+    - Pode tentar quantas vezes quiser<br>
+    - Pode pular<br>
+    - Desistir adiciona +2min<br>
+    - Mais acertos vence<br>
+    - Empate: menor tempo
+  </p>
+</div>
+
+<!-- DIREITA -->
+<div class="right">
+  <div class="card">
+
+    <div id="startScreen">
+      <h2>Quiz de Sons</h2>
+      <input id="email" placeholder="Seu email corporativo">
+      <button onclick="startGame()">Jogar</button>
+    </div>
+
+    <div id="gameScreen" style="display:none">
+      <h3>Som</h3>
+
+      <audio id="audio"></audio>
+
+      <input id="answer" placeholder="Digite seu palpite">
+
+      <button onclick="checkAnswer()">Responder</button>
+      <button onclick="skip()">Pular</button>
+      <button onclick="giveUp()">Desistir (+2min)</button>
+
+      <p id="msg"></p>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const DOMAIN = "@empresa.com";
+
+const sounds = [
+  { src: "sons/1.mp3", answers: ["cachorro"] },
+  { src: "sons/2.mp3", answers: ["gato"] },
+  { src: "sons/3.mp3", answers: ["buzina"] },
+  { src: "sons/4.mp3", answers: ["chuva"] },
+  { src: "sons/5.mp3", answers: ["vento"] },
+  { src: "sons/6.mp3", answers: ["porta"] },
+  { src: "sons/7.mp3", answers: ["motor"] },
+  { src: "sons/8.mp3", answers: ["sirene"] },
+  { src: "sons/9.mp3", answers: ["telefone"] },
+  { src: "sons/10.mp3", answers: ["touro", "boi"] }
+];
+
+let index = 0;
+let score = 0;
+let skips = 0;
+let extraTime = 0;
+let startTime = null;
+let emailUsed = "";
+let finished = false;
+
+function startGame() {
+  const email = document.getElementById("email").value;
+
+  if (!email.endsWith(DOMAIN)) {
+    alert("Use email corporativo válido!");
+    return;
+  }
+
+  const used = JSON.parse(localStorage.getItem("usedEmails") || "[]");
+
+  if (used.includes(email)) {
+    alert("Você já jogou!");
+    return;
+  }
+
+  emailUsed = email;
+  startTime = Date.now();
+
+  document.getElementById("startScreen").style.display = "none";
+  document.getElementById("gameScreen").style.display = "block";
+
+  playSound();
+}
+
+function playSound() {
+  if (finished) return;
+
+  const audio = document.getElementById("audio");
+  audio.src = sounds[index].src;
+  audio.play();
+}
+
+function checkAnswer() {
+  if (finished) return;
+
+  const guess = document.getElementById("answer").value.toLowerCase().trim();
+
+  if (sounds[index].answers.includes(guess)) {
+    score++;
+    document.getElementById("msg").textContent = "🎉 Acertou!";
+    next();
+  } else {
+    document.getElementById("msg").textContent =
+      "💪 Continue tentando!";
+  }
+}
+
+function skip() {
+  next();
+}
+
+function giveUp() {
+  skips++;
+  extraTime += 120;
+  next();
+}
+
+function next() {
+  index++;
+  document.getElementById("answer").value = "";
+
+  if (index >= sounds.length) {
+    finish();
+  } else {
+    playSound();
+  }
+}
+
+function finish() {
+  if (finished) return;
+
+  finished = true;
+
+  const baseTime = Math.floor((Date.now() - startTime) / 1000);
+  const totalTime = baseTime + extraTime;
+
+  const name = emailUsed.split("@")[0];
+
+  let ranking = JSON.parse(localStorage.getItem("ranking") || "[]");
+
+  ranking.push({
+    name,
+    score,
+    skips,
+    baseTime,
+    extraTime,
+    totalTime
+  });
+
+  ranking.sort((a, b) => {
+    if (b.score !== a.score) return b.score - a.score;
+    if (a.totalTime !== b.totalTime) return a.totalTime - b.totalTime;
+    return a.skips - b.skips;
+  });
+
+  localStorage.setItem("ranking", JSON.stringify(ranking));
+
+  let used = JSON.parse(localStorage.getItem("usedEmails") || "[]");
+  used.push(emailUsed);
+  localStorage.setItem("usedEmails", JSON.stringify(used));
+
+  document.getElementById("msg").textContent =
+    `Fim! ${score} acertos | ${skips} desistências | ${totalTime}s`;
+
+  loadRanking();
+}
+
+function loadRanking() {
+  const list = document.getElementById("ranking");
+  list.innerHTML = "";
+
+  let ranking = JSON.parse(localStorage.getItem("ranking") || "[]");
+
+  ranking.forEach(p => {
+    const li = document.createElement("li");
+    li.textContent =
+      `${p.name} | ${p.score} acertos | ${p.skips} desist. | ${p.totalTime}s`;
+    list.appendChild(li);
+  });
+}
+
+loadRanking();
+</script>
+
+</body>
+</html>
