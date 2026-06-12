@@ -11,20 +11,28 @@ body {
   display: flex;
 }
 
+.center {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f3f3f3;
+}
+
 .left {
-  width: 250px;
+  width: 25%;
   background: #222;
   color: white;
   padding: 15px;
 }
 
 .right {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #f3f3f3;
+  width: 25%;
+  background: #111;
+  color: white;
+  padding: 15px;
 }
+
 
 .card {
   background: white;
@@ -45,12 +53,8 @@ button, input {
 <body>
 
 <!-- ESQUERDA -->
+
 <div class="left">
-  <h3>🏆 Ranking</h3>
-  <ul id="ranking"></ul>
-
-  <hr>
-
   <h3>📜 Regras</h3>
   <p>
     - Identifique 10 sons<br>
@@ -62,8 +66,7 @@ button, input {
   </p>
 </div>
 
-<!-- DIREITA -->
-<div class="right">
+<div class="center">
   <div class="card">
 
     <div id="startScreen">
@@ -77,11 +80,17 @@ button, input {
 
       <audio id="audio"></audio>
 
-      <input id="answer" placeholder="Digite seu palpite">
+      <!-- INPUT + BOTÃO RESPONDER -->
+      <div style="display:flex; gap:10px;">
+        <input id="answer" placeholder="Digite seu palpite" style="flex:1;">
+        <button onclick="checkAnswer()" style="width:120px;">Responder</button>
+      </div>
 
-      <button onclick="checkAnswer()">Responder</button>
-      <button onclick="skip()">Pular</button>
-      <button onclick="giveUp()">Desistir (+2min)</button>
+      <!-- BOTÕES EMBAIXO -->
+      <div style="display:flex; justify-content:space-between;">
+        <button onclick="skip()">Pular</button>
+        <button onclick="giveUp()">Desistir (+2min)</button>
+      </div>
 
       <p id="msg"></p>
     </div>
@@ -89,21 +98,27 @@ button, input {
   </div>
 </div>
 
+<div class="right">
+  <h3>🏆 Ranking</h3>
+  <ul id="ranking"></ul>
+</div>
+
+
 <script>
   
 const DOMAINS = ["@teamsix.tech", "@innovsoftware.com.br", "@yahoo.com.br"];
 
 const sounds = [
-  { src: "Fogueira.mp3", answers: ["Fogueira","Fogo"] },
-  { src: "FogosArtificio.mp3", answers: ["Fogos de Artificio", "Fogos de Artifício", "buscapé", "buscape", "foguete"] },
-  { src: "Cobra Cascavel.mp3", answers: ["Cobra Cascavel", "Cobra", "Cascavel"] },
-  { src: "Sanfona.mp3", answers: ["Sanfona"] },
-  { src: "striangulo.mp3", answers: ["Triangulo"] },
   { src: "Boi.mp3", answers: ["Boi"] },
-  { src: "URNA ELETRÔNICA.mp3", answers: ["URNA ELETRÔNICA", "URNA ELETRONICA"] },
+  { src: "Cobra Cascavel.mp3", answers: ["Cobra Cascavel", "Cobra", "Cascavel"] },
+  { src: "FogosArtificio.mp3", answers: ["Fogos de Artificio", "Fogos de Artifício", "buscapé", "buscape", "foguete"] },
+  { src: "Fogueira.mp3", answers: ["Fogueira","Fogo"] },
   { src: "Hino Nacional Brasil.mp3", answers: ["Hino Nacional Brasileiro", "Hino Nacional do Brasil", "Hino Nacional"] },
   { src: "Pato.mp3", answers: ["Pato"] },
-  { src: "Pipoca estourando.mp3", answers: ["Pipoca estourando", "Pipoca"] }
+  { src: "Pipoca estourando.mp3", answers: ["Pipoca estourando", "Pipoca"] },
+  { src: "Sanfona.mp3", answers: ["Sanfona"] },
+  { src: "URNA ELETRÔNICA.mp3", answers: ["URNA ELETRÔNICA", "URNA ELETRONICA"] },
+  { src: "triangulo.mp3", answers: ["Triangulo"] },  
 ];
 
 let index = 0;
@@ -153,10 +168,21 @@ function playSound() {
   if (finished) return;
 
   const audio = document.getElementById("audio");
+
   audio.src = sounds[index].src;
-  audio.play();
+
+  audio.onerror = () => {
+    document.getElementById("msg").textContent =
+      "⚠️ Não foi possível reproduzir esse som. Você pode pular ou tentar novamente.";
+  };
+
+  audio.play().catch(() => {
+    document.getElementById("msg").textContent =
+      "🔊 Clique novamente ou verifique o áudio.";
+  });
 }
 
+  
 function checkAnswer() {
   if (finished) return;
 
@@ -252,7 +278,7 @@ loadRanking();
 </script>
 
 <footer style="position: fixed; bottom: 5px; right: 10px; font-size: 12px; color: gray;">
-  Versão 1.0.1
+  Versão 1.0.2
 </footer>
   
 </body>
