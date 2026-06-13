@@ -17,7 +17,7 @@ body {
 }
 
 .center {
-  width: 50%;
+  width: 30%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -25,14 +25,14 @@ body {
 }
 
 .left {
-  width: 25%;
+  width: 35%;
   background: #222;
   color: white;
   padding: 15px;
 }
 
 .right {
-  width: 25%;
+  width: 35%;
   background: #111;
   color: white;
   padding: 15px;
@@ -59,7 +59,7 @@ button, input {
   height: 45px;
   border-radius: 50%;
   background: black;
-  color: #39FF14; /* verde fluorescente */
+  color: #00FF5A; /* verde Team6 */
   font-size: 20px;
   border: none;
   cursor: pointer;
@@ -159,6 +159,7 @@ let extraTime = 0;
 let startTime = null;
 let emailUsed = "";
 let finished = false;
+let skippedSounds = [];
   
 function startGame() {
   const email = document.getElementById("email").value.toLowerCase();
@@ -246,6 +247,7 @@ function checkAnswer() {
 }
   
 function skip() {
+  skippedSounds.push(index); // guarda o índice pulado
   next();
 }
 
@@ -256,22 +258,35 @@ function giveUp() {
 }
 
 function next() {
-  index++;
+
+  // ✅ se ainda há sons normais
+  if (index < sounds.length - 1) {
+    index++;
+  } 
+  // ✅ terminou os sons → volta pros pulados
+  else if (skippedSounds.length > 0) {
+    index = skippedSounds.shift(); // pega o primeiro pulado
+  } 
+  // ✅ tudo acabou
+  else {
+    finish();
+    return;
+  }
 
   document.getElementById("answer").value = "";
-  document.getElementById("msg").textContent = ""; // ✅ limpar mensagem
+  document.getElementById("msg").textContent = "";
 
-  if (index >= sounds.length) {
-    finish();
-  } else {
-    playSound();
-  }
+  playSound();
 }
-
+  
 function finish() {
   if (finished) return; 
 
   finished = true;
+
+  const audio = document.getElementById("audio");
+  audio.pause();
+  audio.currentTime = 0;
 
   const baseTime = Math.floor((Date.now() - startTime) / 1000);
   const totalTime = baseTime + extraTime;
