@@ -160,6 +160,7 @@ let startTime = null;
 let emailUsed = "";
 let finished = false;
 let skippedSounds = [];
+let answeredSounds = new Set();
   
 function startGame() {
   const email = document.getElementById("email").value.toLowerCase();
@@ -233,6 +234,7 @@ function checkAnswer() {
   const correctAnswers = sounds[index].answers.map(a => normalize(a));
 
   if (correctAnswers.some(ans => guess.includes(ans))) {
+    answeredSounds.add(index);
     score++;
     msg.style.color = "green";
     msg.textContent = "🎉 Acertou!";
@@ -254,21 +256,42 @@ function skip() {
 function giveUp() {
   skips++;
   extraTime += 120;
+
+  answeredSounds.add(index); // ✅ considera como finalizado
+
   next();
 }
 
+
 function next() {
 
-  // ✅ se ainda há sons normais
-  if (index < sounds.length - 1) {
-    index++;
-  } 
-  // ✅ terminou os sons → volta pros pulados
-  else if (skippedSounds.length > 0) {
-    index = skippedSounds.shift(); // pega o primeiro pulado
-  } 
-  // ✅ tudo acabou
-  else {
+  // ✅ procurar próximo não respondido
+  let found = false;
+
+  // percorre lista principal
+  for (let i = index + 1; i < sounds.length; i++) {
+    if (!answeredSounds.has(i)) {
+      index = i;
+      found = true;
+      break;
+    }
+  }
+
+  // ✅ se não achou → tenta os pulados
+  if (!found && skippedSounds.length > 0) {
+    index = skippedSounds.shift();
+
+    // se já foi respondido, pula
+    if (answeredSounds.has(index)) {
+      next();
+      return;
+    }
+
+    found = true;
+  }
+
+  // ✅ se tudo acabou
+  if (!found) {
     finish();
     return;
   }
@@ -277,7 +300,7 @@ function next() {
   document.getElementById("msg").textContent = "";
 
   playSound();
-}
+}  
   
 function finish() {
   if (finished) return; 
