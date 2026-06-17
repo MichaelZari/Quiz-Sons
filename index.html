@@ -3,9 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Quiz de Sons</title>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600p
 
-  
 <style>
 html, body {
   height: 100%;
@@ -13,7 +11,7 @@ html, body {
 
 body {
   margin: 0;
-  font-family: 'Montserrat', sans-serif;
+  font-family: Arial;
   display: flex;
   min-height: 100vh;
 }
@@ -28,14 +26,14 @@ body {
 
 .left {
   width: 30%;
-  background: linear-gradient(180deg, #0f1a13, #0a0f0c);
+  background: #222;
   color: white;
   padding: 15px;
 }
 
 .right {
   width: 30%;
-  background: linear-gradient(180deg, #0a0f0c, #000);
+  background: #111;
   color: white;
   padding: 15px;
 }
@@ -43,12 +41,10 @@ body {
 
 .card {
   background: white;
-  padding: 25px;
-  border-radius: 12px;
-  width: 320px;
+  padding: 20px;
+  border-radius: 10px;
+  width: 300px;
   text-align: center;
-
-  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
 }
 
 button, input {
@@ -89,172 +85,6 @@ input:focus {
   transform: scale(1.1);
   background: #111;
 }
-
-.rules-title {
-  margin-bottom: 15px;
-  border-bottom: 2px solid #00FF5A;
-  display: inline-block;
-  padding-bottom: 5px;
-}
-
-.rule-card {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(0,255,90,0.2);
-  border-radius: 10px;
-
-  padding: 12px;
-  margin-bottom: 12px;
-
-  transition: 0.2s;
-}
-
-.rule-card:hover {
-  transform: scale(1.02);
-  border-color: #00FF5A;
-}
-
-.rule-icon {
-  width: 40px;
-  height: 40px;
-  background: rgba(0,255,90,0.2);
-  border-radius: 8px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  font-size: 20px;
-}
-
-.rule-card strong {
-  display: block;
-  color: white;
-}
-
-.rule-card p {
-  font-size: 12px;
-  color: #ccc;
-  margin: 3px 0 0;
-}  
-
-.start-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}  
-
-.logo-icon {
-  width: 70px;
-  height: 70px;
-
-  background: linear-gradient(145deg, rgba(0,255,90,0.3), rgba(0,255,90,0.1));
-
-  border-radius: 50%;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  font-size: 30px;
-  margin-bottom: 15px;
-
-  box-shadow: 0 0 20px rgba(0,255,90,0.2);
-}
-
-
-.title {
-  font-size: 20px;
-  margin-bottom: 15px;
-}
-
-.input-box input {
-  width: 100%;
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid #00FF5A;
-  outline: none;
-}
-
-.play-btn {
-  width: 100%;
-  padding: 14px;
-  border: none;
-  border-radius: 8px;
-
-  background: linear-gradient(90deg, #00FF5A, #009f3a);
-  color: white;
-  font-weight: bold;
-  font-size: 15px;
-
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.play-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 10px 20px rgba(0,255,90,0.3);
-}
-
-.ranking-title {
-  margin-bottom: 15px;
-  border-bottom: 2px solid #00FF5A;
-  display: inline-block;
-  padding-bottom: 5px;
-}  
-
-.rank-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(0,255,90,0.2);
-  border-radius: 10px;
-
-  padding: 12px;
-  margin-bottom: 10px;
-
-  transition: 0.2s;
-}
-
-.rank-item:hover {
-  transform: scale(1.02);
-  border-color: #00FF5A;
-}
-
-.rank-first {
-  border: 1px solid #00FF5A;
-  box-shadow: 0 0 10px rgba(0,255,90,0.5);
-}
-
-.rank-left {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.rank-name {
-  font-weight: bold;
-}  
-
-.rank-right {
-  text-align: right;
-}
-
-.rank-score {
-  color: #00FF5A;
-  font-weight: bold;
-}
-
-.rank-extra {
-  font-size: 12px;
-  color: gray;
-}
-
   
 </style>
 </head>
@@ -264,75 +94,25 @@ input:focus {
 <!-- ESQUERDA -->
 
 <div class="left">
-  <h3 class="rules-title">📋 REGRAS</h3>
-
-  <div class="rule-card">
-    <div class="rule-icon">🎧</div>
-    <div>
-      <strong>Identifique 10 sons</strong>
-      <p>Escute atentamente cada som e tente adivinhar o que é.</p>
-    </div>
-  </div>
-
-  <div class="rule-card">
-    <div class="rule-icon">🎲</div>
-    <div>
-      <strong>Pode tentar quantas vezes quiser</strong>
-      <p>Pratique e melhore seu desempenho.</p>
-    </div>
-  </div>
-
-  <div class="rule-card">
-    <div class="rule-icon">⏭️</div>
-    <div>
-      <strong>Pode pular</strong>
-      <p>Pule e volte depois para responder.</p>
-    </div>
-  </div>
-
-  <div class="rule-card">
-    <div class="rule-icon">⏱️</div>
-    <div>
-      <strong>Desistir adiciona +2min</strong>
-      <p>Penalidade de tempo ao desistir.</p>
-    </div>
-  </div>
-
-  <div class="rule-card">
-    <div class="rule-icon">🏆</div>
-    <div>
-      <strong>Mais acertos vence</strong>
-      <p>Quem acertar mais sons ganha.</p>
-    </div>
-  </div>
-
-  <div class="rule-card">
-    <div class="rule-icon">⚖️</div>
-    <div>
-      <strong>Empate: menor tempo</strong>
-      <p>O mais rápido vence.</p>
-    </div>
-  </div>
+  <h3>📜 Regras</h3>
+  <p>
+    - Identifique 10 sons<br>
+    - Pode tentar quantas vezes quiser<br>
+    - Pode pular<br>
+    - Desistir adiciona +2min<br>
+    - Mais acertos vence<br>
+    - Empate: menor tempo
+  </p>
 </div>
 
 <div class="center">
   <div class="card">
 
-  <div id="startScreen" class="start-card">
-
-  <div class="logo-icon">📩</div>
-
-  <h2 class="title">Entre para começar</h2>
-
-  <div class="input-box">
-    <input id="email" placeholder="Seu email corporativo">
-  </div>
-
-  <button class="play-btn" onclick="startGame()">
-    Jogar →
-  </button>
-
-</div>
+    <div id="startScreen">
+      <h2>Quiz de Sons</h2>
+      <input id="email" placeholder="Seu email corporativo">
+      <button onclick="startGame()">Jogar</button>
+    </div>
 
     <div id="gameScreen" style="display:none">
       <h3>Som</h3>
@@ -362,30 +142,50 @@ input:focus {
 </div>
 
 <div class="right">
-
-  <h3 class="ranking-title">🏆 RANKING</h3>
-
-  <div id="ranking"></div>
-
+  <h3>🏆 Ranking</h3>
+  <ul id="ranking"></ul>
 </div>
 
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAkQPQArV3LX_iilC5WCyG_9-Q59MNWyVw",
+  authDomain: "quiz-de-sons.firebaseapp.com",
+  projectId: "quiz-de-sons",
+  storageBucket: "quiz-de-sons.firebasestorage.app",
+  messagingSenderId: "901040611303",
+  appId: "1:901040611303:web:af4976c6e579416983e742"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// ✅ BUSCAR SONS DO FIREBASE
+async function loadSounds() {
+  const querySnapshot = await getDocs(collection(db, "sounds"));
+  const data = [];
+
+  querySnapshot.forEach((doc) => {
+    data.push({ id: doc.id, ...doc.data() });
+    data.sort((a, b) => a.id - b.id);
+  });
+
+  console.log("🔥 Dados vindos do Firebase:", data);
+
+  // ✅ salva global
+  window.firebaseSounds = data;
+}
+
+loadSounds();
+</script>
 
 <script>
   
 const DOMAINS = ["@teamsix.tech", "@innovsoftware.com.br", "@yahoo.com.br"];
 
-const sounds = [
-  { src: "Boi.mp3", answers: ["Boi"] },
-  { src: "Cobra Cascavel.mp3", answers: ["Cobra Cascavel", "Cobra", "Cascavel"] },
-  { src: "FogosArtificio.mp3", answers: ["Fogos de Artificio", "Fogos de Artifício", "buscapé", "buscape", "foguete"] },
-  { src: "Fogueira.mp3", answers: ["Fogueira","Fogo"] },
-  { src: "Hino Nacional Brasil.mp3", answers: ["Hino Nacional Brasileiro", "Hino Nacional do Brasil", "Hino Nacional"] },
-  { src: "Pato.mp3", answers: ["Pato"] },
-  { src: "Pipoca estourando.mp3", answers: ["Pipoca estourando", "Pipoca"] },
-  { src: "Sanfona.mp3", answers: ["Sanfona"] },
-  { src: "URNA ELETRÔNICA.mp3", answers: ["URNA ELETRÔNICA", "URNA ELETRONICA"] },
-  { src: "triangulo.mp3", answers: ["Triangulo"] },  
-];
+let sounds = [];
 
 let index = 0;
 let score = 0;
@@ -418,6 +218,14 @@ function startGame() {
     msg.textContent = "⚠️ Este email já participou do jogo.";
     return;
   }
+  
+  if (!window.firebaseSounds || window.firebaseSounds.length === 0) {
+    alert("Carregando dados... aguarde.");
+    return;
+}
+
+sounds = window.firebaseSounds;
+
 
   emailUsed = email;
   startTime = Date.now();
@@ -441,7 +249,7 @@ function playSound() {
 
   const audio = document.getElementById("audio");
 
-  audio.src = sounds[index].src;
+  audio.src = sounds[index].file;
 
   //Progresso
   document.getElementById("progress").textContent =
@@ -598,46 +406,22 @@ function loadRanking() {
 
   let ranking = JSON.parse(localStorage.getItem("ranking") || "[]");
 
-  if (ranking.length === 0) {
-    list.innerHTML = `
-      <div style="text-align:center; color:gray; margin-top:50px;">
-        🏆<br><br>
-        Seja o primeiro no ranking!
-      </div>
-    `;
-    return;
-  }
-
-  
   ranking.forEach((p, i) => {
 
-    const div = document.createElement("div");
+    let medal = "";
+    if (i === 0) medal = "🥇";
+    else if (i === 1) medal = "🥈";
+    else if (i === 2) medal = "🥉";
 
-    div.classList.add("rank-item");
+    const li = document.createElement("li");
 
-    if (i === 0) {
-      div.classList.add("rank-first");
-    }
+    li.textContent =
+      `${medal} ${p.name} | ${p.score} acertos | ${p.skips} desist. | ${p.totalTime}s`;
 
-    div.innerHTML = `
-      <div class="rank-left">
-        <span class="rank-medal">
-          ${i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : ""}
-        </span>
-        <span class="rank-name">${p.name}</span>
-      </div>
-
-      <div class="rank-right">
-        <div class="rank-score">${p.score} acertos</div>
-        <div class="rank-extra">
-          ⏱ ${p.totalTime}s • ❌ ${p.skips}
-        </div>
-      </div>
-    `;
-
-    list.appendChild(div);
+    list.appendChild(li);
   });
 }
+
 loadRanking();
 
 function resetGame() {
@@ -666,6 +450,7 @@ function resetGame() {
   >
 </footer>
 
+<!-- ✅ VERSÃO NO CANTO DIREITO -->
 <footer style="
   position: fixed;
   bottom: 5px;
@@ -674,7 +459,7 @@ function resetGame() {
   color: gray;
   opacity: 0.7;
 "> 
-  Zari! - Versão 1.0.7
+Zari! - Versão 1.0.8
 </footer>
 
 <button onclick="resetGame()" style="
