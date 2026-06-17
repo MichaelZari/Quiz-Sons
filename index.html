@@ -1,374 +1,719 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<title>Quiz de Sons</title>
+  <meta charset="UTF-8" />
+  <title>Quiz de Sons</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <!-- Fonte Montserrat -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap"
+ml, body {
+      margin: 0;
+      height: 100%;
+      font-family: 'Montserrat', sans-serif;
+    }
 
-<style>
-html, body {
-  margin: 0;
-  height: 100%;
-  font-family: 'Montserrat', sans-serif;
-}
+    body {
+      display: flex;
+      min-height: 100vh;
+      background: #f3f3f3;
+    }
 
-body {
-  display: flex;
-  min-height: 100vh;
-}
+    .left, .right {
+      width: 30%;
+      color: white;
+      padding: 20px;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
 
-.left, .right {
-  width: 30%;
-  color: white;
-  padding: 20px;
-}
+    .left {
+      background: linear-gradient(180deg, #1c1c1c, #000);
+    }
 
-.left { background: linear-gradient(#1c1c1c,#000); }
-.right { background: #000; }
+    .right {
+      background: linear-gradient(180deg, #050505, #000);
+    }
 
-.center {
-  width: 40%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #f3f3f3;
-}
+    .center {
+      width: 40%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #f3f3f3;
+      min-height: 100vh;
+      box-sizing: border-box;
+      padding: 20px 0;
+    }
 
-.card {
-  background: white;
-  padding: 25px;
-  border-radius: 10px;
-  width: 320px;
-  text-align: center;
-}
+    .card {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      width: 340px;
+      text-align: center;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.08);
+      box-sizing: border-box;
+    }
 
-button,input {
-  width: 100%;
-  padding: 10px;
-  margin: 10px 0;
-}
+    h2, h3 {
+      margin-top: 0;
+    }
 
-.send-btn {
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  background: #00FF5A;
-  color: black;
-  font-weight: bold;
-  font-size: 18px;
-  border: none;
-  cursor: pointer;
-}
+    .title-block {
+      margin-bottom: 20px;
+    }
 
-.send-btn:hover {
-  transform: scale(1.1);
-}
-</style>
+    input, button {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      box-sizing: border-box;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 14px;
+      border-radius: 8px;
+      border: 1px solid #cfcfcf;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #00ff5a;
+      box-shadow: 0 0 0 3px rgba(0, 255, 90, 0.15);
+    }
+
+    button {
+      cursor: pointer;
+      background: white;
+    }
+
+    .audio-btn {
+      background: #f9f9f9;
+    }
+
+    .answer-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-top: 6px;
+    }
+
+    .answer-row input {
+      flex: 1;
+      margin: 0;
+    }
+
+    .send-btn {
+      width: 50px;
+      min-width: 50px;
+      height: 50px;
+      margin: 0;
+      border-radius: 50%;
+      border: none;
+      background: #00ff5a;
+      color: #000;
+      font-weight: 700;
+      font-size: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 16px rgba(0, 255, 90, 0.28);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .send-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 22px rgba(0, 255, 90, 0.42);
+    }
+
+    .action-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 6px;
+    }
+
+    .action-row button {
+      flex: 1;
+    }
+
+    .message {
+      min-height: 24px;
+      margin-top: 8px;
+      font-size: 14px;
+    }
+
+    .message.error {
+      color: #c62828;
+    }
+
+    .message.success {
+      color: #1b8f39;
+    }
+
+    .message.info {
+      color: #ff8c00;
+    }
+
+    #progress {
+      font-size: 16px;
+      margin: 14px 0;
+    }
+
+    .rules-block h3,
+    .ranking-block h3 {
+      font-size: 16px;
+      margin-bottom: 18px;
+    }
+
+    .rules-block p {
+      margin: 0;
+      line-height: 1.5;
+      font-size: 15px;
+    }
+
+    #ranking {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    #ranking li {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 10px 12px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+
+    .right-actions {
+      margin-top: 20px;
+    }
+
+    .reset-btn {
+      background: #101010;
+      color: #00ff5a;
+      border: 1px solid #00ff5a;
+      font-weight: 600;
+    }
+
+    .empty-ranking {
+      color: #bbb;
+      font-size: 14px;
+      margin-top: 18px;
+    }
+
+    .footer-logo {
+      position: fixed;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+    }
+
+    .footer-logo img {
+      height: 40px;
+      opacity: 0.85;
+    }
+
+    .footer-version {
+      position: fixed;
+      bottom: 5px;
+      right: 10px;
+      color: gray;
+      font-size: 12px;
+      z-index: 10;
+    }
+  </style>
 </head>
-
 <body>
 
-<div class="left">
-<h3>📜 Regras</h3>
-<p>
-Identifique 10 sons<br>
-Pode tentar<br>
-Pode pular<br>
-Desistir +2min<br>
-Mais acertos vence
-</p>
-</div>
-
-<div class="center">
-<div class="card">
-
-<div id="startScreen">
-<h2>Quiz de Sons</h2>
-
-<input id="email" placeholder="Email corporativo">
-<button onclick="startGame()">Jogar</button>
-
-<p id="msg" style="color:red;"></p>
-</div>
-
-<div id="gameScreen" style="display:none">
-
-<button onclick="playSound()">🔊 Ouvir</button>
-<p id="progress"></p>
-
-<audio id="audio"></audio>
-
-<div style="display:flex; gap:10px;">
-<input id="answer" style="flex:1;" onkeydown="handleKey(event)">
-<button class="send-btn" onclick="checkAnswer()">➤</button>
-</div>
-
-<div style="display:flex; gap:10px;">
-<button onclick="skip()">Pular</button>
-<button onclick="giveUp()">Desistir</button>
-</div>
-
-<p id="msgGame"></p>
-
-</div>
-
-</div>
-</div>
-
-<div class="right">
-<h3>🏆 Ranking</h3>
-<ul id="ranking"></ul>
-<button onclick="resetRanking()">⚙ Reset</button>
-</div>
-
-<!-- ✅ FIREBASE -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  addDoc,
-  deleteDoc,
-  doc,
-  getDoc,
-  updateDoc
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-const app = initializeApp({
-  apiKey:"SUA_KEY",
-  authDomain:"quiz-de-sons.firebaseapp.com",
-  projectId:"quiz-de-sons"
-});
-
-window.db = getFirestore(app);
-
-// 🔊 carregar sons
-async function loadSounds(){
-  const snap = await getDocs(collection(db,"sounds"));
-  const data=[];
-  snap.forEach(d=>data.push({id:Number(d.id),...d.data()}));
-  data.sort((a,b)=>a.id-b.id);
-  window.firebaseSounds=data;
-}
-
-// 📊 ranking
-async function loadRanking(){
-  const snap = await getDocs(collection(db,"ranking"));
-  const list=document.getElementById("ranking");
-  list.innerHTML="";
-
-  const data=[];
-  snap.forEach(d=>data.push({id:d.id,...d.data()}));
-
-  data.sort((a,b)=>{
-    if(b.score!==a.score) return b.score-a.score;
-    return a.totalTime-b.totalTime;
-  });
-
-  data.slice(0,10).forEach((p,i)=>{
-    const li=document.createElement("li");
-
-    // ✅ só prefixo email
-    const name=p.email.split("@")[0];
-
-    li.innerText=`${i+1}. ${name} | ${p.score}`;
-    list.appendChild(li);
-  });
-}
-
-// 🔒 obter config
-async function getConfig(){
-  const docRef = doc(db,"config","settings");
-  const docSnap = await getDoc(docRef);
-  return docSnap.data();
-}
-
-// 🔄 reset
-async function resetRanking(){
-
-  const pass = prompt("Senha:");
-
-  const cfg = await getConfig();
-
-  if(pass !== cfg.resetPassword){
-    alert("Senha incorreta");
-    return;
-  }
-
-  const snap = await getDocs(collection(db,"ranking"));
-
-  for(const d of snap.docs){
-    await deleteDoc(doc(db,"ranking", d.id));
-  }
-
-  alert("Ranking resetado!");
-  loadRanking();
-}
-
-window.resetRanking = resetRanking;
-
-loadSounds();
-loadRanking();
-
-</script>
-
-<script>
-
-const DOMAINS = ["@teamsix.tech","@innovsoftware.com.br","@yahoo.com.br"];
-
-let sounds=[];
-let index=0;
-let score=0;
-let skips=0;
-let extraTime=0;
-let startTime;
-let emailUsed;
-let skipped=[];
-let answered=new Set();
-
-// ✅ ENTER
-function handleKey(e){
-if(e.key==="Enter"){
-e.preventDefault();
-checkAnswer();
-}
-}
-
-async function startGame(){
-
-const email=document.getElementById("email").value.toLowerCase();
-
-// domínio
-if(!DOMAINS.some(d=>email.endsWith(d))){
-document.getElementById("msg").innerText="Email inválido";
-return;
-}
-
-// 🔒 checar duplicado
-const cfg = await getConfig();
-
-if(cfg.usedEmails.includes(email)){
-document.getElementById("msg").innerText="Você já jogou!";
-return;
-}
-
-sounds=window.firebaseSounds;
-emailUsed=email;
-startTime=Date.now();
-
-document.getElementById("startScreen").style.display="none";
-document.getElementById("gameScreen").style.display="block";
-
-playSound();
-}
-
-function playSound(){
-const audio=document.getElementById("audio");
-audio.src="Sons/som"+sounds[index].id+".mp3";
-
-document.getElementById("progress").innerText=
-"Som "+(index+1)+" de "+sounds.length;
-
-audio.play();
-}
-
-function normalize(t){
-return t.toLowerCase()
-.normalize("NFD")
-.replace(/[\u0300-\u036f]/g,"")
-.replace(/[^a-z0-9\s]/g,"")
-.trim();
-}
-
-function checkAnswer(){
-
-const words=normalize(document.getElementById("answer").value).split(" ");
-const valid=sounds[index].answers.map(a=>normalize(a));
-
-let ok=false;
-
-for(let v of valid){
-if(words.includes(v)){ ok=true; break; }
-}
-
-if(ok){
-score++;
-answered.add(index);
-next();
-}else{
-document.getElementById("msgGame").innerText="❌ tente novamente";
-}
-}
-
-function skip(){
-if(!skipped.includes(index)) skipped.push(index);
-next();
-}
-
-function giveUp(){
-skips++; extraTime+=120;
-answered.add(index);
-next();
-}
-
-function next(){
-
-if(answered.size>=sounds.length){
-finish();
-return;
-}
-
-let found=false;
-
-for(let i=index+1;i<sounds.length;i++){
-if(!answered.has(i)){ index=i; found=true; break;}
-}
-
-if(!found && skipped.length>0){
-index=skipped.shift();
-if(answered.has(index)){ next(); return;}
-found=true;
-}
-
-if(!found){ finish(); return;}
-
-document.getElementById("answer").value="";
-document.getElementById("msgGame").innerText="";
-playSound();
-}
-
-async function finish(){
-
-const total = Math.floor((Date.now()-startTime)/1000)+extraTime;
-
-// ✅ salvar ranking + email
-await addDoc(collection(db,"ranking"),{
-email: emailUsed,
-score: score,
-totalTime: total
-});
-
-// ✅ salvar email usado
-const cfgRef = doc(db,"config","settings");
-const cfg = await getConfig();
-
-cfg.usedEmails.push(emailUsed);
-
-await updateDoc(cfgRef,{ usedEmails: cfg.usedEmails });
-
-document.getElementById("msgGame").innerText =
-"Finalizado! Pontos: "+score;
-
-loadRanking();
-}
-
-</script>
-
-<footer style="position:fixed; bottom:5px; right:10px; color:gray;">
-Zari! Versão 1.4.0
-</footer>
-
+  <div class="left">
+    <div class="rules-block">
+      <h3>📜 Regras</h3>
+      <p>
+        Identifique 10 sons<br>
+        Pode tentar quantas vezes quiser<br>
+        Pode pular<br>
+        Desistir adiciona +2min<br>
+        Mais acertos vence<br>
+        Empate: menor tempo
+      </p>
+    </div>
+  </div>
+
+  <div class="center">
+    <div class="card">
+
+      <div id="startScreen">
+        <div class="title-block">
+          <h2>Quiz de Sons</h2>
+        </div>
+
+        <input id="email" placeholder="Seu email corporativo" />
+        <button id="startBtn">Jogar</button>
+
+        <p id="startMessage" class="message"></p>
+      </div>
+
+      <div id="gameScreen" style="display:none;">
+        <button id="replayBtn" class="audio-btn">🔊 Ouvir</button>
+
+        <p id="progress"></p>
+
+        <audio id="audio"></audio>
+
+        <div class="answer-row">
+          <input id="answer" placeholder="Digite seu palpite" />
+          <button id="answerBtn" class="send-btn" type="button">➤</button>
+        </div>
+
+        <div class="action-row">
+          <button id="skipBtn" type="button">Pular</button>
+          <button id="giveUpBtn" type="button">Desistir</button>
+        </div>
+
+        <p id="gameMessage" class="message"></p>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="ranking-block">
+      <h3>🏆 Ranking</h3>
+      <ul id="ranking"></ul>
+      <div id="rankingStatus" class="message"></div>
+
+      <div class="right-actions">
+        <button id="resetBtn" class="reset-btn" type="button">⚙ Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Logo central -->
+  <div class="footer-logo">
+    <img src="Logotipo Original Completo Preto e
+  </div>
+
+  <!-- Versão -->
+  <div class="footer-version">Zari! Versão 1.4.1</div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      getDocs,
+      addDoc,
+      deleteDoc,
+      doc,
+      getDoc,
+      query,
+      where,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    // =========================
+    // CONFIG FIREBASE
+    // =========================
+    const firebaseConfig = {
+      apiKey: "SUA_KEY",
+      authDomain: "quiz-de-sons.firebaseapp.com",
+      projectId: "quiz-de-sons"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // =========================
+    // CONFIG / DOM
+    // =========================
+    const DOMAINS = ["@teamsix.tech", "@innovsoftware.com.br", "@yahoo.com.br"];
+
+    const startScreen = document.getElementById("startScreen");
+    const gameScreen = document.getElementById("gameScreen");
+
+    const emailInput = document.getElementById("email");
+    const answerInput = document.getElementById("answer");
+
+    const startBtn = document.getElementById("startBtn");
+    const replayBtn = document.getElementById("replayBtn");
+    const answerBtn = document.getElementById("answerBtn");
+    const skipBtn = document.getElementById("skipBtn");
+    const giveUpBtn = document.getElementById("giveUpBtn");
+    const resetBtn = document.getElementById("resetBtn");
+
+    const startMessage = document.getElementById("startMessage");
+    const gameMessage = document.getElementById("gameMessage");
+    const rankingStatus = document.getElementById("rankingStatus");
+    const progress = document.getElementById("progress");
+    const rankingList = document.getElementById("ranking");
+    const audio = document.getElementById("audio");
+
+    // =========================
+    // ESTADO DO JOGO
+    // =========================
+    let sounds = [];
+    let index = 0;
+    let score = 0;
+    let skips = 0;
+    let extraTime = 0;
+    let startTime = null;
+    let emailUsed = "";
+    let finished = false;
+    let skippedQueue = [];
+    let answered = new Set();
+
+    // =========================
+    // HELPERS DE MENSAGEM
+    // =========================
+    function setMessage(el, text, type = "") {
+      el.textContent = text || "";
+      el.className = "message";
+      if (type) el.classList.add(type);
+    }
+
+    // =========================
+    // NORMALIZAÇÃO
+    // =========================
+    function normalize(text) {
+      return (text || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9\s]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    function escapeRegex(str) {
+      return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    }
+
+    function matchesAnyAnswer(rawGuess, answersArray) {
+      const guess = normalize(rawGuess);
+      if (!guess) return false;
+
+      for (const ansRaw of answersArray || []) {
+        const ans = normalize(ansRaw);
+        if (!ans) continue;
+
+        // correspondência por palavra/frase inteira, evitando prefixo/sufixo
+        const regex = new RegExp(`(^|\\s)${escapeRegex(ans)}(?=\\s|$)`, "i");
+        if (regex.test(guess)) return true;
+      }
+
+      return false;
+    }
+
+    // =========================
+    // FIREBASE - DADOS
+    // =========================
+    async function loadSounds() {
+      const snap = await getDocs(collection(db, "sounds"));
+      const data = [];
+
+      snap.forEach(d => {
+        data.push({ id: Number(d.id), ...d.data() });
+      });
+
+      data.sort((a, b) => a.id - b.id);
+      sounds = data;
+    }
+
+    async function loadRanking() {
+      rankingList.innerHTML = "";
+      setMessage(rankingStatus, "");
+
+      const snap = await getDocs(collection(db, "ranking"));
+      const data = [];
+
+      snap.forEach(d => data.push({ id: d.id, ...d.data() }));
+
+      data.sort((a, b) => {
+        if ((b.score || 0) !== (a.score || 0)) return (b.score || 0) - (a.score || 0);
+        return (a.totalTime || 0) - (b.totalTime || 0);
+      });
+
+      if (data.length === 0) {
+        rankingList.innerHTML = `<li class="empty-ranking">Seja a primeira pessoa no ranking!</li>`;
+        return;
+      }
+
+      data.slice(0, 10).forEach((item, i) => {
+        const prefix = String(item.email || item.name || "").split("@")[0] || "jogador";
+        const li = document.createElement("li");
+        li.textContent = `${i + 1}. ${prefix} | ${item.score} acertos | ${item.totalTime}s`;
+        rankingList.appendChild(li);
+      });
+    }
+
+    async function getResetPassword() {
+      const ref = doc(db, "config", "settings");
+      const snap = await getDoc(ref);
+      if (!snap.exists()) return null;
+      return snap.data().resetPassword || null;
+    }
+
+    async function hasPlayed(email) {
+      const q = query(collection(db, "ranking"), where("email", "==", email));
+      const snap = await getDocs(q);
+      return !snap.empty;
+    }
+
+    async function saveResult() {
+      const baseTime = Math.floor((Date.now() - startTime) / 1000);
+      const totalTime = baseTime + extraTime;
+      const prefix = emailUsed.split("@")[0];
+
+      await addDoc(collection(db, "ranking"), {
+        email: emailUsed,
+        name: prefix,
+        score,
+        skips,
+        baseTime,
+        extraTime,
+        totalTime,
+        createdAt: serverTimestamp()
+      });
+    }
+
+    async function resetRanking() {
+      setMessage(rankingStatus, "");
+
+      const pass = window.prompt("Digite a senha do reset:");
+      if (!pass) return;
+
+      const firebasePassword = await getResetPassword();
+
+      if (!firebasePassword) {
+        setMessage(rankingStatus, "Senha de reset não configurada no Firebase.", "error");
+        return;
+      }
+
+      if (pass !== firebasePassword) {
+        setMessage(rankingStatus, "Senha incorreta.", "error");
+        return;
+      }
+
+      const snap = await getDocs(collection(db, "ranking"));
+      const deletions = [];
+
+      snap.forEach(d => {
+        deletions.push(deleteDoc(doc(db, "ranking", d.id)));
+      });
+
+      await Promise.all(deletions);
+
+      setMessage(rankingStatus, "Ranking resetado com sucesso.", "success");
+      await loadRanking();
+    }
+
+    // =========================
+    // LÓGICA DO JOGO
+    // =========================
+    function resetGameState() {
+      index = 0;
+      score = 0;
+      skips = 0;
+      extraTime = 0;
+      startTime = null;
+      emailUsed = "";
+      finished = false;
+      skippedQueue = [];
+      answered = new Set();
+      answerInput.value = "";
+      setMessage(gameMessage, "");
+      progress.textContent = "";
+      audio.pause();
+      audio.currentTime = 0;
+    }
+
+    function updateProgress() {
+      progress.textContent = `Som ${index + 1} de ${sounds.length}`;
+    }
+
+    function playSound() {
+      if (finished || !sounds.length) return;
+
+      audio.src = `Sons/som${sounds[index].id}.mp3`;
+      updateProgress();
+
+      audio.play().catch(() => {
+        setMessage(gameMessage, "Não foi possível reproduzir o áudio. Tente novamente.", "error");
+      });
+    }
+
+    async function startGame() {
+      setMessage(startMessage, "");
+
+      const email = normalize(emailInput.value);
+      if (!email) {
+        setMessage(startMessage, "Informe o e-mail para jogar.", "error");
+        return;
+      }
+
+      const rawEmail = emailInput.value.trim().toLowerCase();
+
+      if (!DOMAINS.some(domain => rawEmail.endsWith(domain))) {
+        setMessage(startMessage, "Use um e-mail permitido para jogar.", "error");
+        return;
+      }
+
+      if (!sounds.length) {
+        setMessage(startMessage, "Os dados ainda estão carregando. Tente novamente em instantes.", "info");
+        return;
+      }
+
+      const alreadyPlayed = await hasPlayed(rawEmail);
+      if (alreadyPlayed) {
+        setMessage(startMessage, "Este e-mail já participou. Você pode consultar o ranking ao lado.", "error");
+        return;
+      }
+
+      resetGameState();
+      emailUsed = rawEmail;
+      startTime = Date.now();
+
+      startScreen.style.display = "none";
+      gameScreen.style.display = "block";
+
+      playSound();
+      answerInput.focus();
+    }
+
+    function checkAnswer() {
+      if (finished) return;
+      setMessage(gameMessage, "");
+
+      const guess = answerInput.value.trim();
+      if (!guess) {
+        setMessage(gameMessage, "Digite um palpite antes de enviar.", "info");
+        return;
+      }
+
+      const validAnswers = sounds[index]?.answers || [];
+
+      if (matchesAnyAnswer(guess, validAnswers)) {
+        score++;
+        answered.add(index);
+        setMessage(gameMessage, "Acertou! Mandou bem.", "success");
+        nextQuestion();
+      } else {
+        setMessage(gameMessage, "Quase! Tente novamente.", "info");
+      }
+    }
+
+    function skipQuestion() {
+      if (finished) return;
+
+      if (!skippedQueue.includes(index) && !answered.has(index)) {
+        skippedQueue.push(index);
+      }
+      nextQuestion();
+    }
+
+    function giveUpQuestion() {
+      if (finished) return;
+
+      skips++;
+      extraTime += 120;
+      answered.add(index);
+      nextQuestion();
+    }
+
+    async function finishGame() {
+      if (finished) return;
+      finished = true;
+
+      audio.pause();
+      audio.currentTime = 0;
+
+      await saveResult();
+      await loadRanking();
+
+      const totalTime = Math.floor((Date.now() - startTime) / 1000) + extraTime;
+      setMessage(
+        gameMessage,
+        `Finalizado! Acertos: ${score} | Desistências: ${skips} | Tempo total: ${totalTime}s`,
+        "success"
+      );
+
+      progress.textContent = "✅ Finalizado";
+      answerInput.disabled = true;
+      answerBtn.disabled = true;
+      skipBtn.disabled = true;
+      giveUpBtn.disabled = true;
+      replayBtn.disabled = true;
+    }
+
+    function nextQuestion() {
+      if (answered.size >= sounds.length) {
+        finishGame();
+        return;
+      }
+
+      let found = false;
+
+      // tenta próximos não respondidos
+      for (let i = index + 1; i < sounds.length; i++) {
+        if (!answered.has(i)) {
+          index = i;
+          found = true;
+          break;
+        }
+      }
+
+      // se acabou a lista principal, volta para os pulados
+      if (!found && skippedQueue.length > 0) {
+        const candidate = skippedQueue.shift();
+
+        if (answered.has(candidate)) {
+          nextQuestion();
+          return;
+        }
+
+        index = candidate;
+        found = true;
+      }
+
+      if (!found) {
+        finishGame();
+        return;
+      }
+
+      answerInput.value = "";
+      setMessage(gameMessage, "");
+      playSound();
+      answerInput.focus();
+    }
+
+    // =========================
+    // EVENTOS
+    // =========================
+    startBtn.addEventListener("click", startGame);
+    replayBtn.addEventListener("click", playSound);
+    answerBtn.addEventListener("click", checkAnswer);
+    skipBtn.addEventListener("click", skipQuestion);
+    giveUpBtn.addEventListener("click", giveUpQuestion);
+    resetBtn.addEventListener("click", resetRanking);
+
+    answerInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        checkAnswer();
+      }
+    });
+
+    // =========================
+    // BOOT
+    // =========================
+    async function boot() {
+      await loadSounds();
+      await loadRanking();
+    }
+
+    boot();
+  </script>
 </body>
 </html>
