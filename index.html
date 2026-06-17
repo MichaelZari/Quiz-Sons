@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title>Quiz de Sons</title>
 
-<!-- ✅ FONTE -->
+<!-- ✅ FONTE CORRETA -->
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
@@ -25,13 +25,8 @@ body {
   padding: 20px;
 }
 
-.left {
-  background: linear-gradient(#1c1c1c, #000);
-}
-
-.right {
-  background: linear-gradient(#000, #000);
-}
+.left { background: linear-gradient(#1c1c1c, #000); }
+.right { background: #000; }
 
 .center {
   width: 40%;
@@ -47,7 +42,6 @@ body {
   border-radius: 10px;
   width: 320px;
   text-align: center;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
 }
 
 button, input {
@@ -60,10 +54,16 @@ button, input {
   width: 45px;
   height: 45px;
   border-radius: 50%;
-  background: black;
-  color: #00FF5A;
+  background: #00FF5A;
+  color: black;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
 }
 
+.send-btn:hover {
+  transform: scale(1.1);
+}
 </style>
 </head>
 
@@ -99,7 +99,7 @@ Empate: menor tempo
 <audio id="audio"></audio>
 
 <div style="display:flex">
-<input id="answer">
+<input id="answer" onkeypress="handleKey(event)">
 <button class="send-btn" onclick="checkAnswer()">➤</button>
 </div>
 
@@ -123,7 +123,12 @@ Empate: menor tempo
 <!-- ✅ FIREBASE -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  addDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const app = initializeApp({
   apiKey:"SUA_KEY",
@@ -131,7 +136,7 @@ const app = initializeApp({
   projectId:"quiz-de-sons"
 });
 
-const db = getFirestore(app);
+window.db = getFirestore(app);
 
 async function loadSounds() {
   const snapshot = await getDocs(collection(db,"sounds"));
@@ -145,26 +150,53 @@ async function loadSounds() {
   window.firebaseSounds = data;
 }
 loadSounds();
+
+async function loadRanking(){
+  const snapshot = await getDocs(collection(db,"ranking"));
+  const list = document.getElementById("ranking");
+  list.innerHTML="";
+
+  const data=[];
+
+  snapshot.forEach(doc=>data.push(doc.data()));
+
+  data.sort((a,b)=>{
+    if(b.score!==a.score) return b.score-a.score;
+    return a.totalTime-b.totalTime;
+  });
+
+  data.slice(0,10).forEach((p,i)=>{
+    const li=document.createElement("li");
+    li.innerText=`${i+1}. ${p.name} | ${p.score} pts`;
+    list.appendChild(li);
+  });
+}
+
+window.loadRanking = loadRanking;
 </script>
 
 <script>
 
 const DOMAINS = ["@teamsix.tech","@innovsoftware.com.br","@yahoo.com.br"];
 
-let sounds = [];
-let index = 0;
-let score = 0;
-let skips = 0;
-let extraTime = 0;
+let sounds=[];
+let index=0;
+let score=0;
+let skips=0;
+let extraTime=0;
 let startTime;
 let emailUsed;
-let finished = false;
-let skippedSounds = [];
-let answered = new Set();
+let finished=false;
+let skippedSounds=[];
+let answered=new Set();
 
-// ✅ VALIDA EMAIL E INICIA
+function handleKey(e){
+if(e.key==="Enter") checkAnswer();
+}
+
 function startGame(){
-const email = document.getElementById("email").value.toLowerCase();
+
+const email=document.getElementById("email").value.toLowerCase();
 
 if(!DOMAINS.some(d=>email.endsWith(d))){
 document.getElementById("msg").innerText="Email inválido!";
@@ -176,9 +208,9 @@ alert("Carregando...");
 return;
 }
 
-sounds = window.firebaseSounds;
-emailUsed = email;
-startTime = Date.now();
+sounds=window.firebaseSounds;
+emailUsed=email;
+startTime=Date.now();
 
 document.getElementById("startScreen").style.display="none";
 document.getElementById("gameScreen").style.display="block";
@@ -186,18 +218,16 @@ document.getElementById("gameScreen").style.display="block";
 playSound();
 }
 
-// ✅ SOM
 function playSound(){
-const audio = document.getElementById("audio");
-audio.src = "Sons/som"+sounds[index].id+".mp3";
+const audio=document.getElementById("audio");
+audio.src="Sons/som"+sounds[index].id+".mp3";
 
-document.getElementById("progress").innerText =
+document.getElementById("progress").innerText=
 "Som "+(index+1)+" de "+sounds.length;
 
 audio.play();
 }
 
-// ✅ NORMALIZAÇÃO
 function normalize(text){
 return text.toLowerCase()
 .normalize("NFD")
@@ -208,16 +238,16 @@ return text.toLowerCase()
 
 function checkAnswer(){
 
-const guess = normalize(document.getElementById("answer").value);
-const words = guess.split(" ");
+const guess=normalize(document.getElementById("answer").value);
+const words=guess.split(" ");
 
-const valid = sounds[index].answers.map(a=>normalize(a));
+const valid=sounds[index].answers.map(a=>normalize(a));
 
-let correct = false;
+let correct=false;
 
 for(let v of valid){
 if(words.includes(v)){
-correct = true;
+correct=true;
 break;
 }
 }
@@ -231,13 +261,11 @@ document.getElementById("msgGame").innerText="❌ continue tentando";
 }
 }
 
-// ✅ PULAR
 function skip(){
 if(!skippedSounds.includes(index)) skippedSounds.push(index);
 next();
 }
 
-// ✅ DESISTIR
 function giveUp(){
 skips++;
 extraTime+=120;
@@ -245,17 +273,14 @@ answered.add(index);
 next();
 }
 
-// ✅ LÓGICA DE VOLTAR (CORRIGIDA)
 function next(){
 
-// terminou?
 if(answered.size>=sounds.length){
 finish();
 return;
 }
 
-// próximo não respondido
-let found = false;
+let found=false;
 
 for(let i=index+1;i<sounds.length;i++){
 if(!answered.has(i)){
@@ -265,7 +290,6 @@ break;
 }
 }
 
-// volta nos pulados
 if(!found && skippedSounds.length>0){
 index=skippedSounds.shift();
 if(answered.has(index)){
@@ -285,29 +309,38 @@ document.getElementById("msgGame").innerText="";
 playSound();
 }
 
-// ✅ FINAL
-function finish(){
+async function finish(){
+
 finished=true;
 
-const base = Math.floor((Date.now()-startTime)/1000);
-const total = base+extraTime;
+const base=Math.floor((Date.now()-startTime)/1000);
+const total=base+extraTime;
 
-alert(
-"Finalizado!\n"+
-"Acertos: "+score+"\n"+
-"Tempo: "+total+"s"
-);
+const name=emailUsed.split("@")[0];
+
+// ✅ salva no Firebase
+await addDoc(collection(db,"ranking"),{
+name:name,
+score:score,
+totalTime:total
+});
+
+alert("Finalizado!\nPontuação:"+score);
+
+// atualiza ranking
+loadRanking();
 }
+
+loadRanking();
 
 </script>
 
-<!-- ✅ LOGO -->
 <footer style="position:fixed; bottom:10px; left:50%; transform:translateX(-50%);">
 <img src="Logotipo Original Completo Preto e Verde.png" style="height:40px;">
 </footer>
 
-<footer style="position:fixed; bottom:5px; right:10px; font-size:12px; color:gray;">
-Zari! Versão 1.2.0
+<footer style="position:fixed; bottom:5px; right:10px; color:gray;">
+Zari! Versão 1.3.0
 </footer>
 
 </body>
