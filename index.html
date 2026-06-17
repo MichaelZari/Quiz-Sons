@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <title>Quiz de Sons</title>
 
-<!-- ✅ FONTE -->
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
@@ -25,7 +24,7 @@ body {
   padding: 20px;
 }
 
-.left { background: linear-gradient(#1c1c1c, #000); }
+.left { background: linear-gradient(#1c1c1c,#000); }
 .right { background: #000; }
 
 .center {
@@ -44,13 +43,12 @@ body {
   text-align: center;
 }
 
-button, input {
+button,input {
   width: 100%;
   padding: 10px;
   margin: 10px 0;
 }
 
-/* ✅ BOTÃO RESPOSTA */
 .send-btn {
   width: 45px;
   height: 45px;
@@ -61,17 +59,11 @@ button, input {
   font-size: 18px;
   border: none;
   cursor: pointer;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .send-btn:hover {
   transform: scale(1.1);
-  box-shadow: 0 0 10px rgba(0,255,90,0.6);
 }
-
 </style>
 </head>
 
@@ -81,11 +73,10 @@ button, input {
 <h3>📜 Regras</h3>
 <p>
 Identifique 10 sons<br>
-Pode tentar quantas vezes quiser<br>
+Pode tentar<br>
 Pode pular<br>
 Desistir +2min<br>
-Mais acertos vence<br>
-Empate: menor tempo
+Mais acertos vence
 </p>
 </div>
 
@@ -94,8 +85,10 @@ Empate: menor tempo
 
 <div id="startScreen">
 <h2>Quiz de Sons</h2>
-<input id="email" placeholder="Seu email corporativo">
+
+<input id="email" placeholder="Email corporativo">
 <button onclick="startGame()">Jogar</button>
+
 <p id="msg" style="color:red;"></p>
 </div>
 
@@ -106,8 +99,7 @@ Empate: menor tempo
 
 <audio id="audio"></audio>
 
-<!-- ✅ INPUT + BOTÃO -->
-<div style="display:flex; gap:10px; align-items:center;">
+<div style="display:flex; gap:10px;">
 <input id="answer" style="flex:1;" onkeydown="handleKey(event)">
 <button class="send-btn" onclick="checkAnswer()">➤</button>
 </div>
@@ -127,6 +119,7 @@ Empate: menor tempo
 <div class="right">
 <h3>🏆 Ranking</h3>
 <ul id="ranking"></ul>
+<button onclick="resetRanking()">⚙ Reset</button>
 </div>
 
 <!-- ✅ FIREBASE -->
@@ -136,7 +129,11 @@ import {
   getFirestore,
   collection,
   getDocs,
-  addDoc
+  addDoc,
+  deleteDoc,
+  doc,
+  getDoc,
+  updateDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const app = initializeApp({
@@ -147,49 +144,73 @@ const app = initializeApp({
 
 window.db = getFirestore(app);
 
-// ✅ CARREGA SONS
-async function loadSounds() {
-  const snapshot = await getDocs(collection(db,"sounds"));
-
-  const data = [];
-
-  snapshot.forEach(doc=>{
-    data.push({ id:Number(doc.id), ...doc.data() });
-  });
-
+// 🔊 carregar sons
+async function loadSounds(){
+  const snap = await getDocs(collection(db,"sounds"));
+  const data=[];
+  snap.forEach(d=>data.push({id:Number(d.id),...d.data()}));
   data.sort((a,b)=>a.id-b.id);
-
-  window.firebaseSounds = data;
+  window.firebaseSounds=data;
 }
-loadSounds();
 
-
-// ✅ CARREGA RANKING
+// 📊 ranking
 async function loadRanking(){
+  const snap = await getDocs(collection(db,"ranking"));
+  const list=document.getElementById("ranking");
+  list.innerHTML="";
 
-  const snapshot = await getDocs(collection(db,"ranking"));
-  const list = document.getElementById("ranking");
-  list.innerHTML = "";
-
-  const data = [];
-
-  snapshot.forEach(doc=>{
-    data.push(doc.data());
-  });
+  const data=[];
+  snap.forEach(d=>data.push({id:d.id,...d.data()}));
 
   data.sort((a,b)=>{
-    if(b.score !== a.score) return b.score - a.score;
-    return a.totalTime - b.totalTime;
+    if(b.score!==a.score) return b.score-a.score;
+    return a.totalTime-b.totalTime;
   });
 
   data.slice(0,10).forEach((p,i)=>{
-    const li = document.createElement("li");
-    li.innerText = `${i+1}. ${p.name} | ${p.score} pts`;
+    const li=document.createElement("li");
+
+    // ✅ só prefixo email
+    const name=p.email.split("@")[0];
+
+    li.innerText=`${i+1}. ${name} | ${p.score}`;
     list.appendChild(li);
   });
 }
 
-window.loadRanking = loadRanking;
+// 🔒 obter config
+async function getConfig(){
+  const docRef = doc(db,"config","settings");
+  const docSnap = await getDoc(docRef);
+  return docSnap.data();
+}
+
+// 🔄 reset
+async function resetRanking(){
+
+  const pass = prompt("Senha:");
+
+  const cfg = await getConfig();
+
+  if(pass !== cfg.resetPassword){
+    alert("Senha incorreta");
+    return;
+  }
+
+  const snap = await getDocs(collection(db,"ranking"));
+
+  for(const d of snap.docs){
+    await deleteDoc(doc(db,"ranking", d.id));
+  }
+
+  alert("Ranking resetado!");
+  loadRanking();
+}
+
+window.resetRanking = resetRanking;
+
+loadSounds();
+loadRanking();
 
 </script>
 
@@ -204,30 +225,32 @@ let skips=0;
 let extraTime=0;
 let startTime;
 let emailUsed;
-let finished=false;
-let skippedSounds=[];
+let skipped=[];
 let answered=new Set();
 
-// ✅ ENTER FUNCIONANDO
+// ✅ ENTER
 function handleKey(e){
-  if(e.key === "Enter"){
-    e.preventDefault();
-    checkAnswer();
-  }
+if(e.key==="Enter"){
+e.preventDefault();
+checkAnswer();
+}
 }
 
-// ✅ INICIAR
-function startGame(){
+async function startGame(){
 
 const email=document.getElementById("email").value.toLowerCase();
 
+// domínio
 if(!DOMAINS.some(d=>email.endsWith(d))){
-document.getElementById("msg").innerText="Email inválido!";
+document.getElementById("msg").innerText="Email inválido";
 return;
 }
 
-if(!window.firebaseSounds){
-alert("Carregando...");
+// 🔒 checar duplicado
+const cfg = await getConfig();
+
+if(cfg.usedEmails.includes(email)){
+document.getElementById("msg").innerText="Você já jogou!";
 return;
 }
 
@@ -241,10 +264,8 @@ document.getElementById("gameScreen").style.display="block";
 playSound();
 }
 
-// ✅ SOM
 function playSound(){
 const audio=document.getElementById("audio");
-
 audio.src="Sons/som"+sounds[index].id+".mp3";
 
 document.getElementById("progress").innerText=
@@ -253,56 +274,45 @@ document.getElementById("progress").innerText=
 audio.play();
 }
 
-// ✅ NORMALIZAÇÃO
-function normalize(text){
-return text.toLowerCase()
+function normalize(t){
+return t.toLowerCase()
 .normalize("NFD")
 .replace(/[\u0300-\u036f]/g,"")
 .replace(/[^a-z0-9\s]/g,"")
 .trim();
 }
 
-// ✅ VALIDAÇÃO INTELIGENTE
 function checkAnswer(){
 
-const guess=normalize(document.getElementById("answer").value);
-const words=guess.split(" ");
-
+const words=normalize(document.getElementById("answer").value).split(" ");
 const valid=sounds[index].answers.map(a=>normalize(a));
 
-let correct=false;
+let ok=false;
 
 for(let v of valid){
-if(words.includes(v)){
-correct=true;
-break;
-}
+if(words.includes(v)){ ok=true; break; }
 }
 
-if(correct){
+if(ok){
 score++;
 answered.add(index);
 next();
 }else{
-document.getElementById("msgGame").innerText="❌ continue tentando";
+document.getElementById("msgGame").innerText="❌ tente novamente";
 }
 }
 
-// ✅ PULAR
 function skip(){
-if(!skippedSounds.includes(index)) skippedSounds.push(index);
+if(!skipped.includes(index)) skipped.push(index);
 next();
 }
 
-// ✅ DESISTIR
 function giveUp(){
-skips++;
-extraTime+=120;
+skips++; extraTime+=120;
 answered.add(index);
 next();
 }
 
-// ✅ FLUXO COMPLETO COM RETORNO
 function next(){
 
 if(answered.size>=sounds.length){
@@ -313,68 +323,51 @@ return;
 let found=false;
 
 for(let i=index+1;i<sounds.length;i++){
-if(!answered.has(i)){
-index=i;
-found=true;
-break;
-}
+if(!answered.has(i)){ index=i; found=true; break;}
 }
 
-if(!found && skippedSounds.length>0){
-index=skippedSounds.shift();
-
-if(answered.has(index)){
-next();
-return;
-}
-
+if(!found && skipped.length>0){
+index=skipped.shift();
+if(answered.has(index)){ next(); return;}
 found=true;
 }
 
-if(!found){
-finish();
-return;
-}
+if(!found){ finish(); return;}
 
 document.getElementById("answer").value="";
 document.getElementById("msgGame").innerText="";
-
 playSound();
 }
 
-// ✅ FINAL + SALVAR RANKING
 async function finish(){
 
-finished=true;
+const total = Math.floor((Date.now()-startTime)/1000)+extraTime;
 
-const base=Math.floor((Date.now()-startTime)/1000);
-const total=base+extraTime;
-
-const name=emailUsed.split("@")[0];
-
+// ✅ salvar ranking + email
 await addDoc(collection(db,"ranking"),{
-name:name,
-score:score,
-totalTime:total
+email: emailUsed,
+score: score,
+totalTime: total
 });
 
-alert("Finalizado!\nPontuação: "+score);
+// ✅ salvar email usado
+const cfgRef = doc(db,"config","settings");
+const cfg = await getConfig();
+
+cfg.usedEmails.push(emailUsed);
+
+await updateDoc(cfgRef,{ usedEmails: cfg.usedEmails });
+
+document.getElementById("msgGame").innerText =
+"Finalizado! Pontos: "+score;
 
 loadRanking();
-
 }
-
-loadRanking();
 
 </script>
 
-<!-- ✅ LOGO -->
-<footer style="position:fixed; bottom:10px; left:50%; transform:translateX(-50%);">
-<img src="Logotipo Original Completo Preto e Verde.png" style="height:40px; opacity:0.8;">
-</footer>
-
 <footer style="position:fixed; bottom:5px; right:10px; color:gray;">
-Zari! Versão 1.3.1
+Zari! Versão 1.4.0
 </footer>
 
 </body>
