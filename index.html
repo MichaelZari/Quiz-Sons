@@ -8,37 +8,62 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
-body {
+html, body {
   margin: 0;
+  height: 100%;
   font-family: 'Montserrat', sans-serif;
-  display: flex;
 }
 
-.center { width: 40%; display:flex; justify-content:center; align-items:center; background:#f3f3f3; }
-.left { width:30%; background:#222; color:white; padding:15px; }
-.right { width:30%; background:#111; color:white; padding:15px; }
+body {
+  display: flex;
+  min-height: 100vh;
+}
+
+.left, .right {
+  width: 30%;
+  color: white;
+  padding: 20px;
+}
+
+.left {
+  background: linear-gradient(#1c1c1c, #000);
+}
+
+.right {
+  background: linear-gradient(#000, #000);
+}
+
+.center {
+  width: 40%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f3f3f3;
+}
 
 .card {
-  background:white;
-  padding:20px;
-  border-radius:10px;
-  width:300px;
-  text-align:center;
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+  width: 320px;
+  text-align: center;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
 }
 
-button,input {
-  width:100%;
-  padding:10px;
-  margin:10px 0;
+button, input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
 }
 
 .send-btn {
-  width:45px;
-  height:45px;
-  border-radius:50%;
-  background:black;
-  color:#00FF5A;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: black;
+  color: #00FF5A;
 }
+
 </style>
 </head>
 
@@ -49,9 +74,10 @@ button,input {
 <p>
 Identifique 10 sons<br>
 Pode tentar quantas vezes quiser<br>
-Pular permitido<br>
+Pode pular<br>
 Desistir +2min<br>
-Mais acertos vence
+Mais acertos vence<br>
+Empate: menor tempo
 </p>
 </div>
 
@@ -59,9 +85,10 @@ Mais acertos vence
 <div class="card">
 
 <div id="startScreen">
-<h2>Quiz</h2>
-<input id="email">
+<h2>Quiz de Sons</h2>
+<input id="email" placeholder="Seu email corporativo">
 <button onclick="startGame()">Jogar</button>
+<p id="msg" style="color:red;"></p>
 </div>
 
 <div id="gameScreen" style="display:none">
@@ -76,7 +103,12 @@ Mais acertos vence
 <button class="send-btn" onclick="checkAnswer()">➤</button>
 </div>
 
-<p id="msg"></p>
+<div style="display:flex; gap:10px;">
+<button onclick="skip()">Pular</button>
+<button onclick="giveUp()">Desistir</button>
+</div>
+
+<p id="msgGame"></p>
 
 </div>
 
@@ -103,7 +135,6 @@ const db = getFirestore(app);
 
 async function loadSounds() {
   const snapshot = await getDocs(collection(db,"sounds"));
-
   const data = [];
 
   snapshot.forEach(doc=>{
@@ -111,7 +142,6 @@ async function loadSounds() {
   });
 
   data.sort((a,b)=>a.id-b.id);
-
   window.firebaseSounds = data;
 }
 loadSounds();
@@ -119,19 +149,36 @@ loadSounds();
 
 <script>
 
+const DOMAINS = ["@teamsix.tech","@innovsoftware.com.br","@yahoo.com.br"];
+
 let sounds = [];
 let index = 0;
 let score = 0;
+let skips = 0;
+let extraTime = 0;
+let startTime;
+let emailUsed;
 let finished = false;
+let skippedSounds = [];
+let answered = new Set();
 
+// ✅ VALIDA EMAIL E INICIA
 function startGame(){
+const email = document.getElementById("email").value.toLowerCase();
+
+if(!DOMAINS.some(d=>email.endsWith(d))){
+document.getElementById("msg").innerText="Email inválido!";
+return;
+}
 
 if(!window.firebaseSounds){
-  alert("Carregando...");
-  return;
+alert("Carregando...");
+return;
 }
 
 sounds = window.firebaseSounds;
+emailUsed = email;
+startTime = Date.now();
 
 document.getElementById("startScreen").style.display="none";
 document.getElementById("gameScreen").style.display="block";
@@ -139,87 +186,128 @@ document.getElementById("gameScreen").style.display="block";
 playSound();
 }
 
+// ✅ SOM
 function playSound(){
-
 const audio = document.getElementById("audio");
+audio.src = "Sons/som"+sounds[index].id+".mp3";
 
-// ✅ SOM PADRÃO
-audio.src = "Sons/som" + sounds[index].id + ".mp3";
-
-document.getElementById("progress").textContent =
+document.getElementById("progress").innerText =
 "Som "+(index+1)+" de "+sounds.length;
 
 audio.play();
 }
 
-// ✅ NORMALIZA TEXTO
+// ✅ NORMALIZAÇÃO
 function normalize(text){
-return text
-.toLowerCase()
+return text.toLowerCase()
 .normalize("NFD")
 .replace(/[\u0300-\u036f]/g,"")
 .replace(/[^a-z0-9\s]/g,"")
 .trim();
 }
 
-// ✅ TOKENIZAÇÃO (EVITA ERRO DE SUFIXO)
-function tokenize(text){
-return normalize(text).split(" ");
-}
-
 function checkAnswer(){
 
-const guess = document.getElementById("answer").value;
-const words = tokenize(guess);
+const guess = normalize(document.getElementById("answer").value);
+const words = guess.split(" ");
 
-const validAnswers = sounds[index].answers.map(a=>normalize(a));
+const valid = sounds[index].answers.map(a=>normalize(a));
 
 let correct = false;
 
-for(let ans of validAnswers){
-
-// ✅ precisa ser palavra isolada
-if(words.includes(ans)){
+for(let v of valid){
+if(words.includes(v)){
 correct = true;
 break;
 }
-
 }
 
 if(correct){
 score++;
+answered.add(index);
 next();
 }else{
-document.getElementById("msg").textContent = "❌ tente novamente";
+document.getElementById("msgGame").innerText="❌ continue tentando";
+}
 }
 
+// ✅ PULAR
+function skip(){
+if(!skippedSounds.includes(index)) skippedSounds.push(index);
+next();
 }
 
-// ✅ AVANÇA
+// ✅ DESISTIR
+function giveUp(){
+skips++;
+extraTime+=120;
+answered.add(index);
+next();
+}
+
+// ✅ LÓGICA DE VOLTAR (CORRIGIDA)
 function next(){
-index++;
 
-document.getElementById("answer").value="";
-document.getElementById("msg").textContent="";
-
-if(index>=sounds.length){
+// terminou?
+if(answered.size>=sounds.length){
 finish();
 return;
 }
 
+// próximo não respondido
+let found = false;
+
+for(let i=index+1;i<sounds.length;i++){
+if(!answered.has(i)){
+index=i;
+found=true;
+break;
+}
+}
+
+// volta nos pulados
+if(!found && skippedSounds.length>0){
+index=skippedSounds.shift();
+if(answered.has(index)){
+next();
+return;
+}
+found=true;
+}
+
+if(!found){
+finish();
+return;
+}
+
+document.getElementById("answer").value="";
+document.getElementById("msgGame").innerText="";
 playSound();
 }
 
 // ✅ FINAL
 function finish(){
 finished=true;
-alert("Pontuação: "+score);
+
+const base = Math.floor((Date.now()-startTime)/1000);
+const total = base+extraTime;
+
+alert(
+"Finalizado!\n"+
+"Acertos: "+score+"\n"+
+"Tempo: "+total+"s"
+);
 }
 
 </script>
 
-<footer style="position:fixed; bottom:5px; right:10px;">
-Versão 1.1.0
+<!-- ✅ LOGO -->
+<footer style="position:fixed; bottom:10px; left:50%; transform:translateX(-50%);">
+<img src="Logotipo Original Completo Preto e Verde.png" style="height:40px;">
+</footer>
+
+<footer style="position:fixed; bottom:5px; right:10px; font-size:12px; color:gray;">
+Zari! Versão 1.2.0
 </footer>
 
 </body>
