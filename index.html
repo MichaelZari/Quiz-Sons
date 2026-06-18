@@ -3,11 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <title>Quiz de Sons</title>
+  <link href="https://fonts.googleapis.com/css2?family=ght@400;600;700&display=swap
 
-  <!-- Fonte Montserrat -->
-  <link
-    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap"
-ml, body {
+  <style>
+    html, body {
       margin: 0;
       height: 100%;
       font-family: 'Montserrat', sans-serif;
@@ -60,10 +59,6 @@ ml, body {
       margin-top: 0;
     }
 
-    .title-block {
-      margin-bottom: 20px;
-    }
-
     input, button {
       width: 100%;
       padding: 12px;
@@ -103,20 +98,20 @@ ml, body {
     }
 
     .send-btn {
-      width: 50px;
-      min-width: 50px;
-      height: 50px;
+      width: 52px;
+      min-width: 52px;
+      height: 52px;
       margin: 0;
       border-radius: 50%;
       border: none;
       background: #00ff5a;
       color: #000;
       font-weight: 700;
-      font-size: 22px;
+      font-size: 23px;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 0 16px rgba(0, 255, 90, 0.28);
+      box-shadow: 0 0 16px rgba(0, 255, 90, 0.30);
       transition: transform 0.15s ease, box-shadow 0.15s ease;
     }
 
@@ -196,6 +191,19 @@ ml, body {
       font-weight: 600;
     }
 
+    .reset-panel {
+      display: none;
+      margin-top: 10px;
+    }
+
+    .reset-panel.active {
+      display: block;
+    }
+
+    .reset-panel input {
+      margin-bottom: 8px;
+    }
+
     .empty-ranking {
       color: #bbb;
       font-size: 14px;
@@ -243,21 +251,15 @@ ml, body {
 
   <div class="center">
     <div class="card">
-
       <div id="startScreen">
-        <div class="title-block">
-          <h2>Quiz de Sons</h2>
-        </div>
-
+        <h2>Quiz de Sons</h2>
         <input id="email" placeholder="Seu email corporativo" />
-        <button id="startBtn">Jogar</button>
-
+        <button id="startBtn" type="button">Jogar</button>
         <p id="startMessage" class="message"></p>
       </div>
 
       <div id="gameScreen" style="display:none;">
-        <button id="replayBtn" class="audio-btn">🔊 Ouvir</button>
-
+        <button id="replayBtn" class="audio-btn" type="button">🔊 Ouvir</button>
         <p id="progress"></p>
 
         <audio id="audio"></audio>
@@ -274,7 +276,6 @@ ml, body {
 
         <p id="gameMessage" class="message"></p>
       </div>
-
     </div>
   </div>
 
@@ -285,18 +286,21 @@ ml, body {
       <div id="rankingStatus" class="message"></div>
 
       <div class="right-actions">
-        <button id="resetBtn" class="reset-btn" type="button">⚙ Reset</button>
+        <button id="toggleResetBtn" class="reset-btn" type="button">⚙ Reset</button>
+
+        <div id="resetPanel" class="reset-panel">
+          <input id="resetPasswordInput" type="password" placeholder="Senha do reset" />
+          <button id="confirmResetBtn" class="reset-btn" type="button">Confirmar reset</button>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Logo central -->
   <div class="footer-logo">
-    <img src="Logotipo Original Completo Preto e
+    <img src Original Completo Preto e Verde.png
   </div>
 
-  <!-- Versão -->
-  <div class="footer-version">Zari! Versão 1.4.1</div>
+  <div class="footer-version">Zari! Versão 1.4.2</div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -313,9 +317,6 @@ ml, body {
       serverTimestamp
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    // =========================
-    // CONFIG FIREBASE
-    // =========================
     const firebaseConfig = {
       apiKey: "SUA_KEY",
       authDomain: "quiz-de-sons.firebaseapp.com",
@@ -325,9 +326,6 @@ ml, body {
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // =========================
-    // CONFIG / DOM
-    // =========================
     const DOMAINS = ["@teamsix.tech", "@innovsoftware.com.br", "@yahoo.com.br"];
 
     const startScreen = document.getElementById("startScreen");
@@ -341,7 +339,11 @@ ml, body {
     const answerBtn = document.getElementById("answerBtn");
     const skipBtn = document.getElementById("skipBtn");
     const giveUpBtn = document.getElementById("giveUpBtn");
-    const resetBtn = document.getElementById("resetBtn");
+
+    const toggleResetBtn = document.getElementById("toggleResetBtn");
+    const confirmResetBtn = document.getElementById("confirmResetBtn");
+    const resetPanel = document.getElementById("resetPanel");
+    const resetPasswordInput = document.getElementById("resetPasswordInput");
 
     const startMessage = document.getElementById("startMessage");
     const gameMessage = document.getElementById("gameMessage");
@@ -350,9 +352,6 @@ ml, body {
     const rankingList = document.getElementById("ranking");
     const audio = document.getElementById("audio");
 
-    // =========================
-    // ESTADO DO JOGO
-    // =========================
     let sounds = [];
     let index = 0;
     let score = 0;
@@ -364,18 +363,12 @@ ml, body {
     let skippedQueue = [];
     let answered = new Set();
 
-    // =========================
-    // HELPERS DE MENSAGEM
-    // =========================
     function setMessage(el, text, type = "") {
       el.textContent = text || "";
       el.className = "message";
       if (type) el.classList.add(type);
     }
 
-    // =========================
-    // NORMALIZAÇÃO
-    // =========================
     function normalize(text) {
       return (text || "")
         .toLowerCase()
@@ -398,7 +391,6 @@ ml, body {
         const ans = normalize(ansRaw);
         if (!ans) continue;
 
-        // correspondência por palavra/frase inteira, evitando prefixo/sufixo
         const regex = new RegExp(`(^|\\s)${escapeRegex(ans)}(?=\\s|$)`, "i");
         if (regex.test(guess)) return true;
       }
@@ -406,9 +398,6 @@ ml, body {
       return false;
     }
 
-    // =========================
-    // FIREBASE - DADOS
-    // =========================
     async function loadSounds() {
       const snap = await getDocs(collection(db, "sounds"));
       const data = [];
@@ -481,8 +470,11 @@ ml, body {
     async function resetRanking() {
       setMessage(rankingStatus, "");
 
-      const pass = window.prompt("Digite a senha do reset:");
-      if (!pass) return;
+      const pass = resetPasswordInput.value.trim();
+      if (!pass) {
+        setMessage(rankingStatus, "Digite a senha para resetar.", "info");
+        return;
+      }
 
       const firebasePassword = await getResetPassword();
 
@@ -505,13 +497,12 @@ ml, body {
 
       await Promise.all(deletions);
 
+      resetPasswordInput.value = "";
+      resetPanel.classList.remove("active");
       setMessage(rankingStatus, "Ranking resetado com sucesso.", "success");
       await loadRanking();
     }
 
-    // =========================
-    // LÓGICA DO JOGO
-    // =========================
     function resetGameState() {
       index = 0;
       score = 0;
@@ -523,6 +514,11 @@ ml, body {
       skippedQueue = [];
       answered = new Set();
       answerInput.value = "";
+      answerInput.disabled = false;
+      answerBtn.disabled = false;
+      skipBtn.disabled = false;
+      giveUpBtn.disabled = false;
+      replayBtn.disabled = false;
       setMessage(gameMessage, "");
       progress.textContent = "";
       audio.pause();
@@ -547,13 +543,12 @@ ml, body {
     async function startGame() {
       setMessage(startMessage, "");
 
-      const email = normalize(emailInput.value);
-      if (!email) {
+      const rawEmail = emailInput.value.trim().toLowerCase();
+
+      if (!rawEmail) {
         setMessage(startMessage, "Informe o e-mail para jogar.", "error");
         return;
       }
-
-      const rawEmail = emailInput.value.trim().toLowerCase();
 
       if (!DOMAINS.some(domain => rawEmail.endsWith(domain))) {
         setMessage(startMessage, "Use um e-mail permitido para jogar.", "error");
@@ -655,7 +650,6 @@ ml, body {
 
       let found = false;
 
-      // tenta próximos não respondidos
       for (let i = index + 1; i < sounds.length; i++) {
         if (!answered.has(i)) {
           index = i;
@@ -664,7 +658,6 @@ ml, body {
         }
       }
 
-      // se acabou a lista principal, volta para os pulados
       if (!found && skippedQueue.length > 0) {
         const candidate = skippedQueue.shift();
 
@@ -688,15 +681,18 @@ ml, body {
       answerInput.focus();
     }
 
-    // =========================
-    // EVENTOS
-    // =========================
     startBtn.addEventListener("click", startGame);
     replayBtn.addEventListener("click", playSound);
     answerBtn.addEventListener("click", checkAnswer);
     skipBtn.addEventListener("click", skipQuestion);
     giveUpBtn.addEventListener("click", giveUpQuestion);
-    resetBtn.addEventListener("click", resetRanking);
+
+    toggleResetBtn.addEventListener("click", () => {
+      resetPanel.classList.toggle("active");
+      setMessage(rankingStatus, "");
+    });
+
+    confirmResetBtn.addEventListener("click", resetRanking);
 
     answerInput.addEventListener("keydown", (e) => {
       if (e.key === "Enter") {
@@ -705,9 +701,6 @@ ml, body {
       }
     });
 
-    // =========================
-    // BOOT
-    // =========================
     async function boot() {
       await loadSounds();
       await loadRanking();
