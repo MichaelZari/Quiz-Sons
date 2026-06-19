@@ -532,7 +532,7 @@
     function playSound() {
       if (finished || !sounds.length) return;
 
-      audio.src = `Sons/som${sounds[index].id}.mp3`;
+     audio.src = `sounds/${sounds[index].name}.mp3`;
       updateProgress();
 
       audio.play().catch(() => {
