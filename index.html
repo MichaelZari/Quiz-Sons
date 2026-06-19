@@ -59,6 +59,19 @@ body {
   margin-top: auto;
 }
 
+.footer-logo {
+  position: fixed;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+
+.footer-logo img {
+  height: 35px;
+  opacity: 0.85;
+}  
+
 /* ✅ reset canto inferior direito */
 .footer-reset {
   position: fixed;
@@ -241,5 +254,9 @@ loadSounds();
 
 </script>
 
+<div class="footer-logo">
+  <img src="logo-teamsix.png" alt="Teamsix">
+</div>
+  
 </body>
 </html>
