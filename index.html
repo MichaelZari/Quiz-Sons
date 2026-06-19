@@ -29,8 +29,12 @@ body {
 }
 
 .left {
-  background: linear-gradient(180deg, #1c1c1c, #000);
-  justify-content: space-between; /* ✅ mantém versão no final */
+  background: linear-gradient(180deg, #0a0a0a, #000);
+
+  display: flex;
+  flex-direction: column;
+
+  justify-content: flex-start; /* ✅ começa no topo */
 }
 
 .right {
@@ -234,6 +238,13 @@ button {
   transform: scale(1.03);
   box-shadow: 0 0 12px rgba(0,255,90,0.5);
 }
+
+
+.rules-list {
+  display: flex;
+  flex-direction: column;
+}
+
   
 </style>
 </head>
@@ -241,76 +252,86 @@ button {
 <body>
 
 <!-- ESQUERDA -->
-<div class="rules-header">
-  <img src="Icons/regras.png" class="rules-icon" />
-  <span class="rules-title">REGRAS</span>
-</div>
+<div class="left">
 
-<!-- ITEM 1 -->
-<div class="rule-item">
-  <div class="rule-icon-box">
-    <img src="Icons/som.png">
+  <div class="rules-header">
+    <img src="Icons/regras.png" class="rules-icon" />
+    <span class="rules-title">REGRAS</span>
   </div>
 
-  <div class="rule-content">
-    <div class="rule-title-item">Identifique 6 sons</div>
-    <div class="rule-subtitle">
-      ÚNICA tentativa, escute atentamente cada som e tente adivinhar!
+  <div class="rules-list">
+
+    <div class="rule-item">
+      <div class="rule-icon-box">
+        <img src="Icons/som.png">
+      </div>
+
+      <div class="rule-content">
+        <div class="rule-title-item">Identifique 6 sons</div>
+        <div class="rule-subtitle">
+          ÚNICA tentativa, escute atentamente cada som e tente adivinhar!
+        </div>
+      </div>
     </div>
-  </div>
-</div>
 
-  
-  <!-- ✅ versão fixa em baixo -->
+  </div>
+
   <div class="footer-version">
     Zari! Versão 1.4.6
   </div>
+
 </div>
+
 
 <!-- CENTRO -->
 <div class="center">
   <div class="center-container">
 
-    <!-- ✅ ÍCONE -->
     <img src="Icons/som.png" class="main-icon" />
 
-    <!-- ✅ TÍTULO -->
     <h1 class="main-title">Quiz de Sons</h1>
-
-    <!-- ✅ SUBTÍTULO -->
     <p class="main-subtitle">Escute. Identifique. Única chance!</p>
 
-    <!-- CARD -->
-  <!-- ETAPA 1 -->
-<div id="startArea">
-  <h3>Entre para começar</h3>
-  <input id="email" placeholder="Seu email corporativo" />
-  <button id="startBtn" class="start-btn">Jogar</button>
+    <div class="card">
+
+      <!-- ETAPA 1 -->
+      <div id="startArea">
+        <h3>Entre para começar</h3>
+        <input id="email" placeholder="Seu email corporativo" />
+        <button id="startBtn" class="start-btn">Jogar</button>
+      </div>
+
+      <!-- ETAPA 2 -->
+      <div id="gameArea" style="display:none;">
+        <button id="replayBtn">🔊 Ouvir</button>
+        <input id="answer" placeholder="Resposta">
+        <button id="answerBtn">Enviar</button>
+        <button id="skipBtn">Pular</button>
+        <button id="giveUpBtn">Desistir</button>
+      </div>
+
+      <p id="gameMessage"></p>
+
+    </div>
+
+  </div>
 </div>
 
-<!-- ETAPA 2 -->
-<div id="gameArea" style="display:none;">
-  
-  <button id="replayBtn">🔊 Ouvir</button>
 
-  <input id="answer" placeholder="Resposta">
-  <button id="answerBtn">Enviar</button>
-
-  <button id="skipBtn">Pular</button>
-  <button id="giveUpBtn">Desistir</button>
-
-</div>
-    
 <!-- DIREITA -->
 <div class="right">
+
   <div class="ranking-header">
-  <img src="Icons/trofeu.png" class="ranking-icon" />
-  <span class="ranking-title">RANKING</span>
-</div>
+    <img src="Icons/trofeu.png" class="ranking-icon" />
+    <span class="ranking-title">RANKING</span>
+  </div>
+
   <ul id="ranking"></ul>
+
 </div>
 
-<!-- ✅ RESET -->
+
+<!-- RESET -->
 <div class="footer-reset">
   <button id="toggleResetBtn">⚙ Reset</button>
 
@@ -320,133 +341,10 @@ button {
   </div>
 </div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {
-  getFirestore,
-  collection,
-  getDocs
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-import {
-  getStorage,
-  ref,
-  getDownloadURL
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
-
-/* ✅ CONFIG */
-const firebaseConfig = {
-  apiKey: "SUA_KEY",
-  authDomain: "quiz-de-sons.firebaseapp.com",
-  projectId: "quiz-de-sons",
-  storageBucket: "quiz-de-sons.appspot.com"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const storage = getStorage(app);
-
-/* ✅ ELEMENTOS */
-const audio = document.getElementById("audio");
-const emailInput = document.getElementById("email");
-const startBtn = document.getElementById("startBtn");
-const replayBtn = document.getElementById("replayBtn");
-const answerInput = document.getElementById("answer");
-const answerBtn = document.getElementById("answerBtn");
-const gameMessage = document.getElementById("gameMessage");
-const skipBtn = document.getElementById("skipBtn");
-const giveUpBtn = document.getElementById("giveUpBtn");
-
-/* ✅ EMAIL PERMITIDO */
-const DOMAINS = ["@teamsix.tech", "@innovsoftware.com.br", "@yahoo.com.br"];
-
-function isValidEmail(email) {
-  return DOMAINS.some(domain => email.endsWith(domain));
-}
-
-/* ✅ DADOS */
-let sounds = [];
-let index = 0;
-
-/* ✅ CARREGA SONS */
-async function loadSounds() {
-  const snap = await getDocs(collection(db, "sounds"));
-  snap.forEach(doc => {
-    sounds.push(doc.data());
-  });
-}
-
-/* ✅ TOCAR ÁUDIO */
-async function playSound() {
-  try {
-    const soundName = sounds[index].name;
-
-    const soundRef = ref(storage, `sounds/${soundName}.mp3`);
-    const url = await getDownloadURL(soundRef);
-
-    audio.src = url;
-    await audio.play();
-
-    console.log("tocando:", soundName);
-
-  } catch (err) {
-    console.error(err);
-    alert("Erro ao tocar som");
-  }
-}
-
-/* ✅ INICIAR JOGO COM VALIDAÇÃO */
-const answerInput = document.getElementById("answer");
-const answerBtn = document.getElementById("answerBtn");
-
-const startArea = document.getElementById("startArea");
-const gameArea = document.getElementById("gameArea");
-
-startBtn.onclick = () => {
-  const email = emailInput.value.trim().toLowerCase();
-
-  if (!isValidEmail(email)) {
-    gameMessage.textContent = "Email inválido ou não permitido";
-    return;
-  }
-
-  if (!sounds.length) {
-    gameMessage.textContent = "Carregando sons...";
-    return;
-  }
-
-  // ✅ ESCONDE A PRIMEIRA TELA
-  startArea.style.display = "none";
-
-  // ✅ MOSTRA O JOGO
-  gameArea.style.display = "block";
-
-  gameMessage.textContent = "Jogo iniciado!";
-
-  playSound();
-};
-
-/* ✅ REPLAY */
-replayBtn.onclick = playSound;
-
-/* ✅ RESET UI */
-const toggleResetBtn = document.getElementById("toggleResetBtn");
-const resetPanel = document.getElementById("resetPanel");
-
-toggleResetBtn.onclick = () => {
-  resetPanel.classList.toggle("active");
-};
-
-/* ✅ INIT */
-loadSounds();
-
-gameMessage.textContent = "Digite seu email para iniciar";  
-  
-</script>
-
+<!-- LOGO -->
 <div class="footer-logo">
   <img src="logo-teamsix.png" alt="Teamsix">
 </div>
-  
+
 </body>
 </html>
