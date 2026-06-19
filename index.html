@@ -343,7 +343,7 @@ button {
   </div>
 
   <div class="footer-version">
-    Zari! Versão 1.4.6
+    Zari! Versão 2.0.0
   </div>
 
 </div>
@@ -412,5 +412,39 @@ button {
   <img src="logo-teamsix.png" alt="Teamsix">
 </div>
 
+<script>
+const emailInput = document.getElementById("email");
+const startBtn = document.getElementById("startBtn");
+const gameMessage = document.getElementById("gameMessage");
+const startArea = document.getElementById("startArea");
+const gameArea = document.getElementById("gameArea");
+
+// ✅ domínios permitidos
+const DOMAINS = ["@teamsix.tech", "@innovsoftware.com.br"];
+
+// ✅ valida email
+function isValidEmail(email) {
+  const isFormatValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const isDomainValid = DOMAINS.some(domain => email.endsWith(domain));
+
+  return isFormatValid && isDomainValid;
+}
+
+// ✅ botão jogar
+startBtn.onclick = () => {
+  const email = emailInput.value.trim().toLowerCase();
+
+  if (!isValidEmail(email)) {
+    gameMessage.textContent = "Email inválido ou não permitido";
+    return;
+  }
+
+  gameMessage.textContent = "Jogo iniciado!";
+
+  startArea.style.display = "none";
+  gameArea.style.display = "block";
+};
+</script>
+  
 </body>
 </html>
