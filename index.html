@@ -24,10 +24,13 @@ body {
   color: white;
   padding: 20px;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 }
 
 .left {
   background: linear-gradient(180deg, #1c1c1c, #000);
+  justify-content: space-between; /* ✅ mantém versão no final */
 }
 
 .right {
@@ -49,11 +52,11 @@ body {
   text-align: center;
 }
 
-/* ✅ versão abaixo das regras */
+/* ✅ versão no rodapé esquerdo */
 .footer-version {
-  margin-top: 20px;
   color: gray;
   font-size: 12px;
+  margin-top: auto;
 }
 
 /* ✅ reset canto inferior direito */
@@ -61,18 +64,22 @@ body {
   position: fixed;
   bottom: 10px;
   right: 10px;
+  z-index: 10;
 }
 
 .reset-panel {
   display: none;
+  margin-top: 8px;
 }
 
 .reset-panel.active {
   display: block;
 }
 
-.send-btn {
-  width: 52px;
+button {
+  margin-top: 10px;
+  padding: 10px;
+  cursor: pointer;
 }
 
 </style>
@@ -80,8 +87,9 @@ body {
 
 <body>
 
+<!-- ESQUERDA -->
 <div class="left">
-  <div class="rules-block">
+  <div>
     <h3>📜 Regras</h3>
     <p>
       Identifique 10 sons<br>
@@ -91,14 +99,21 @@ body {
       Mais acertos vence<br>
       Empate: menor tempo
     </p>
+  </div>
 
-    <!-- ✅ versão aqui -->
-    <div class="footer-version">Zari! Versão 1.4.3</div>
+  <!-- ✅ versão fixa em baixo -->
+  <div class="footer-version">
+    Zari! Versão 1.4.4
   </div>
 </div>
 
+<!-- CENTRO -->
 <div class="center">
   <div class="card">
+
+    <input id="email" placeholder="Seu email" />
+    <button id="startBtn">Jogar</button>
+
     <button id="replayBtn">🔊 Ouvir</button>
     <p id="progress"></p>
 
@@ -108,20 +123,22 @@ body {
     <button id="answerBtn">Enviar</button>
 
     <p id="gameMessage"></p>
+
   </div>
 </div>
 
+<!-- DIREITA -->
 <div class="right">
   <h3>🏆 Ranking</h3>
   <ul id="ranking"></ul>
 </div>
 
-<!-- ✅ RESET NO LUGAR CERTO -->
+<!-- ✅ RESET -->
 <div class="footer-reset">
   <button id="toggleResetBtn">⚙ Reset</button>
 
   <div id="resetPanel" class="reset-panel">
-    <input id="resetPasswordInput" type="password" placeholder="Senha">
+    <input id="resetPasswordInput" type="password" placeholder="Senha" />
     <button id="confirmResetBtn">Confirmar</button>
   </div>
 </div>
@@ -140,7 +157,7 @@ import {
   getDownloadURL
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
-// ✅ CONFIG
+/* ✅ CONFIG */
 const firebaseConfig = {
   apiKey: "SUA_KEY",
   authDomain: "quiz-de-sons.firebaseapp.com",
@@ -152,12 +169,24 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const storage = getStorage(app);
 
+/* ✅ ELEMENTOS */
 const audio = document.getElementById("audio");
+const emailInput = document.getElementById("email");
+const startBtn = document.getElementById("startBtn");
+const replayBtn = document.getElementById("replayBtn");
 
+/* ✅ EMAIL PERMITIDO */
+const DOMAINS = ["@teamsix.tech", "@innovsoftware.com.br", "@yahoo.com.br"];
+
+function isValidEmail(email) {
+  return DOMAINS.some(domain => email.endsWith(domain));
+}
+
+/* ✅ DADOS */
 let sounds = [];
 let index = 0;
 
-// ✅ CARREGA SONS
+/* ✅ CARREGA SONS */
 async function loadSounds() {
   const snap = await getDocs(collection(db, "sounds"));
   snap.forEach(doc => {
@@ -165,7 +194,7 @@ async function loadSounds() {
   });
 }
 
-// ✅ TOCAR SOM (AGORA CERTO)
+/* ✅ TOCAR ÁUDIO */
 async function playSound() {
   try {
     const soundName = sounds[index].name;
@@ -184,8 +213,30 @@ async function playSound() {
   }
 }
 
-document.getElementById("replayBtn").onclick = playSound;
+/* ✅ INICIAR JOGO COM VALIDAÇÃO */
+startBtn.onclick = () => {
+  const email = emailInput.value.trim().toLowerCase();
 
+  if (!isValidEmail(email)) {
+    alert("Email inválido ou não permitido");
+    return;
+  }
+
+  playSound();
+};
+
+/* ✅ REPLAY */
+replayBtn.onclick = playSound;
+
+/* ✅ RESET UI */
+const toggleResetBtn = document.getElementById("toggleResetBtn");
+const resetPanel = document.getElementById("resetPanel");
+
+toggleResetBtn.onclick = () => {
+  resetPanel.classList.toggle("active");
+};
+
+/* ✅ INIT */
 loadSounds();
 
 </script>
