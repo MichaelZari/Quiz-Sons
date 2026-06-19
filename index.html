@@ -1,712 +1,194 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <title>Quiz de Sons</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet" />
+<meta charset="UTF-8" />
+<title>Quiz de Sons</title>
 
-  <style>
-    html, body {
-      margin: 0;
-      height: 100%;
-      font-family: 'Montserrat', sans-serif;
-    }
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet" />
 
-    body {
-      display: flex;
-      min-height: 100vh;
-      background: #f3f3f3;
-    }
+<style>
+html, body {
+  margin: 0;
+  height: 100%;
+  font-family: 'Montserrat', sans-serif;
+}
 
-    .left, .right {
-      width: 30%;
-      color: white;
-      padding: 20px;
-      min-height: 100vh;
-      box-sizing: border-box;
-    }
+body {
+  display: flex;
+  min-height: 100vh;
+  background: #f3f3f3;
+}
 
-    .left {
-      background: linear-gradient(180deg, #1c1c1c, #000);
-    }
+.left, .right {
+  width: 30%;
+  color: white;
+  padding: 20px;
+  box-sizing: border-box;
+}
 
-    .right {
-      background: linear-gradient(180deg, #050505, #000);
-    }
+.left {
+  background: linear-gradient(180deg, #1c1c1c, #000);
+}
 
-    .center {
-      width: 40%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: #f3f3f3;
-      min-height: 100vh;
-      box-sizing: border-box;
-      padding: 20px 0;
-    }
+.right {
+  background: linear-gradient(180deg, #050505, #000);
+}
 
-    .card {
-      background: white;
-      padding: 25px;
-      border-radius: 12px;
-      width: 340px;
-      text-align: center;
-      box-shadow: 0 10px 24px rgba(0,0,0,0.08);
-      box-sizing: border-box;
-    }
+.center {
+  width: 40%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-    h2, h3 {
-      margin-top: 0;
-    }
+.card {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  width: 340px;
+  text-align: center;
+}
 
-    input, button {
-      width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      box-sizing: border-box;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 14px;
-      border-radius: 8px;
-      border: 1px solid #cfcfcf;
-    }
+/* ✅ versão abaixo das regras */
+.footer-version {
+  margin-top: 20px;
+  color: gray;
+  font-size: 12px;
+}
 
-    input:focus {
-      outline: none;
-      border-color: #00ff5a;
-      box-shadow: 0 0 0 3px rgba(0, 255, 90, 0.15);
-    }
+/* ✅ reset canto inferior direito */
+.footer-reset {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+}
 
-    button {
-      cursor: pointer;
-      background: white;
-    }
+.reset-panel {
+  display: none;
+}
 
-    .audio-btn {
-      background: #f9f9f9;
-    }
+.reset-panel.active {
+  display: block;
+}
 
-    .answer-row {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      margin-top: 6px;
-    }
+.send-btn {
+  width: 52px;
+}
 
-    .answer-row input {
-      flex: 1;
-      margin: 0;
-    }
-
-    .send-btn {
-      width: 52px;
-      min-width: 52px;
-      height: 52px;
-      margin: 0;
-      border-radius: 50%;
-      border: none;
-      background: #00ff5a;
-      color: #000;
-      font-weight: 700;
-      font-size: 23px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 16px rgba(0, 255, 90, 0.30);
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
-    }
-
-    .send-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 22px rgba(0, 255, 90, 0.42);
-    }
-
-    .action-row {
-      display: flex;
-      gap: 12px;
-      margin-top: 6px;
-    }
-
-    .action-row button {
-      flex: 1;
-    }
-
-    .message {
-      min-height: 24px;
-      margin-top: 8px;
-      font-size: 14px;
-    }
-
-    .message.error {
-      color: #c62828;
-    }
-
-    .message.success {
-      color: #1b8f39;
-    }
-
-    .message.info {
-      color: #ff8c00;
-    }
-
-    #progress {
-      font-size: 16px;
-      margin: 14px 0;
-    }
-
-    .rules-block h3,
-    .ranking-block h3 {
-      font-size: 16px;
-      margin-bottom: 18px;
-    }
-
-    .rules-block p {
-      margin: 0;
-      line-height: 1.5;
-      font-size: 15px;
-    }
-
-    #ranking {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    #ranking li {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.08);
-      padding: 10px 12px;
-      border-radius: 8px;
-      margin-bottom: 10px;
-      font-size: 14px;
-    }
-
-    .right-actions {
-      margin-top: 20px;
-    }
-
-    .reset-btn {
-      background: #101010;
-      color: #00ff5a;
-      border: 1px solid #00ff5a;
-      font-weight: 600;
-    }
-
-    .reset-panel {
-      display: none;
-      margin-top: 10px;
-    }
-
-    .reset-panel.active {
-      display: block;
-    }
-
-    .reset-panel input {
-      margin-bottom: 8px;
-    }
-
-    .empty-ranking {
-      color: #bbb;
-      font-size: 14px;
-      margin-top: 18px;
-    }
-
-    .footer-logo {
-      position: fixed;
-      bottom: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 10;
-    }
-
-    .footer-logo img {
-      height: 40px;
-      opacity: 0.85;
-    }
-
-    .footer-version {
-      position: fixed;
-      bottom: 5px;
-      left: 10px;
-      color: gray;
-      font-size: 12px;
-      z-index: 10;
-    }
-  </style>
+</style>
 </head>
+
 <body>
 
-  <div class="left">
-    <div class="rules-block">
-      <h3>📜 Regras</h3>
-      <p>
-        Identifique 10 sons<br>
-        Pode tentar quantas vezes quiser<br>
-        Pode pular<br>
-        Desistir adiciona +2min<br>
-        Mais acertos vence<br>
-        Empate: menor tempo
-      </p>
-    </div>
+<div class="left">
+  <div class="rules-block">
+    <h3>📜 Regras</h3>
+    <p>
+      Identifique 10 sons<br>
+      Pode tentar quantas vezes quiser<br>
+      Pode pular<br>
+      Desistir adiciona +2min<br>
+      Mais acertos vence<br>
+      Empate: menor tempo
+    </p>
+
+    <!-- ✅ versão aqui -->
+    <div class="footer-version">Zari! Versão 1.4.3</div>
   </div>
+</div>
 
-  <div class="center">
-    <div class="card">
-      <div id="startScreen">
-        <h2>Quiz de Sons</h2>
-        <input id="email" placeholder="Seu email corporativo" />
-        <button id="startBtn" type="button">Jogar</button>
-        <p id="startMessage" class="message"></p>
-      </div>
+<div class="center">
+  <div class="card">
+    <button id="replayBtn">🔊 Ouvir</button>
+    <p id="progress"></p>
 
-      <div id="gameScreen" style="display:none;">
-        <button id="replayBtn" class="audio-btn" type="button">🔊 Ouvir</button>
-        <p id="progress"></p>
+    <audio id="audio"></audio>
 
-        <audio id="audio"></audio>
+    <input id="answer" placeholder="Resposta">
+    <button id="answerBtn">Enviar</button>
 
-        <div class="answer-row">
-          <input id="answer" placeholder="Digite seu palpite" />
-          <button id="answerBtn" class="send-btn" type="button">➤</button>
-        </div>
-
-        <div class="action-row">
-          <button id="skipBtn" type="button">Pular</button>
-          <button id="giveUpBtn" type="button">Desistir</button>
-        </div>
-
-        <p id="gameMessage" class="message"></p>
-      </div>
-    </div>
+    <p id="gameMessage"></p>
   </div>
+</div>
 
-  <div class="right">
-    <div class="ranking-block">
-      <h3>🏆 Ranking</h3>
-      <ul id="ranking"></ul>
-      <div id="rankingStatus" class="message"></div>
+<div class="right">
+  <h3>🏆 Ranking</h3>
+  <ul id="ranking"></ul>
+</div>
 
-      <div class="right-actions">
-        <button id="toggleResetBtn" class="reset-btn" type="button">⚙ Reset</button>
+<!-- ✅ RESET NO LUGAR CERTO -->
+<div class="footer-reset">
+  <button id="toggleResetBtn">⚙ Reset</button>
 
-        <div id="resetPanel" class="reset-panel">
-          <input id="resetPasswordInput" type="password" placeholder="Senha do reset" />
-          <button id="confirmResetBtn" class="reset-btn" type="button">Confirmar reset</button>
-        </div>
-      </div>
-    </div>
+  <div id="resetPanel" class="reset-panel">
+    <input id="resetPasswordInput" type="password" placeholder="Senha">
+    <button id="confirmResetBtn">Confirmar</button>
   </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getFirestore,
+  collection,
+  getDocs
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+import {
+  getStorage,
+  ref,
+  getDownloadURL
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
+// ✅ CONFIG
+const firebaseConfig = {
+  apiKey: "SUA_KEY",
+  authDomain: "quiz-de-sons.firebaseapp.com",
+  projectId: "quiz-de-sons",
+  storageBucket: "quiz-de-sons.appspot.com"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const storage = getStorage(app);
+
+const audio = document.getElementById("audio");
+
+let sounds = [];
+let index = 0;
+
+// ✅ CARREGA SONS
+async function loadSounds() {
+  const snap = await getDocs(collection(db, "sounds"));
+  snap.forEach(doc => {
+    sounds.push(doc.data());
+  });
+}
+
+// ✅ TOCAR SOM (AGORA CERTO)
+async function playSound() {
+  try {
+    const soundName = sounds[index].name;
+
+    const soundRef = ref(storage, `sounds/${soundName}.mp3`);
+    const url = await getDownloadURL(soundRef);
+
+    audio.src = url;
+    await audio.play();
+
+    console.log("tocando:", soundName);
+
+  } catch (err) {
+    console.error(err);
+    alert("Erro ao tocar som");
+  }
+}
+
+document.getElementById("replayBtn").onclick = playSound;
+
+loadSounds();
+
+</script>
 
-  <div class="footer-logo">
-    <img src="Logotipo Original Completo Preto e Verde.png" alt="Logo" />
-  </div>
-
-  <div class="footer-version">Zari! Versão 1.4.3</div>
-
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import {
-      getFirestore,
-      collection,
-      getDocs,
-      addDoc,
-      deleteDoc,
-      doc,
-      getDoc,
-      query,
-      where,
-      serverTimestamp
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "SUA_KEY",
-      authDomain: "quiz-de-sons.firebaseapp.com",
-      projectId: "quiz-de-sons"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    const DOMAINS = ["@teamsix.tech", "@innovsoftware.com.br", "@yahoo.com.br"];
-
-    const startScreen = document.getElementById("startScreen");
-    const gameScreen = document.getElementById("gameScreen");
-
-    const emailInput = document.getElementById("email");
-    const answerInput = document.getElementById("answer");
-
-    const startBtn = document.getElementById("startBtn");
-    const replayBtn = document.getElementById("replayBtn");
-    const answerBtn = document.getElementById("answerBtn");
-    const skipBtn = document.getElementById("skipBtn");
-    const giveUpBtn = document.getElementById("giveUpBtn");
-
-    const toggleResetBtn = document.getElementById("toggleResetBtn");
-    const confirmResetBtn = document.getElementById("confirmResetBtn");
-    const resetPanel = document.getElementById("resetPanel");
-    const resetPasswordInput = document.getElementById("resetPasswordInput");
-
-    const startMessage = document.getElementById("startMessage");
-    const gameMessage = document.getElementById("gameMessage");
-    const rankingStatus = document.getElementById("rankingStatus");
-    const progress = document.getElementById("progress");
-    const rankingList = document.getElementById("ranking");
-    const audio = document.getElementById("audio");
-
-    let sounds = [];
-    let index = 0;
-    let score = 0;
-    let skips = 0;
-    let extraTime = 0;
-    let startTime = null;
-    let emailUsed = "";
-    let finished = false;
-    let skippedQueue = [];
-    let answered = new Set();
-
-    function setMessage(el, text, type = "") {
-      el.textContent = text || "";
-      el.className = "message";
-      if (type) el.classList.add(type);
-    }
-
-    function normalize(text) {
-      return (text || "")
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .replace(/[^a-z0-9\s]/g, " ")
-        .replace(/\s+/g, " ")
-        .trim();
-    }
-
-    function escapeRegex(str) {
-      return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    }
-
-    function matchesAnyAnswer(rawGuess, answersArray) {
-      const guess = normalize(rawGuess);
-      if (!guess) return false;
-
-      for (const ansRaw of answersArray || []) {
-        const ans = normalize(ansRaw);
-        if (!ans) continue;
-
-        const regex = new RegExp(`(^|\\s)${escapeRegex(ans)}(?=\\s|$)`, "i");
-        if (regex.test(guess)) return true;
-      }
-
-      return false;
-    }
-
-    async function loadSounds() {
-      const snap = await getDocs(collection(db, "sounds"));
-      const data = [];
-
-      snap.forEach(d => {
-        data.push({ id: Number(d.id), ...d.data() });
-      });
-
-      data.sort((a, b) => a.id - b.id);
-      sounds = data;
-    }
-
-    async function loadRanking() {
-      rankingList.innerHTML = "";
-      setMessage(rankingStatus, "");
-
-      const snap = await getDocs(collection(db, "ranking"));
-      const data = [];
-
-      snap.forEach(d => data.push({ id: d.id, ...d.data() }));
-
-      data.sort((a, b) => {
-        if ((b.score || 0) !== (a.score || 0)) return (b.score || 0) - (a.score || 0);
-        return (a.totalTime || 0) - (b.totalTime || 0);
-      });
-
-      if (data.length === 0) {
-        rankingList.innerHTML = `<li class="empty-ranking">Seja a primeira pessoa no ranking!</li>`;
-        return;
-      }
-
-      data.slice(0, 10).forEach((item, i) => {
-        const prefix = String(item.email || item.name || "").split("@")[0] || "jogador";
-        const li = document.createElement("li");
-        li.textContent = `${i + 1}. ${prefix} | ${item.score} acertos | ${item.totalTime}s`;
-        rankingList.appendChild(li);
-      });
-    }
-
-    async function getResetPassword() {
-      const ref = doc(db, "config", "settings");
-      const snap = await getDoc(ref);
-      if (!snap.exists()) return null;
-      return snap.data().resetPassword || null;
-    }
-
-    async function hasPlayed(email) {
-      const q = query(collection(db, "ranking"), where("email", "==", email));
-      const snap = await getDocs(q);
-      return !snap.empty;
-    }
-
-    async function saveResult() {
-      const baseTime = Math.floor((Date.now() - startTime) / 1000);
-      const totalTime = baseTime + extraTime;
-      const prefix = emailUsed.split("@")[0];
-
-      await addDoc(collection(db, "ranking"), {
-        email: emailUsed,
-        name: prefix,
-        score,
-        skips,
-        baseTime,
-        extraTime,
-        totalTime,
-        createdAt: serverTimestamp()
-      });
-    }
-
-    async function resetRanking() {
-      setMessage(rankingStatus, "");
-
-      const pass = resetPasswordInput.value.trim();
-      if (!pass) {
-        setMessage(rankingStatus, "Digite a senha para resetar.", "info");
-        return;
-      }
-
-      const firebasePassword = await getResetPassword();
-
-      if (!firebasePassword) {
-        setMessage(rankingStatus, "Senha de reset não configurada no Firebase.", "error");
-        return;
-      }
-
-      if (pass !== firebasePassword) {
-        setMessage(rankingStatus, "Senha incorreta.", "error");
-        return;
-      }
-
-      const snap = await getDocs(collection(db, "ranking"));
-      const deletions = [];
-
-      snap.forEach(d => {
-        deletions.push(deleteDoc(doc(db, "ranking", d.id)));
-      });
-
-      await Promise.all(deletions);
-
-      resetPasswordInput.value = "";
-      resetPanel.classList.remove("active");
-      setMessage(rankingStatus, "Ranking resetado com sucesso.", "success");
-      await loadRanking();
-    }
-
-    function resetGameState() {
-      index = 0;
-      score = 0;
-      skips = 0;
-      extraTime = 0;
-      startTime = null;
-      emailUsed = "";
-      finished = false;
-      skippedQueue = [];
-      answered = new Set();
-      answerInput.value = "";
-      answerInput.disabled = false;
-      answerBtn.disabled = false;
-      skipBtn.disabled = false;
-      giveUpBtn.disabled = false;
-      replayBtn.disabled = false;
-      setMessage(gameMessage, "");
-      progress.textContent = "";
-      audio.pause();
-      audio.currentTime = 0;
-    }
-
-    function updateProgress() {
-      progress.textContent = `Som ${index + 1} de ${sounds.length}`;
-    }
-
-    function playSound() {
-      if (finished || !sounds.length) return;
-
-     audio.src = `sounds/${sounds[index].name}.mp3`;
-      updateProgress();
-
-      audio.play().catch(() => {
-        setMessage(gameMessage, "Não foi possível reproduzir o áudio. Tente novamente.", "error");
-      });
-    }
-
-    async function startGame() {
-      setMessage(startMessage, "");
-
-      const rawEmail = emailInput.value.trim().toLowerCase();
-
-      if (!rawEmail) {
-        setMessage(startMessage, "Informe o e-mail para jogar.", "error");
-        return;
-      }
-
-      if (!DOMAINS.some(domain => rawEmail.endsWith(domain))) {
-        setMessage(startMessage, "Use um e-mail permitido para jogar.", "error");
-        return;
-      }
-
-      if (!sounds.length) {
-        setMessage(startMessage, "Os dados ainda estão carregando. Tente novamente em instantes.", "info");
-        return;
-      }
-
-      const alreadyPlayed = await hasPlayed(rawEmail);
-      if (alreadyPlayed) {
-        setMessage(startMessage, "Este e-mail já participou. Você pode consultar o ranking ao lado.", "error");
-        return;
-      }
-
-      resetGameState();
-      emailUsed = rawEmail;
-      startTime = Date.now();
-
-      startScreen.style.display = "none";
-      gameScreen.style.display = "block";
-
-      playSound();
-      answerInput.focus();
-    }
-
-    function checkAnswer() {
-      if (finished) return;
-      setMessage(gameMessage, "");
-
-      const guess = answerInput.value.trim();
-      if (!guess) {
-        setMessage(gameMessage, "Digite um palpite antes de enviar.", "info");
-        return;
-      }
-
-      const validAnswers = sounds[index]?.answers || [];
-
-      if (matchesAnyAnswer(guess, validAnswers)) {
-        score++;
-        answered.add(index);
-        setMessage(gameMessage, "Acertou! Mandou bem.", "success");
-        nextQuestion();
-      } else {
-        setMessage(gameMessage, "Quase! Tente novamente.", "info");
-      }
-    }
-
-    function skipQuestion() {
-      if (finished) return;
-
-      if (!skippedQueue.includes(index) && !answered.has(index)) {
-        skippedQueue.push(index);
-      }
-      nextQuestion();
-    }
-
-    function giveUpQuestion() {
-      if (finished) return;
-
-      skips++;
-      extraTime += 120;
-      answered.add(index);
-      nextQuestion();
-    }
-
-    async function finishGame() {
-      if (finished) return;
-      finished = true;
-
-      audio.pause();
-      audio.currentTime = 0;
-
-      await saveResult();
-      await loadRanking();
-
-      const totalTime = Math.floor((Date.now() - startTime) / 1000) + extraTime;
-      setMessage(
-        gameMessage,
-        `Finalizado! Acertos: ${score} | Desistências: ${skips} | Tempo total: ${totalTime}s`,
-        "success"
-      );
-
-      progress.textContent = "✅ Finalizado";
-      answerInput.disabled = true;
-      answerBtn.disabled = true;
-      skipBtn.disabled = true;
-      giveUpBtn.disabled = true;
-      replayBtn.disabled = true;
-    }
-
-    function nextQuestion() {
-      if (answered.size >= sounds.length) {
-        finishGame();
-        return;
-      }
-
-      let found = false;
-
-      for (let i = index + 1; i < sounds.length; i++) {
-        if (!answered.has(i)) {
-          index = i;
-          found = true;
-          break;
-        }
-      }
-
-      if (!found && skippedQueue.length > 0) {
-        const candidate = skippedQueue.shift();
-
-        if (answered.has(candidate)) {
-          nextQuestion();
-          return;
-        }
-
-        index = candidate;
-        found = true;
-      }
-
-      if (!found) {
-        finishGame();
-        return;
-      }
-
-      answerInput.value = "";
-      setMessage(gameMessage, "");
-      playSound();
-      answerInput.focus();
-    }
-
-    startBtn.addEventListener("click", startGame);
-    replayBtn.addEventListener("click", playSound);
-    answerBtn.addEventListener("click", checkAnswer);
-    skipBtn.addEventListener("click", skipQuestion);
-    giveUpBtn.addEventListener("click", giveUpQuestion);
-
-    toggleResetBtn.addEventListener("click", () => {
-      resetPanel.classList.toggle("active");
-      setMessage(rankingStatus, "");
-    });
-
-    confirmResetBtn.addEventListener("click", resetRanking);
-
-    answerInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        checkAnswer();
-      }
-    });
-
-    async function boot() {
-      await loadSounds();
-      await loadRanking();
-    }
-
-    boot();
-  </script>
 </body>
 </html>
