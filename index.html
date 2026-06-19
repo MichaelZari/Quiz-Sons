@@ -85,10 +85,15 @@ body {
   
 .card {
   background: white;
-  padding: 25px;
-  border-radius: 12px;
+  padding: 30px;
+  border-radius: 16px;
   width: 340px;
   text-align: center;
+
+  /* 🔥 glow verde */
+  box-shadow: 
+    0 10px 25px rgba(0,0,0,0.1),
+    0 0 25px rgba(0, 255, 90, 0.25);
 }
 
 /* ✅ versão no rodapé esquerdo */
@@ -206,6 +211,29 @@ button {
   color: #bbb;
   margin-top: 3px;
 }
+
+.start-btn {
+  width: 100%;
+  padding: 14px;
+  margin-top: 12px;
+
+  background: linear-gradient(135deg, #00ff5a, #008f3a);
+  color: black;
+
+  font-weight: 600;
+  font-size: 15px;
+
+  border: none;
+  border-radius: 10px;
+
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.start-btn:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 12px rgba(0,255,90,0.5);
+}
   
 </style>
 </head>
@@ -235,7 +263,7 @@ button {
   
   <!-- ✅ versão fixa em baixo -->
   <div class="footer-version">
-    Zari! Versão 1.4.5
+    Zari! Versão 1.4.6
   </div>
 </div>
 
@@ -253,26 +281,26 @@ button {
     <p class="main-subtitle">Escute. Identifique. Única chance!</p>
 
     <!-- CARD -->
-    <div class="card">
-
-    <input id="email" placeholder="Seu email" />
-    <button id="startBtn">Jogar</button>
-
-    <button id="replayBtn">🔊 Ouvir</button>
-    <p id="progress"></p>
-
-    <button id="replayBtn" disabled>🔊 Ouvir</button>
-    
-    <input id="answer" placeholder="Resposta" disabled>
-    <button id="answerBtn" disabled>Enviar</button>
-
-    <p id="gameMessage"></p>
-
-    </div> <!-- card -->
-
-  </div> <!-- center-container -->
+  <!-- ETAPA 1 -->
+<div id="startArea">
+  <h3>Entre para começar</h3>
+  <input id="email" placeholder="Seu email corporativo" />
+  <button id="startBtn" class="start-btn">Jogar</button>
 </div>
 
+<!-- ETAPA 2 -->
+<div id="gameArea" style="display:none;">
+  
+  <button id="replayBtn">🔊 Ouvir</button>
+
+  <input id="answer" placeholder="Resposta">
+  <button id="answerBtn">Enviar</button>
+
+  <button id="skipBtn">Pular</button>
+  <button id="giveUpBtn">Desistir</button>
+
+</div>
+    
 <!-- DIREITA -->
 <div class="right">
   <div class="ranking-header">
@@ -326,6 +354,8 @@ const replayBtn = document.getElementById("replayBtn");
 const answerInput = document.getElementById("answer");
 const answerBtn = document.getElementById("answerBtn");
 const gameMessage = document.getElementById("gameMessage");
+const skipBtn = document.getElementById("skipBtn");
+const giveUpBtn = document.getElementById("giveUpBtn");
 
 /* ✅ EMAIL PERMITIDO */
 const DOMAINS = ["@teamsix.tech", "@innovsoftware.com.br", "@yahoo.com.br"];
@@ -369,6 +399,9 @@ async function playSound() {
 const answerInput = document.getElementById("answer");
 const answerBtn = document.getElementById("answerBtn");
 
+const startArea = document.getElementById("startArea");
+const gameArea = document.getElementById("gameArea");
+
 startBtn.onclick = () => {
   const email = emailInput.value.trim().toLowerCase();
 
@@ -378,20 +411,17 @@ startBtn.onclick = () => {
   }
 
   if (!sounds.length) {
-    gameMessage.textContent = "Carregando sons, aguarde...";
+    gameMessage.textContent = "Carregando sons...";
     return;
   }
 
-  // ✅ LIBERA OS CONTROLES
-  replayBtn.disabled = false;
-  answerInput.disabled = false;
-  answerBtn.disabled = false;
+  // ✅ ESCONDE A PRIMEIRA TELA
+  startArea.style.display = "none";
 
-  // ✅ BLOQUEIA EMAIL E BOTÃO JOGAR
-  emailInput.disabled = true;
-  startBtn.disabled = true;
+  // ✅ MOSTRA O JOGO
+  gameArea.style.display = "block";
 
-  gameMessage.textContent = "Jogo iniciado! Ouça o som";
+  gameMessage.textContent = "Jogo iniciado!";
 
   playSound();
 };
