@@ -134,25 +134,105 @@ button {
   cursor: pointer;
 }
 
+/* ===== REGRAS MODERNAS ===== */
+
+/* HEADER REGRAS */
+.rules-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.rules-icon {
+  height: 24px;
+}
+
+.rules-title {
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+/* ITEM DA REGRA */
+.rule-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 12px;
+  border-radius: 12px;
+
+  background: rgba(0, 255, 90, 0.05);
+
+  margin-bottom: 12px;
+}
+
+/* CAIXA DO ÍCONE */
+.rule-icon-box {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+
+  background: linear-gradient(135deg, #00ff5a, #008f3a);
+}
+
+/* IMAGEM DENTRO DO ÍCONE */
+.rule-icon-box img {
+  width: 70%;
+  height: 70%;
+  object-fit: contain;
+}
+
+/* TEXTO */
+.rule-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.rule-title-item {
+  font-weight: 600;
+  font-size: 14px;
+  color: #fff;
+}
+
+.rule-subtitle {
+  font-size: 12px;
+  color: #bbb;
+  margin-top: 3px;
+}
+  
 </style>
 </head>
 
 <body>
 
 <!-- ESQUERDA -->
-<div class="left">
-  <div>
-    <h3>📜 Regras</h3>
-    <p>
-      Identifique 10 sons<br>
-      Pode tentar quantas vezes quiser<br>
-      Pode pular<br>
-      Desistir adiciona +2min<br>
-      Mais acertos vence<br>
-      Empate: menor tempo
-    </p>
+<div class="rules-header">
+  <img src="Icons/regras.png" class="rules-icon" />
+  <span class="rules-title">REGRAS</span>
+</div>
+
+<!-- ITEM 1 -->
+<div class="rule-item">
+  <div class="rule-icon-box">
+    <img src="Icons/som.png">
   </div>
 
+  <div class="rule-content">
+    <div class="rule-title-item">Identifique 6 sons</div>
+    <div class="rule-subtitle">
+      ÚNICA tentativa, escute atentamente cada som e tente adivinhar!
+    </div>
+  </div>
+</div>
+
+  
   <!-- ✅ versão fixa em baixo -->
   <div class="footer-version">
     Zari! Versão 1.4.5
