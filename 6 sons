@@ -274,6 +274,19 @@ button {
       </div>
     </div>
 
+      <div class="rule-icon-box">
+        <img src="Icons/dado.png">
+      </div>
+
+      <div class="rule-content">
+        <div class="rule-title-item">Tentativas ilimitadas</div>
+        <div class="rule-subtitle">
+          Envie seu palpite até acertar, se não conseguir desista! kk
+        </div>
+      </div>
+    </div>
+
+
   </div>
 
   <div class="footer-version">
