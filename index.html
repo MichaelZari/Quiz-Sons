@@ -37,6 +37,23 @@ body {
   background: linear-gradient(180deg, #050505, #000);
 }
 
+.ranking-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.ranking-icon {
+  height: 28px;
+}
+
+.ranking-title {
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: 1px;
+}
+  
 .center {
   width: 40%;
   display: flex;
@@ -44,6 +61,28 @@ body {
   align-items: center;
 }
 
+.center-container {
+  text-align: center;
+}
+
+.main-icon {
+  height: 60px;
+  margin-bottom: 10px;
+}
+
+.main-title {
+  font-size: 32px;
+  margin: 5px 0;
+  color: #1c1c1c;
+}
+
+.main-subtitle {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 20px;
+}  
+
+  
 .card {
   background: white;
   padding: 25px;
@@ -116,13 +155,25 @@ button {
 
   <!-- ✅ versão fixa em baixo -->
   <div class="footer-version">
-    Zari! Versão 1.4.4
+    Zari! Versão 1.4.5
   </div>
 </div>
 
 <!-- CENTRO -->
 <div class="center">
-  <div class="card">
+  <div class="center-container">
+
+    <!-- ✅ ÍCONE -->
+    <img src="Icons/som.png" class="main-icon" />
+
+    <!-- ✅ TÍTULO -->
+    <h1 class="main-title">Quiz de Sons</h1>
+
+    <!-- ✅ SUBTÍTULO -->
+    <p class="main-subtitle">Escute. Identifique. Única chance!</p>
+
+    <!-- CARD -->
+    <div class="card">
 
     <input id="email" placeholder="Seu email" />
     <button id="startBtn">Jogar</button>
@@ -137,12 +188,17 @@ button {
 
     <p id="gameMessage"></p>
 
-  </div>
+    </div> <!-- card -->
+
+  </div> <!-- center-container -->
 </div>
 
 <!-- DIREITA -->
 <div class="right">
-  <h3>🏆 Ranking</h3>
+  <div class="ranking-header">
+  <img src="Icons/trofeu.png" class="ranking-icon" />
+  <span class="ranking-title">RANKING</span>
+</div>
   <ul id="ranking"></ul>
 </div>
 
