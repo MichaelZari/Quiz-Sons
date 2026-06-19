@@ -130,10 +130,10 @@ button {
     <button id="replayBtn">🔊 Ouvir</button>
     <p id="progress"></p>
 
-    <audio id="audio"></audio>
-
-    <input id="answer" placeholder="Resposta">
-    <button id="answerBtn">Enviar</button>
+    <button id="replayBtn" disabled>🔊 Ouvir</button>
+    
+    <input id="answer" placeholder="Resposta" disabled>
+    <button id="answerBtn" disabled>Enviar</button>
 
     <p id="gameMessage"></p>
 
@@ -187,6 +187,9 @@ const audio = document.getElementById("audio");
 const emailInput = document.getElementById("email");
 const startBtn = document.getElementById("startBtn");
 const replayBtn = document.getElementById("replayBtn");
+const answerInput = document.getElementById("answer");
+const answerBtn = document.getElementById("answerBtn");
+const gameMessage = document.getElementById("gameMessage");
 
 /* ✅ EMAIL PERMITIDO */
 const DOMAINS = ["@teamsix.tech", "@innovsoftware.com.br", "@yahoo.com.br"];
@@ -227,13 +230,32 @@ async function playSound() {
 }
 
 /* ✅ INICIAR JOGO COM VALIDAÇÃO */
+const answerInput = document.getElementById("answer");
+const answerBtn = document.getElementById("answerBtn");
+
 startBtn.onclick = () => {
   const email = emailInput.value.trim().toLowerCase();
 
   if (!isValidEmail(email)) {
-    alert("Email inválido ou não permitido");
+    gameMessage.textContent = "Email inválido ou não permitido";
     return;
   }
+
+  if (!sounds.length) {
+    gameMessage.textContent = "Carregando sons, aguarde...";
+    return;
+  }
+
+  // ✅ LIBERA OS CONTROLES
+  replayBtn.disabled = false;
+  answerInput.disabled = false;
+  answerBtn.disabled = false;
+
+  // ✅ BLOQUEIA EMAIL E BOTÃO JOGAR
+  emailInput.disabled = true;
+  startBtn.disabled = true;
+
+  gameMessage.textContent = "Jogo iniciado! Ouça o som";
 
   playSound();
 };
@@ -252,6 +274,8 @@ toggleResetBtn.onclick = () => {
 /* ✅ INIT */
 loadSounds();
 
+gameMessage.textContent = "Digite seu email para iniciar";  
+  
 </script>
 
 <div class="footer-logo">
