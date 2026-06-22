@@ -267,6 +267,107 @@ button {
   box-sizing: border-box;
 }
 
+
+ /* 🔊 botão ouvir grande */
+.replay-btn {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  border: none;
+  font-size: 30px;
+  margin-top: 10px;
+
+  background: radial-gradient(circle, #00ff5a, #005522);
+  color: white;
+
+  box-shadow: 0 0 20px rgba(0,255,90,0.5);
+}
+
+.replay-title {
+  margin-top: 12px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.replay-subtitle {
+  font-size: 13px;
+  color: #777;
+  margin-bottom: 20px;
+}
+
+/* campo resposta */
+#answer {
+  width: 100%;
+  padding: 18px;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+/* botão enviar */
+.submit-btn {
+  width: 100%;
+  padding: 18px;
+  margin-top: 15px;
+
+  border-radius: 20px;
+  border: none;
+
+  background: linear-gradient(90deg,#00ff5a,#009a3a);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* linha */
+.divider {
+  height: 1px;
+  background: #ddd;
+  margin: 25px 0;
+}
+
+/* container das ações */
+.actions {
+  display: flex;
+  gap: 12px;
+}
+
+/* cards */
+.action-card {
+  flex: 1;
+  padding: 16px;
+  border-radius: 16px;
+  cursor: pointer;
+  border: 1px solid #eee;
+  text-align: left;
+  transition: 0.2s;
+}
+
+.action-card:hover {
+  transform: scale(1.03);
+}
+
+/* título */
+.action-title {
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+/* subtexto */
+.action-sub {
+  font-size: 12px;
+  color: #777;
+}
+
+/* cor pular */
+.skip {
+  border: 2px solid #8e44ad;
+}
+
+/* cor desistir */
+.giveup {
+  border: 2px solid #d63031;
+} 
   
   
 </style>
@@ -395,14 +496,34 @@ button {
       </div>
 
       <!-- ETAPA 2 -->
-      <div id="gameArea" style="display:none;">
-        <button id="replayBtn">🔊 Ouvir</button>
-        <input id="answer" placeholder="Resposta">
-        <button id="answerBtn">Enviar</button>
-        <button id="skipBtn">Pular</button>
-        <button id="giveUpBtn">Desistir</button>
-      </div>
+<div id="gameArea" style="display:none;">
+<audio id="audio"></audio>
+  <button id="replayBtn" class="replay-btn">🔊</button>
+  <h3 class="replay-title">Ouvir novamente</h3>
+  <p class="replay-subtitle">Reproduza o som quantas vezes precisar.</p>
 
+
+  <input id="answer" placeholder="Qual é o som?" />
+
+  <button id="answerBtn" class="submit-btn">Enviar</button>
+
+  <div class="divider"></div>
+
+  <div class="actions">
+
+    <div id="skipBtn" class="action-card skip">
+      <div class="action-title">Pular</div>
+      <div class="action-sub">Ouça novamente ao final</div>
+    </div>
+
+    <div id="giveUpBtn" class="action-card giveup">
+      <div class="action-title">Desistir</div>
+      <div class="action-sub">+120s ao tempo</div>
+    </div>
+
+  </div>
+
+</div>
       <p id="gameMessage"></p>
 
     </div>
@@ -471,6 +592,103 @@ startBtn.onclick = () => {
   startArea.style.display = "none";
   gameArea.style.display = "block";
 };
+
+ const replayBtn = document.getElementById("replayBtn");
+const audio = document.getElementById("audio");
+
+// 👉 caminho do som (teste inicial)
+const replayBtn = document.getElementById("replayBtn");
+const answerBtn = document.getElementById("answerBtn");
+const skipBtn = document.getElementById("skipBtn");
+const giveUpBtn = document.getElementById("giveUpBtn");
+const answerInput = document.getElementById("answer");
+const audio = document.getElementById("audio");
+
+let sounds = [101,102,103,104,105,106];
+let current = 0;
+let skipped = [];
+let answered = new Set();
+
+// tocar som atual
+function playSound() {
+  const id = sounds[current];
+  audio.src = `Sons/som${id}.mp3`;
+  audio.play();
+}
+
+// botão ouvir
+replayBtn.onclick = playSound;
+
+// iniciar primeiro som automaticamente
+startBtn.onclick = () => {
+  const email = emailInput.value.trim().toLowerCase();
+
+  if (!isValidEmail(email)) {
+    gameMessage.textContent = "Email inválido ou não permitido";
+    return;
+  }
+
+  gameMessage.textContent = "Jogo iniciado!";
+
+  startArea.style.display = "none";
+  gameArea.style.display = "block";
+
+  playSound();
+};
+
+// enviar resposta (simples: só avança)
+answerBtn.onclick = () => {
+  answered.add(current);
+  next();
+};
+
+// pular
+skipBtn.onclick = () => {
+  skipped.push(current);
+  next();
+};
+
+// desistir (considera como respondido)
+giveUpBtn.onclick = () => {
+  answered.add(current);
+  next();
+};
+
+// lógica de avanço
+function next() {
+
+  // procura próximo não respondido
+  let found = false;
+
+  for (let i = current + 1; i < sounds.length; i++) {
+    if (!answered.has(i)) {
+      current = i;
+      found = true;
+      break;
+    }
+  }
+
+  // se não achou → volta pros pulados
+  if (!found && skipped.length > 0) {
+    current = skipped.shift();
+
+    if (answered.has(current)) {
+      next();
+      return;
+    }
+
+    found = true;
+  }
+
+  // acabou tudo
+  if (!found) {
+    gameMessage.textContent = "Finalizado!";
+    return;
+  }
+
+  answerInput.value = "";
+  playSound();
+}  
 </script>
   
 </body>
