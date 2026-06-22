@@ -332,11 +332,26 @@ button {
   gap: 12px;
 }
 
+.action-icon {
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+
+  object-fit: contain;
+}
+
+.action-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 /* cards */
 .action-card {
   flex: 1;
   padding: 16px;
   border-radius: 16px;
+  height: 100px;
   cursor: pointer;
   border: 1px solid #eee;
   text-align: left;
@@ -455,7 +470,7 @@ button {
 
      <div class="rule-item">
       <div class="rule-icon-box">
-        <img src="Icons/adicional+.png">
+        <img src="Icons/Adicional+True.png">
       </div>
       
       <div class="rule-content">
@@ -509,10 +524,10 @@ button {
 
 <div id="skipBtn" class="action-card skip">
 
-  <div class="action-header">
-    <img src="Icons/pular.png" class="action-icon">
-    <div class="action-title">Pular</div>
-  </div>
+<div class="action-header">
+  <img src="Icons/pular.png" class="action-icon">
+  <div class="action-title">Pular</div>
+</div>
 
   <div class="action-sub">Ouça novamente ao final</div>
 
@@ -520,10 +535,10 @@ button {
 
 <div id="giveUpBtn" class="action-card giveup">
 
-  <div class="action-header">
-    <img src="Icons/adicional+.png" class="action-icon">
-    <div class="action-title">Desistir</div>
-  </div>
+<div class="action-header">
+  <img src="Icons/Adicional+True.png" class="action-icon">
+  <div class="action-title">Desistir</div>
+</div>
 
   <div class="action-sub">+120s ao seu tempo</div>
 
@@ -593,6 +608,7 @@ const skipBtn = document.getElementById("skipBtn");
 const giveUpBtn = document.getElementById("giveUpBtn");
 const answerInput = document.getElementById("answer");
 const audio = document.getElementById("audio");
+audio.loop = true;
 
 let sounds = [101,102,103,104,105,106];
 let current = 0;
@@ -603,6 +619,8 @@ let answered = new Set();
 function playSound() {
   const id = sounds[current];
   audio.src = `Sons/som${id}.mp3`;
+
+  audio.loop = true;
 
   audio.currentTime = 0;
   audio.play().catch(err => {
@@ -627,12 +645,13 @@ startBtn.onclick = () => {
   playSound();
 };
 
-// enviar resposta (simples: só avança)
-answerBtn.onclick = () => {
-  answered.add(current);
   function saveRanking() {
   console.log("Salvar ranking aqui");
 }
+  
+// enviar resposta (simples: só avança)
+answerBtn.onclick = () => {
+  answered.add(current);
   next();
 };
 
