@@ -508,13 +508,13 @@ button {
 <div id="gameArea" style="display:none;">
 <audio id="audio"></audio>
 
-  <input id="answer" placeholder="Qual é o som?" />
+<input id="answer" placeholder="Qual é o som?" />
 
-  <button id="answerBtn" class="submit-btn">Enviar</button>
+<button id="answerBtn" class="submit-btn">Enviar</button>
 
-  <div class="divider"></div>
+<div id="gameDivider" class="divider"></div>
 
-<div class="actions">
+<div id="actionsRow" class="actions">
 
   <div id="skipBtn" class="action-card skip">
     <div class="action-icon-box">
@@ -595,11 +595,15 @@ const gameMessage = document.getElementById("gameMessage");
 const startArea = document.getElementById("startArea");
 const gameArea = document.getElementById("gameArea");
 
+const rankingEl = document.getElementById("ranking");
+
 const answerBtn = document.getElementById("answerBtn");
 const skipBtn = document.getElementById("skipBtn");
 const giveUpBtn = document.getElementById("giveUpBtn");
 const answerInput = document.getElementById("answer");
 const audio = document.getElementById("audio");
+const gameDivider = document.getElementById("gameDivider");
+const actionsRow = document.getElementById("actionsRow");
 
 const DOMAINS = ["@teamsix.tech", "@innovsoftware.com.br"];
 
@@ -616,6 +620,13 @@ let current = 0;
 let skipped = [];
 let answered = new Set();
 let extraTime = 0;
+let correctCount = 0;
+let gameStartTime = null;
+let playerEmail = "";
+
+if (rankingEl && rankingEl.innerHTML.trim() === "") {
+  rankingEl.innerHTML = "<li>Aguardando ranking...</li>";
+}
 
 function isValidEmail(email) {
   const isFormatValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -683,10 +694,29 @@ function saveRanking() {
   console.log("Salvar ranking aqui futuramente");
 }
 
+function hideGameControls() {
+  answerInput.style.display = "none";
+  answerBtn.style.display = "none";
+  gameDivider.style.display = "none";
+  actionsRow.style.display = "none";
+}
+
 function finishGame() {
   audio.pause();
   audio.currentTime = 0;
-  gameMessage.textContent = `Finalizado! Desistências: ${extraTime / 120}`;
+
+  const normalTime = gameStartTime
+    ? Math.floor((Date.now() - gameStartTime) / 1000)
+    : 0;
+
+  const totalTime = normalTime + extraTime;
+  const playerName = playerEmail ? playerEmail.split("@")[0] : "jogador";
+
+  hideGameControls();
+
+  gameMessage.textContent =
+    `@${playerName} ${correctCount} acertos - ${normalTime}s + ${extraTime}s = ${totalTime}s`;
+
   saveRanking();
 }
 
@@ -734,7 +764,8 @@ async function submitAnswer() {
 
   if (isCorrect) {
     answered.add(current);
-    gameMessage.textContent = "Parabéns acertou!";
+    correctCount++;
+    gameMessage.textContent = "Parabéns, acertou!";
     clearAndFocusAnswer();
     next();
   } else {
@@ -751,10 +782,23 @@ startBtn.onclick = () => {
     return;
   }
 
+  playerEmail = email;
+  current = 0;
+  skipped = [];
+  answered = new Set();
+  extraTime = 0;
+  correctCount = 0;
+  gameStartTime = Date.now();
+
   gameMessage.textContent = "";
 
   startArea.style.display = "none";
   gameArea.style.display = "block";
+
+  answerInput.style.display = "block";
+  answerBtn.style.display = "block";
+  gameDivider.style.display = "block";
+  actionsRow.style.display = "flex";
 
   playSound();
   answerInput.focus();
