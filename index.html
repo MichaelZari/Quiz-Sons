@@ -664,6 +664,7 @@ async function loadRanking() {
     const prefix = (item.email || item.name || "jogador").split("@")[0];
 
     let medalHtml = "";
+
     if (index === 0) {
       medalHtml = `Icons/1.png`;
     } else if (index === 1) {
@@ -691,7 +692,7 @@ async function loadRanking() {
     rankingEl.appendChild(li);
   });
 }
-
+  
 async function saveRanking() {
   const normalTime = gameStartTime
     ? Math.floor((Date.now() - gameStartTime) / 1000)
@@ -793,7 +794,7 @@ async function submitAnswer() {
   }
 }
 
-startBtn.onclick = async () => {
+async function startGame() {
   const email = emailInput.value.trim().toLowerCase();
 
   startMessage.textContent = "";
@@ -803,32 +804,51 @@ startBtn.onclick = async () => {
     return;
   }
 
-  const hasPlayed = await alreadyPlayed(email);
-  if (hasPlayed) {
-    startMessage.textContent = "Usuário já participou. Consulte no Ranking.";
-    return;
+  try {
+    const hasPlayed = await alreadyPlayed(email);
+
+    if (hasPlayed) {
+      startMessage.textContent = "Usuário já participou. Consulte no Ranking.";
+      return;
+    }
+
+    playerEmail = email;
+    current = 0;
+    skipped = [];
+    answered = new Set();
+    extraTime = 0;
+    correctCount = 0;
+    gameStartTime = Date.now();
+    gameMessage.textContent = "";
+
+    startArea.style.display = "none";
+    gameArea.style.display = "block";
+
+    answerInput.style.display = "block";
+    answerBtn.style.display = "block";
+    gameDivider.style.display = "block";
+    actionsRow.style.display = "flex";
+
+    playSound();
+    answerInput.focus();
+  } catch (error) {
+    console.error("Erro ao iniciar jogo:", error);
+    startMessage.textContent = "Não foi possível iniciar o jogo.";
   }
+}
 
-  playerEmail = email;
-  current = 0;
-  skipped = [];
-  answered = new Set();
-  extraTime = 0;
-  correctCount = 0;
-  gameStartTime = Date.now();
-  gameMessage.textContent = "";
-
-  startArea.style.display = "none";
-  gameArea.style.display = "block";
-
-  answerInput.style.display = "block";
-  answerBtn.style.display = "block";
-  gameDivider.style.display = "block";
-  actionsRow.style.display = "flex";
-
-  playSound();
-  answerInput.focus();
+startBtn.onclick = async () => {
+  await startGame();
 };
+
+emailInput.addEventListener("keydown", async (e) => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    await startGame();
+  }
+});
+
+  
 
 answerBtn.onclick = async () => {
   await submitAnswer();
