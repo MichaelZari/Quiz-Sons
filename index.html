@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8" />
 <title>Quiz de Sons</title>
-
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet" />
 
 <style>
@@ -38,23 +37,6 @@ body {
 .right {
   background: linear-gradient(180deg, #0a0a0a, #000);
   justify-content: flex-start;
-}
-
-.ranking-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 15px;
-}
-
-.ranking-icon {
-  height: 32px;
-}
-
-.ranking-title {
-  font-weight: 700;
-  font-size: 20px;
-  letter-spacing: 1px;
 }
 
 .center {
@@ -140,23 +122,32 @@ button {
   margin-top: 10px;
   padding: 10px;
   cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
 }
 
-.rules-header {
+.rules-header,
+.ranking-header {
   display: flex;
   align-items: center;
   gap: 10px;
   margin-bottom: 20px;
 }
 
-.rules-icon {
+.rules-icon,
+.ranking-icon {
   height: 32px;
 }
 
-.rules-title {
+.rules-title,
+.ranking-title {
   font-weight: 700;
   letter-spacing: 1px;
   font-size: 20px;
+}
+
+.rules-list {
+  display: flex;
+  flex-direction: column;
 }
 
 .rule-item {
@@ -223,11 +214,6 @@ button {
   box-shadow: 0 0 12px rgba(0,255,90,0.5);
 }
 
-.rules-list {
-  display: flex;
-  flex-direction: column;
-}
-
 #email {
   width: 100%;
   padding: 16px;
@@ -249,6 +235,7 @@ button {
   margin-top: 10px;
   box-sizing: border-box;
   display: block;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .submit-btn {
@@ -257,7 +244,7 @@ button {
   margin-top: 15px;
   border-radius: 20px;
   border: none;
-  background: linear-gradient(90deg, #00ff5a, #009a3a);
+  background: linear-gradient(90deg,#00ff5a,#009a3a);
   font-size: 18px;
   font-weight: 600;
   box-sizing: border-box;
@@ -385,6 +372,19 @@ button {
   font-size: 12px;
   color: #bfbfbf;
 }
+
+#startMessage {
+  color: #c62828;
+  margin-top: 10px;
+  min-height: 20px;
+  font-size: 13px;
+}
+
+#gameMessage {
+  margin-top: 16px;
+  min-height: 22px;
+  font-size: 14px;
+}
 </style>
 </head>
 
@@ -403,9 +403,7 @@ button {
       </div>
       <div class="rule-content">
         <div class="rule-title-item">Identifique 6 sons</div>
-        <div class="rule-subtitle">
-          Ouça cada som com atenção e descubra o que é.
-        </div>
+        <div class="rule-subtitle">Ouça cada som com atenção e descubra o que é.</div>
       </div>
     </div>
 
@@ -415,9 +413,7 @@ button {
       </div>
       <div class="rule-content">
         <div class="rule-title-item">Tentativas ilimitadas</div>
-        <div class="rule-subtitle">
-          Tentativas ilimitadas, até você acertar.
-        </div>
+        <div class="rule-subtitle">Tentativas ilimitadas, até você acertar.</div>
       </div>
     </div>
 
@@ -427,9 +423,7 @@ button {
       </div>
       <div class="rule-content">
         <div class="rule-title-item">Pular</div>
-        <div class="rule-subtitle">
-          Está difícil? Pule agora e escute o som novamente ao final.
-        </div>
+        <div class="rule-subtitle">Está difícil? Pule agora e escute o som novamente ao final.</div>
       </div>
     </div>
 
@@ -439,9 +433,7 @@ button {
       </div>
       <div class="rule-content">
         <div class="rule-title-item">O Vencedor</div>
-        <div class="rule-subtitle">
-          Quem acertar mais sons conquista o topo do ranking.
-        </div>
+        <div class="rule-subtitle">Quem acertar mais sons conquista o topo do ranking.</div>
       </div>
     </div>
 
@@ -451,9 +443,7 @@ button {
       </div>
       <div class="rule-content">
         <div class="rule-title-item">Desempate</div>
-        <div class="rule-subtitle">
-          Empatou? O menor tempo leva a vitória.
-        </div>
+        <div class="rule-subtitle">Empatou? O menor tempo leva a vitória.</div>
       </div>
     </div>
 
@@ -463,9 +453,7 @@ button {
       </div>
       <div class="rule-content">
         <div class="rule-title-item">Desistir</div>
-        <div class="rule-subtitle">
-          Desistir adiciona 120 segundos ao seu tempo final.
-        </div>
+        <div class="rule-subtitle">Desistir adiciona 120 segundos ao seu tempo final.</div>
       </div>
     </div>
   </div>
@@ -486,7 +474,7 @@ button {
         <h3>Entre para começar</h3>
         <input id="email" placeholder="Seu email corporativo" />
         <button id="startBtn" class="start-btn">Jogar</button>
-        <p id="startMessage" style="color:#c62828; margin-top:10px; min-height:20px;"></p>
+        <p id="startMessage"></p>
       </div>
 
       <div id="gameArea" style="display:none;">
@@ -573,10 +561,10 @@ const db = getFirestore(app);
 
 const emailInput = document.getElementById("email");
 const startBtn = document.getElementById("startBtn");
+const startMessage = document.getElementById("startMessage");
 const gameMessage = document.getElementById("gameMessage");
 const startArea = document.getElementById("startArea");
 const gameArea = document.getElementById("gameArea");
-const startMessage = document.getElementById("startMessage");
 
 const answerBtn = document.getElementById("answerBtn");
 const skipBtn = document.getElementById("skipBtn");
@@ -707,9 +695,9 @@ async function loadRanking() {
     const prefix = (item.email || item.name || "jogador").split("@")[0];
 
     let medalHtml = "";
-
     if (index === 0) {
-      medalHtml = `<img src="Icons/1.png" class="rank-medal" alt="1     ${medalHtml}
+      medalHtml = `<img src="Icons/1.png" classs="rank-line-1">
+        ${medalHtml}
         <span class="rank-name">${index + 1}. ${prefix}</span>
       </div>
       <div class="rank-line-2">
@@ -866,15 +854,25 @@ startBtn.onclick = async () => {
   startMessage.textContent = "";
 
   if (!isValidEmail(email)) {
-    startMessage.textContent = ";    startMessage.textContent = "Email inválido ou não permitido";
+    startMessage.textContent = "Email inválido ou não permitido";
+    return;
+  }
+
+  const hasPlayed = await alreadyPlayed(email);
+  if (hasPlayed) {
+    startMessage.textContent = "Usuário já participou. Consulte no Ranking.";
+    return;
+  }
+
+  playerEmail = email;
   current = 0;
   skipped = [];
   answered = new Set();
   extraTime = 0;
   correctCount = 0;
   gameStartTime = Date.now();
-
   gameMessage.textContent = "";
+
   startArea.style.display = "none";
   gameArea.style.display = "block";
 
@@ -886,14 +884,6 @@ startBtn.onclick = async () => {
   playSound();
   answerInput.focus();
 };
-    return;
-  }
-
-  const hasPlayed = await alreadyPlayed(email);
-  if (hasPlayed) {
-    startMessage.textContent = "Usuário já participou. Consulte no Ranking.";
-    return;
-  }
 
 answerBtn.onclick = async () => {
   await submitAnswer();
