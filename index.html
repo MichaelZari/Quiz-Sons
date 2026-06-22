@@ -829,10 +829,10 @@ async function loadRanking() {
     let medalHtml = "";
 
     if (index === 0) {
-      medalHtml = `<img src="Icons/1.png" class="rank-medal" alt="1  medalHtml = `<img src="Icons/2.png" class="rank-medal" alt="   medalHtml = `Icons/3.png`;
-    }
-
-    const li = document.createElement("li");
+      medalHtml = `<img src="Icons/  } else if (index === 1) {
+      medalHtml = `Icons/2.png`;
+    } else if (index === 2) {
+      medalHtml = `<img src="Icons/3.png" classst li = document.createElement("li");
 
     if (index === 0) {
       li.classList.add("rank-first");
@@ -850,7 +850,7 @@ async function loadRanking() {
 
     rankingEl.appendChild(li);
   });
-}  
+}
   
 async function getResetPassword() {
   const cfgRef = doc(db, "config", "settings");
