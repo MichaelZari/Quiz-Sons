@@ -48,15 +48,15 @@ body {
 }
 
 .ranking-icon {
-  height: 32px; 
+  height: 32px;
 }
 
 .ranking-title {
   font-weight: 700;
-  font-size: 20px; 
+  font-size: 20px;
   letter-spacing: 1px;
 }
-  
+
 .center {
   width: 40%;
   display: flex;
@@ -87,9 +87,8 @@ body {
   font-size: 14px;
   color: #666;
   margin-bottom: 20px;
-}  
+}
 
-  
 .card {
   background: white;
   padding: 30px;
@@ -97,13 +96,11 @@ body {
   width: 100%;
   text-align: center;
   box-sizing: border-box;
-
-  box-shadow: 
+  box-shadow:
     0 10px 25px rgba(0,0,0,0.1),
     0 0 25px rgba(0, 255, 90, 0.25);
 }
 
-/* ✅ versão no rodapé esquerdo */
 .footer-version {
   color: gray;
   font-size: 12px;
@@ -121,9 +118,8 @@ body {
 .footer-logo img {
   height: 35px;
   opacity: 0.85;
-}  
+}
 
-/* ✅ reset canto inferior direito */
 .footer-reset {
   position: fixed;
   bottom: 10px;
@@ -146,9 +142,6 @@ button {
   cursor: pointer;
 }
 
-/* ===== REGRAS MODERNAS ===== */
-
-/* HEADER REGRAS */
 .rules-header {
   display: flex;
   align-items: center;
@@ -157,55 +150,43 @@ button {
 }
 
 .rules-icon {
-  height: 32px; 
+  height: 32px;
 }
 
 .rules-title {
   font-weight: 700;
   letter-spacing: 1px;
-  font-size: 20px; 
+  font-size: 20px;
 }
 
-/* ITEM DA REGRA */
 .rule-item {
   display: flex;
   align-items: center;
   gap: 12px;
-
   padding: 12px;
   border-radius: 12px;
-
   background: rgba(0, 255, 90, 0.05);
-
   margin-bottom: 12px;
 }
 
-/* CAIXA DO ÍCONE */
 .rule-icon-box {
   width: 48px;
   height: 48px;
   min-width: 48px;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   border-radius: 10px;
-
   background: linear-gradient(135deg, #0a0a0a, #002914);
-
   box-shadow: 0 0 8px rgba(0, 255, 90, 0.25);
 }
 
-
-/* IMAGEM DENTRO DO ÍCONE */
 .rule-icon-box img {
   width: 70%;
   height: 70%;
   object-fit: contain;
 }
 
-/* TEXTO */
 .rule-content {
   display: flex;
   flex-direction: column;
@@ -225,29 +206,22 @@ button {
 
 .start-btn {
   width: 100%;
-
   padding: 16px;
   margin-top: 12px;
-
   background: linear-gradient(135deg, #00ff5a, #008f3a);
   color: black;
-
   font-weight: 600;
   font-size: 16px;
-
   border: none;
   border-radius: 16px;
-
   cursor: pointer;
   transition: 0.2s;
 }
-
 
 .start-btn:hover {
   transform: scale(1.03);
   box-shadow: 0 0 12px rgba(0,255,90,0.5);
 }
-
 
 .rules-list {
   display: flex;
@@ -256,23 +230,16 @@ button {
 
 #email {
   width: 100%;
-
   padding: 16px;
   margin-top: 12px;
-
   border-radius: 16px;
   border: 1px solid #ddd;
-
   font-size: 15px;
   font-family: 'Montserrat', sans-serif;
-
   background: #f5f5f5;
   box-sizing: border-box;
 }
 
-
-
-/* campo resposta */
 #answer {
   width: 100%;
   padding: 18px;
@@ -284,30 +251,25 @@ button {
   display: block;
 }
 
-/* botão enviar */
 .submit-btn {
   width: 100%;
   padding: 18px;
   margin-top: 15px;
-
   border-radius: 20px;
   border: none;
-
-  background: linear-gradient(90deg,#00ff5a,#009a3a);
+  background: linear-gradient(90deg, #00ff5a, #009a3a);
   font-size: 18px;
   font-weight: 600;
   box-sizing: border-box;
   display: block;
 }
 
-/* linha */
 .divider {
   height: 1px;
   background: #ddd;
   margin: 25px 0;
 }
 
-/* container das ações */
 .actions {
   display: flex;
   gap: 12px;
@@ -322,7 +284,6 @@ button {
   border: 1px solid #eee;
   text-align: left;
   transition: 0.2s;
-
   display: flex;
   align-items: center;
   gap: 12px;
@@ -337,11 +298,9 @@ button {
   width: 48px;
   height: 48px;
   min-width: 48px;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   border-radius: 10px;
   background: #f7f7f7;
 }
@@ -381,53 +340,6 @@ button {
   list-style: none;
   margin: 0;
   padding: 0;
-}
-
-#ranking li {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 14px;
-  padding: 14px 16px;
-  margin-bottom: 12px;
-  font-size: 14px;
-  line-height: 1.4;
-  color: white;
-}
-
-#ranking li.rank-first {
-  border: 1px solid rgba(0,255,90,0.6);
-  box-shadow: 0 0 16px rgba(0,255,90,0.18);
-  background: rgba(0, 255, 90, 0.06);
-}
-
-.rank-line-1 {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-weight: 700;
-  margin-bottom: 6px;
-}
-
-.rank-medal {
-  width: 28px;
-  height: 28px;
-  min-width: 28px;
-  object-fit: contain;
-}
-
-.rank-name {
-  color: white;
-}
-
-.rank-line-2 {
-  font-size: 12px;
-  color: #bfbfbf;
-}
-  
- #ranking {
-  list-style: none;
-  margin: 0;
-  padding: 0;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -459,7 +371,10 @@ button {
 }
 
 .rank-medal {
-  font-size: 18px;
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  object-fit: contain;
 }
 
 .rank-name {
@@ -469,28 +384,23 @@ button {
 .rank-line-2 {
   font-size: 12px;
   color: #bfbfbf;
-} 
-  
+}
 </style>
 </head>
 
 <body>
 
-<!-- ESQUERDA -->
 <div class="left">
-
   <div class="rules-header">
     <img src="Icons/regras.png" class="rules-icon" />
     <span class="rules-title">REGRAS</span>
   </div>
 
   <div class="rules-list">
-
     <div class="rule-item">
       <div class="rule-icon-box">
         <img src="Icons/som.png">
       </div>
-
       <div class="rule-content">
         <div class="rule-title-item">Identifique 6 sons</div>
         <div class="rule-subtitle">
@@ -503,7 +413,6 @@ button {
       <div class="rule-icon-box">
         <img src="Icons/dado.png">
       </div>
-
       <div class="rule-content">
         <div class="rule-title-item">Tentativas ilimitadas</div>
         <div class="rule-subtitle">
@@ -512,30 +421,26 @@ button {
       </div>
     </div>
 
-     <div class="rule-item">
+    <div class="rule-item">
       <div class="rule-icon-box">
         <img src="Icons/fone.png">
       </div>
-
       <div class="rule-content">
         <div class="rule-title-item">Pular</div>
         <div class="rule-subtitle">
-          Está dificil? Pule agora e escute o som novamente ao final.
+          Está difícil? Pule agora e escute o som novamente ao final.
         </div>
       </div>
     </div>
-
-
 
     <div class="rule-item">
       <div class="rule-icon-box">
         <img src="Icons/trofeu.png">
       </div>
-
       <div class="rule-content">
         <div class="rule-title-item">O Vencedor</div>
         <div class="rule-subtitle">
-           Quem acertar mais sons conquista o topo do ranking.
+          Quem acertar mais sons conquista o topo do ranking.
         </div>
       </div>
     </div>
@@ -544,7 +449,6 @@ button {
       <div class="rule-icon-box">
         <img src="Icons/relogio.png">
       </div>
-
       <div class="rule-content">
         <div class="rule-title-item">Desempate</div>
         <div class="rule-subtitle">
@@ -553,12 +457,10 @@ button {
       </div>
     </div>
 
-
-     <div class="rule-item">
+    <div class="rule-item">
       <div class="rule-icon-box">
         <img src="Icons/Adicional+True.png">
       </div>
-      
       <div class="rule-content">
         <div class="rule-title-item">Desistir</div>
         <div class="rule-subtitle">
@@ -566,94 +468,71 @@ button {
         </div>
       </div>
     </div>
-
-
-
   </div>
 
   <div class="footer-version">
     Zari! Versão 2.0.2
   </div>
-
 </div>
 
-
-<!-- CENTRO -->
 <div class="center">
   <div class="center-container">
-
     <img src="Icons/som.png" class="main-icon" />
-
     <h1 class="main-title">Quiz de Sons</h1>
     <p class="main-subtitle">Escute. Identifique. Única chance!</p>
 
     <div class="card">
-
-      <!-- ETAPA 1 -->
       <div id="startArea">
         <h3>Entre para começar</h3>
         <input id="email" placeholder="Seu email corporativo" />
         <button id="startBtn" class="start-btn">Jogar</button>
       </div>
 
-      <!-- ETAPA 2 -->
-<div id="gameArea" style="display:none;">
-<audio id="audio"></audio>
+      <div id="gameArea" style="display:none;">
+        <audio id="audio"></audio>
 
-<input id="answer" placeholder="Qual é o som?" />
+        <input id="answer" placeholder="Qual é o som?" />
+        <button id="answerBtn" class="submit-btn">Enviar</button>
 
-<button id="answerBtn" class="submit-btn">Enviar</button>
+        <div id="gameDivider" class="divider"></div>
 
-<div id="gameDivider" class="divider"></div>
+        <div id="actionsRow" class="actions">
+          <div id="skipBtn" class="action-card skip">
+            <div class="action-icon-box">
+              <img src="Icons/pular.png" class="action-icon">
+            </div>
+            <div class="action-content">
+              <div class="action-title">Pular</div>
+              <div class="action-sub">Ouça novamente ao final</div>
+            </div>
+          </div>
 
-<div id="actionsRow" class="actions">
+          <div id="giveUpBtn" class="action-card giveup">
+            <div class="action-icon-box">
+              <img src="Icons/Adicional+True.png" class="action-icon">
+            </div>
+            <div class="action-content">
+              <div class="action-title">Desistir</div>
+              <div class="action-sub">+120s ao seu tempo</div>
+            </div>
+          </div>
+        </div>
 
-  <div id="skipBtn" class="action-card skip">
-    <div class="action-icon-box">
-      <img src="Icons/pular.png" class="action-icon">
+        <p id="gameMessage"></p>
+      </div>
     </div>
-
-    <div class="action-content">
-      <div class="action-title">Pular</div>
-      <div class="action-sub">Ouça novamente ao final</div>
-    </div>
-  </div>
-
-  <div id="giveUpBtn" class="action-card giveup">
-    <div class="action-icon-box">
-      <img src="Icons/Adicional+True.png" class="action-icon">
-    </div>
-
-    <div class="action-content">
-      <div class="action-title">Desistir</div>
-      <div class="action-sub">+120s ao seu tempo</div>
-    </div>
-  </div>
-
-</div>
-
-      <p id="gameMessage"></p>
-
-    </div>
-
   </div>
 </div>
 
-
-<!-- DIREITA -->
 <div class="right">
-
   <div class="ranking-header">
     <img src="Icons/trofeu.png" class="ranking-icon" />
     <span class="ranking-title">RANKING</span>
   </div>
 
   <ul id="ranking"></ul>
-
 </div>
 
-
-<!-- RESET -->
 <div class="footer-reset">
   <button id="toggleResetBtn">⚙ Reset</button>
 
@@ -663,7 +542,6 @@ button {
   </div>
 </div>
 
-<!-- LOGO -->
 <div class="footer-logo">
   <img src="logo-teamsix.png" alt="Teamsix">
 </div>
@@ -829,18 +707,7 @@ async function loadRanking() {
     let medalHtml = "";
 
     if (index === 0) {
-      medalHtml = `<img src="Icons/  } else if (index === 1) {
-      medalHtml = `Icons/2.png`;
-    } else if (index === 2) {
-      medalHtml = `<img src="Icons/3.png" classst li = document.createElement("li");
-
-    if (index === 0) {
-      li.classList.add("rank-first");
-    }
-
-    li.innerHTML = `
-      <div class="rank-line-1">
-        ${medalHtml}
+      medalHtml = `<img src="Icons/1.png" class="rank-medal" alt="1     ${medalHtml}
         <span class="rank-name">${index + 1}. ${prefix}</span>
       </div>
       <div class="rank-line-2">
@@ -851,7 +718,7 @@ async function loadRanking() {
     rankingEl.appendChild(li);
   });
 }
-  
+
 async function getResetPassword() {
   const cfgRef = doc(db, "config", "settings");
   const cfgSnap = await getDoc(cfgRef);
@@ -1060,6 +927,6 @@ confirmResetBtn.onclick = async () => {
 
 loadRanking();
 </script>
-  
+
 </body>
 </html>
