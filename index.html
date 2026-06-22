@@ -696,7 +696,7 @@
     }
 
 
-    async function loadRanking() {
+async function loadRanking() {
   rankingEl.innerHTML = "";
 
   const snap = await getDocs(collection(db, "ranking"));
@@ -731,7 +731,8 @@
     if (index < 3) {
       li.innerHTML = `
         <div class="rank-row">
-          <img src="Icons/${index + 1      <div class="rank-text">
+          <img src="Icons/${index + 1}.png" class="rank-medal" alt="${index + 1}º lugar">
+          <div class="rank-text">
             <div class="rank-name">${prefix}</div>
           </div>
         </div>
@@ -751,6 +752,7 @@
     rankingEl.appendChild(li);
   });
 }
+
     
     async function saveRanking() {
       const normalTime = gameStartTime
