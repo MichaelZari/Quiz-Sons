@@ -481,17 +481,17 @@
           <button id="startBtn" class="start-btn">Jogar</button>
           <p id="startMessage"></p>
         </div>
-
-        <div id="gameArea" style="display:none;">
-          <audio id="audio"></audio>
-
-          <div class="progress-bar">
-            <div id="progressFill" class="progress-fill"></div>
-          </div>
-
-          <input id="answer" placeholder="Qual é o som?" />
-          <button id="answerBtn" class="submit-btn">Enviar</button>
-
+      
+      <div id="gameArea" style="display:none;">
+        <audio id="audio"></audio>
+      
+        <div class="progress-bar">
+          <div id="progressFill" class="progress-fill"></div>
+        </div>
+      
+        <input id="answer" placeholder="Qual é o som?" />
+        <button id="answerBtn" class="submit-btn">Enviar</button>
+  
           <div id="gameDivider" class="divider"></div>
 
           <div id="actionsRow" class="actions">
@@ -670,47 +670,60 @@
       return !snap.empty;
     }
 
-    async function loadRanking() {
-      rankingEl.innerHTML = "";
+async function loadRanking() {
+  rankingEl.innerHTML = "";
 
-      const snap = await getDocs(collection(db, "ranking"));
-      const rankingData = [];
+  const snap = await getDocs(collection(db, "ranking"));
+  const rankingData = [];
 
-      snap.forEach(docSnap => {
-        rankingData.push(docSnap.data());
-      });
+  snap.forEach(docSnap => {
+    rankingData.push(docSnap.data());
+  });
 
-      rankingData.sort((a, b) => {
-        if ((b.score || 0) !== (a.score || 0)) {
-          return (b.score || 0) - (a.score || 0);
-        }
-        return (a.totalTime || 0) - (b.totalTime || 0);
-      });
+  rankingData.sort((a, b) => {
+    if ((b.score || 0) !== (a.score || 0)) {
+      return (b.score || 0) - (a.score || 0);
+    }
+    return (a.totalTime || 0) - (b.totalTime || 0);
+  });
 
-      if (rankingData.length === 0) {
-        rankingEl.innerHTML = "<li>Aguardando ranking...</li>";
-        return;
-      }
+  if (rankingData.length === 0) {
+    rankingEl.innerHTML = "<li>Aguardando ranking...</li>";
+    return;
+  }
 
-      rankingData.forEach((item, index) => {
-        const prefix = (item.email || item.name || "jogador").split("@")[0];
+  rankingData.forEach((item, index) => {
+    const prefix = (item.email || item.name || "jogador").split("@")[0];
 
-        let medalHtml = "";
-        if (index === 0) {
-          medalHtml = `<img src="Icons/1.png" class.innerHTML = `
-          <div class="rank-line-1">
-            ${medalHtml}
-            <span class="rank-name">${index + 1}. ${prefix}</span>
-          </div>
-          <div class="rank-line-2">
-            ${item.score} acertos • ${item.totalTime}s
-          </div>
-        `;
+    let medalHtml = "";
 
-        rankingEl.appendChild(li);
-      });
+    if (index === 0) {
+      medalHtml = `<img src="Icons/1.png" class="rank-medal" alt="1º lugar">`;
+    } else if (index === 1) {
+      medalHtml = `<img src="Icons/2.png" class="rank-medal" alt="2º lugar">`;
+    } else if (index === 2) {
+      medalHtml = `<img src="Icons/3.png" class="rank-medal" alt="3º lugar">`;
     }
 
+    const li = document.createElement("li");
+
+    if (index === 0) {
+      li.classList.add("rank-first");
+    }
+
+    li.innerHTML = `
+      <div class="rank-line-1">
+        ${medalHtml}
+        <span class="rank-name">${index + 1}. ${prefix}</span>
+      </div>
+      <div class="rank-line-2">
+        ${item.score} acertos • ${item.totalTime}s
+      </div>
+    `;
+
+    rankingEl.appendChild(li);
+  });
+}
     async function saveRanking() {
       const normalTime = gameStartTime
         ? Math.floor((Date.now() - gameStartTime) / 1000)
