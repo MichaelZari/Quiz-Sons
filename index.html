@@ -461,7 +461,7 @@ button {
       <div class="rule-content">
         <div class="rule-title-item">Desistir</div>
         <div class="rule-subtitle">
-          Desistir adiciona 120segs ao seu tempo final
+          Desistir adiciona 120 segundos ao seu tempo final.
         </div>
       </div>
     </div>
@@ -593,9 +593,6 @@ startBtn.onclick = () => {
   gameArea.style.display = "block";
 };
 
- const replayBtn = document.getElementById("replayBtn");
-const audio = document.getElementById("audio");
-
 // 👉 caminho do som (teste inicial)
 const replayBtn = document.getElementById("replayBtn");
 const answerBtn = document.getElementById("answerBtn");
@@ -615,9 +612,6 @@ function playSound() {
   audio.src = `Sons/som${id}.mp3`;
   audio.play();
 }
-
-// botão ouvir
-replayBtn.onclick = playSound;
 
 // iniciar primeiro som automaticamente
 startBtn.onclick = () => {
