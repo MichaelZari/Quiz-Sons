@@ -350,9 +350,14 @@
 }
 
 #ranking li.rank-first {
-  border: 1px solid rgba(0,255,90,0.6);
-  box-shadow: 0 0 16px rgba(0,255,90,0.18);
-  background: rgba(0,255,90,0.08);
+  border: 1px solid rgba(0,255,90,0.8);
+  background: rgba(0,255,90,0.10);
+
+  box-shadow:
+    0 0 25px rgba(0,255,90,0.35),
+    0 8px 25px rgba(0,255,90,0.25);
+
+  transform: scale(1.02);
 }
 
 .rank-row {
@@ -730,7 +735,7 @@ async function loadRanking() {
 
     li.innerHTML = `
       <div class="rank-row">
-        <div class="rank-index-circle">${index + 1}</div>
+        <div class="rank-index-circle">${index + 1}º</div>
         <div class="rank-text">
           <div class="rank-name">${prefix}</div>
           <div class="rank-subtitle">${scoreLabel} · ${item.totalTime}s</div>
