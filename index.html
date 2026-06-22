@@ -1,897 +1,899 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<title>Quiz de Sons</title>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8" />
+  <title>Quiz de Sons</title>
 
-<style>
-html, body {
-  margin: 0;
-  height: 100%;
-  font-family: 'Montserrat', sans-serif;
-}
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap"
+    rel="stylesheet"
+  />
 
-body {
-  display: flex;
-  min-height: 100vh;
-  background: #f3f3f3;
-}
+  <style>
+    html, body {
+      margin: 0;
+      height: 100%;
+      font-family: 'Montserrat', sans-serif;
+    }
 
-.left, .right {
-  width: 30%;
-  min-width: 30%;
-  color: white;
-  padding: 20px;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
+    body {
+      display: flex;
+      min-height: 100vh;
+      background: #f3f3f3;
+    }
 
-.left {
-  background: linear-gradient(180deg, #0a0a0a, #000);
-  justify-content: flex-start;
-}
+    .left, .right {
+      width: 30%;
+      min-width: 30%;
+      color: white;
+      padding: 20px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
 
-.right {
-  background: linear-gradient(180deg, #0a0a0a, #000);
-  justify-content: flex-start;
-}
+    .left {
+      background: linear-gradient(180deg, #0a0a0a, #000);
+      justify-content: flex-start;
+    }
 
-.center {
-  width: 40%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+    .right {
+      background: linear-gradient(180deg, #0a0a0a, #000);
+      justify-content: flex-start;
+    }
 
-.center-container {
-  text-align: center;
-  width: 100%;
-  max-width: calc(100% - 30px);
-  padding: 0 15px;
-  box-sizing: border-box;
-}
+    .center {
+      width: 40%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-.main-icon {
-  height: 60px;
-  margin-bottom: 10px;
-}
+    .center-container {
+      text-align: center;
+      width: 100%;
+      max-width: calc(100% - 30px);
+      padding: 0 15px;
+      box-sizing: border-box;
+    }
 
-.main-title {
-  font-size: 32px;
-  margin: 5px 0;
-  color: #1c1c1c;
-}
+    .main-icon {
+      height: 60px;
+      margin-bottom: 10px;
+    }
 
-.main-subtitle {
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 20px;
-}
+    .main-title {
+      font-size: 32px;
+      margin: 5px 0;
+      color: #1c1c1c;
+    }
 
-.card {
-  background: white;
-  padding: 30px;
-  border-radius: 16px;
-  width: 100%;
-  text-align: center;
-  box-sizing: border-box;
-  box-shadow:
-    0 10px 25px rgba(0,0,0,0.1),
-    0 0 25px rgba(0, 255, 90, 0.25);
-}
+    .main-subtitle {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 20px;
+    }
 
-.footer-version {
-  color: gray;
-  font-size: 12px;
-  margin-top: auto;
-}
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 16px;
+      width: 100%;
+      text-align: center;
+      box-sizing: border-box;
+      box-shadow:
+        0 10px 25px rgba(0,0,0,0.1),
+        0 0 25px rgba(0, 255, 90, 0.25);
+    }
 
-.footer-logo {
-  position: fixed;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 10;
-}
+    .footer-version {
+      color: gray;
+      font-size: 12px;
+      margin-top: auto;
+    }
 
-.footer-logo img {
-  height: 35px;
-  opacity: 0.85;
-}
+    .footer-logo {
+      position: fixed;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+    }
 
-button {
-  margin-top: 10px;
-  padding: 10px;
-  cursor: pointer;
-  font-family: 'Montserrat', sans-serif;
-}
+    .footer-logo img {
+      height: 35px;
+      opacity: 0.85;
+    }
 
-.rules-header,
-.ranking-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 20px;
-}
+    button {
+      margin-top: 10px;
+      padding: 10px;
+      cursor: pointer;
+      font-family: 'Montserrat', sans-serif;
+    }
 
-.rules-icon,
-.ranking-icon {
-  height: 32px;
-}
+    .rules-header,
+    .ranking-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
 
-.rules-title,
-.ranking-title {
-  font-weight: 700;
-  letter-spacing: 1px;
-  font-size: 20px;
-}
+    .rules-icon,
+    .ranking-icon {
+      height: 32px;
+    }
 
-.rules-list {
-  display: flex;
-  flex-direction: column;
-}
+    .rules-title,
+    .ranking-title {
+      font-weight: 700;
+      letter-spacing: 1px;
+      font-size: 20px;
+    }
 
-.rule-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px;
-  border-radius: 12px;
-  background: rgba(0, 255, 90, 0.05);
-  margin-bottom: 12px;
-}
+    .rules-list {
+      display: flex;
+      flex-direction: column;
+    }
 
-.rule-icon-box {
-  width: 48px;
-  height: 48px;
-  min-width: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #0a0a0a, #002914);
-  box-shadow: 0 0 8px rgba(0, 255, 90, 0.25);
-}
+    .rule-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      border-radius: 12px;
+      background: rgba(0, 255, 90, 0.05);
+      margin-bottom: 12px;
+    }
 
-.rule-icon-box img {
-  width: 70%;
-  height: 70%;
-  object-fit: contain;
-}
+    .rule-icon-box {
+      width: 48px;
+      height: 48px;
+      min-width: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #0a0a0a, #002914);
+      box-shadow: 0 0 8px rgba(0, 255, 90, 0.25);
+    }
 
-.rule-content {
-  display: flex;
-  flex-direction: column;
-}
+    .rule-icon-box img {
+      width: 70%;
+      height: 70%;
+      object-fit: contain;
+    }
 
-.rule-title-item {
-  font-weight: 600;
-  font-size: 14px;
-  color: #fff;
-}
+    .rule-content {
+      display: flex;
+      flex-direction: column;
+    }
 
-.rule-subtitle {
-  font-size: 12px;
-  color: #bbb;
-  margin-top: 3px;
-}
+    .rule-title-item {
+      font-weight: 600;
+      font-size: 14px;
+      color: #fff;
+    }
 
-.start-btn {
-  width: 100%;
-  padding: 16px;
-  margin-top: 12px;
-  background: linear-gradient(135deg, #00ff5a, #008f3a);
-  color: black;
-  font-weight: 600;
-  font-size: 16px;
-  border: none;
-  border-radius: 16px;
-  cursor: pointer;
-  transition: 0.2s;
-}
+    .rule-subtitle {
+      font-size: 12px;
+      color: #bbb;
+      margin-top: 3px;
+    }
 
-.start-btn:hover {
-  transform: scale(1.03);
-  box-shadow: 0 0 12px rgba(0,255,90,0.5);
-}
+    .start-btn {
+      width: 100%;
+      padding: 16px;
+      margin-top: 12px;
+      background: linear-gradient(135deg, #00ff5a, #008f3a);
+      color: black;
+      font-weight: 600;
+      font-size: 16px;
+      border: none;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
 
-#email {
-  width: 100%;
-  padding: 16px;
-  margin-top: 12px;
-  border-radius: 16px;
-  border: 1px solid #ddd;
-  font-size: 15px;
-  font-family: 'Montserrat', sans-serif;
-  background: #f5f5f5;
-  box-sizing: border-box;
-}
+    .start-btn:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 12px rgba(0,255,90,0.5);
+    }
 
-.progress-bar {
-  width: 100%;
-  height: 10px;
-  background: #d9d9d9;
-  border-radius: 999px;
-  overflow: hidden;
-  margin-top: 8px;
-  margin-bottom: 14px;
-}
+    #email {
+      width: 100%;
+      padding: 16px;
+      margin-top: 12px;
+      border-radius: 16px;
+      border: 1px solid #ddd;
+      font-size: 15px;
+      font-family: 'Montserrat', sans-serif;
+      background: #f5f5f5;
+      box-sizing: border-box;
+    }
 
-.progress-fill {
-  width: 0%;
-  height: 100%;
-  background: linear-gradient(90deg, #00ff5a, #00c853);
-  border-radius: 999px;
-  transition: width 0.25s ease;
-}
+    .progress-bar {
+      width: 100%;
+      height: 10px;
+      background: #d9d9d9;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 8px;
+      margin-bottom: 14px;
+    }
 
-#answer {
-  width: 100%;
-  padding: 18px;
-  border-radius: 20px;
-  border: 1px solid #ddd;
-  font-size: 16px;
-  margin-top: 10px;
-  box-sizing: border-box;
-  display: block;
-  font-family: 'Montserrat', sans-serif;
-}
+    .progress-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #00ff5a, #00c853);
+      border-radius: 999px;
+      transition: width 0.25s ease;
+    }
 
-.submit-btn {
-  width: 100%;
-  padding: 18px;
-  margin-top: 15px;
-  border-radius: 20px;
-  border: none;
-  background: linear-gradient(90deg,#00ff5a,#009a3a);
-  font-size: 18px;
-  font-weight: 600;
-  box-sizing: border-box;
-  display: block;
-}
+    #answer {
+      width: 100%;
+      padding: 18px;
+      border-radius: 20px;
+      border: 1px solid #ddd;
+      font-size: 16px;
+      margin-top: 10px;
+      box-sizing: border-box;
+      display: block;
+      font-family: 'Montserrat', sans-serif;
+    }
 
-.divider {
-  height: 1px;
-  background: #ddd;
-  margin: 25px 0;
-}
+    .submit-btn {
+      width: 100%;
+      padding: 18px;
+      margin-top: 15px;
+      border-radius: 20px;
+      border: none;
+      background: linear-gradient(90deg, #00ff5a, #009a3a);
+      font-size: 18px;
+      font-weight: 600;
+      box-sizing: border-box;
+      display: block;
+    }
 
-.actions {
-  display: flex;
-  gap: 12px;
-}
+    .divider {
+      height: 1px;
+      background: #ddd;
+      margin: 25px 0;
+    }
 
-.action-card {
-  flex: 1;
-  min-height: 108px;
-  padding: 16px;
-  border-radius: 16px;
-  cursor: pointer;
-  border: 1px solid #eee;
-  text-align: left;
-  transition: 0.2s;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  box-sizing: border-box;
-}
+    .actions {
+      display: flex;
+      gap: 12px;
+    }
 
-.action-card:hover {
-  transform: scale(1.03);
-}
+    .action-card {
+      flex: 1;
+      min-height: 108px;
+      padding: 16px;
+      border-radius: 16px;
+      cursor: pointer;
+      border: 1px solid #eee;
+      text-align: left;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-sizing: border-box;
+    }
 
-.action-icon-box {
-  width: 48px;
-  height: 48px;
-  min-width: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 10px;
-  background: #f7f7f7;
-}
+    .action-card:hover {
+      transform: scale(1.03);
+    }
 
-.action-icon {
-  width: 70%;
-  height: 70%;
-  object-fit: contain;
-}
+    .action-icon-box {
+      width: 48px;
+      height: 48px;
+      min-width: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      background: #f7f7f7;
+    }
 
-.action-content {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
+    .action-icon {
+      width: 70%;
+      height: 70%;
+      object-fit: contain;
+    }
 
-.action-title {
-  font-weight: 600;
-  margin-bottom: 4px;
-}
+    .action-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
 
-.action-sub {
-  font-size: 12px;
-  color: #777;
-  line-height: 1.35;
-}
+    .action-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
 
-.skip {
-  border: 2px solid #8e44ad;
-}
+    .action-sub {
+      font-size: 12px;
+      color: #777;
+      line-height: 1.35;
+    }
 
-.giveup {
-  border: 2px solid #d63031;
-}
+    .skip {
+      border: 2px solid #8e44ad;
+    }
 
-#ranking {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
+    .giveup {
+      border: 2px solid #d63031;
+    }
 
-#ranking li {
-  width: 100%;
-  box-sizing: border-box;
-  background: rgba(0, 255, 90, 0.05);
-  border: 1px solid rgba(0, 255, 90, 0.18);
-  border-radius: 14px;
-  padding: 14px 16px;
-  color: white;
-}
+    #ranking {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
 
-#ranking li.rank-first {
-  border: 1px solid rgba(0,255,90,0.6);
-  box-shadow: 0 0 16px rgba(0,255,90,0.18);
-  background: rgba(0,255,90,0.08);
-}
+    #ranking li {
+      width: 100%;
+      box-sizing: border-box;
+      background: rgba(0, 255, 90, 0.05);
+      border: 1px solid rgba(0, 255, 90, 0.18);
+      border-radius: 14px;
+      padding: 14px 16px;
+      color: white;
+    }
 
-.rank-line-1 {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-weight: 700;
-  margin-bottom: 6px;
-}
+    #ranking li.rank-first {
+      border: 1px solid rgba(0,255,90,0.6);
+      box-shadow: 0 0 16px rgba(0,255,90,0.18);
+      background: rgba(0,255,90,0.08);
+    }
 
-.rank-medal {
-  width: 28px;
-  height: 28px;
-  min-width: 28px;
-  object-fit: contain;
-}
+    .rank-line-1 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
 
-.rank-name {
-  color: white;
-}
+    .rank-medal {
+      width: 28px;
+      height: 28px;
+      min-width: 28px;
+      object-fit: contain;
+    }
 
-.rank-line-2 {
-  font-size: 12px;
-  color: #bfbfbf;
-}
+    .rank-name {
+      color: white;
+    }
 
-#startMessage {
-  color: #c62828;
-  margin-top: 10px;
-  min-height: 20px;
-  font-size: 13px;
-}
+    .rank-line-2 {
+      font-size: 12px;
+      color: #bfbfbf;
+    }
 
-#gameMessage {
-  margin-top: 16px;
-  min-height: 22px;
-  font-size: 14px;
-}
-</style>
+    #startMessage {
+      color: #c62828;
+      margin-top: 10px;
+      min-height: 20px;
+      font-size: 13px;
+    }
+
+    #gameMessage {
+      margin-top: 16px;
+      min-height: 22px;
+      font-size: 14px;
+    }
+  </style>
 </head>
-
 <body>
 
-<div class="left">
-  <div class="rules-header">
-    <img src="Icons/regras.png" class="rules-icon" />
-    <span class="rules-title">REGRAS</span>
+  <div class="left">
+    <div class="rules-header">
+      <img src="Icons/regras.png" class="rules-icon" />
+      <span class="rules-title">REGRAS</span>
+    </div>
+
+    <div class="rules-list">
+      <div class="rule-item">
+        <div class="rule-icon-box">
+          <img src="Icons/som.png">
+        </div>
+        <div class="rule-content">
+          <div class="rule-title-item">Identifique 6 sons</div>
+          <div class="rule-subtitle">Ouça cada som com atenção e descubra o que é.</div>
+        </div>
+      </div>
+
+      <div class="rule-item">
+        <div class="rule-icon-box">
+          <img src="Icons/dado.png">
+        </div>
+        <div class="rule-content">
+          <div class="rule-title-item">Tentativas ilimitadas</div>
+          <div class="rule-subtitle">Tentativas ilimitadas, até você acertar.</div>
+        </div>
+      </div>
+
+      <div class="rule-item">
+        <div class="rule-icon-box">
+          <img src="Icons/fone.png">
+        </div>
+        <div class="rule-content">
+          <div class="rule-title-item">Pular</div>
+          <div class="rule-subtitle">Está difícil? Pule agora e escute o som novamente ao final.</div>
+        </div>
+      </div>
+
+      <div class="rule-item">
+        <div class="rule-icon-box">
+          <img src="Icons/trofeu.png">
+        </div>
+        <div class="rule-content">
+          <div class="rule-title-item">O Vencedor</div>
+          <div class="rule-subtitle">Quem acertar mais sons conquista o topo do ranking.</div>
+        </div>
+      </div>
+
+      <div class="rule-item">
+        <div class="rule-icon-box">
+          <img src="Icons/relogio.png">
+        </div>
+        <div class="rule-content">
+          <div class="rule-title-item">Desempate</div>
+          <div class="rule-subtitle">Empatou? O menor tempo leva a vitória.</div>
+        </div>
+      </div>
+
+      <div class="rule-item">
+        <div class="rule-icon-box">
+          <img src="Icons/Adicional+True.png">
+        </div>
+        <div class="rule-content">
+          <div class="rule-title-item">Desistir</div>
+          <div class="rule-subtitle">Desistir adiciona 120 segundos ao seu tempo final.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-version">
+      Zari! Versão 2.0.2
+    </div>
   </div>
 
-  <div class="rules-list">
-    <div class="rule-item">
-      <div class="rule-icon-box">
-        <img src="Icons/som.png">
-      </div>
-      <div class="rule-content">
-        <div class="rule-title-item">Identifique 6 sons</div>
-        <div class="rule-subtitle">Ouça cada som com atenção e descubra o que é.</div>
-      </div>
-    </div>
+  <div class="center">
+    <div class="center-container">
+      <img src="Icons/som.png" class="main-icon" />
+      <h1 class="main-title">Quiz de Sons</h1>
+      <p class="main-subtitle">Escute. Identifique. Única chance!</p>
 
-    <div class="rule-item">
-      <div class="rule-icon-box">
-        <img src="Icons/dado.png">
-      </div>
-      <div class="rule-content">
-        <div class="rule-title-item">Tentativas ilimitadas</div>
-        <div class="rule-subtitle">Tentativas ilimitadas, até você acertar.</div>
-      </div>
-    </div>
-
-    <div class="rule-item">
-      <div class="rule-icon-box">
-        <img src="Icons/fone.png">
-      </div>
-      <div class="rule-content">
-        <div class="rule-title-item">Pular</div>
-        <div class="rule-subtitle">Está difícil? Pule agora e escute o som novamente ao final.</div>
-      </div>
-    </div>
-
-    <div class="rule-item">
-      <div class="rule-icon-box">
-        <img src="Icons/trofeu.png">
-      </div>
-      <div class="rule-content">
-        <div class="rule-title-item">O Vencedor</div>
-        <div class="rule-subtitle">Quem acertar mais sons conquista o topo do ranking.</div>
-      </div>
-    </div>
-
-    <div class="rule-item">
-      <div class="rule-icon-box">
-        <img src="Icons/relogio.png">
-      </div>
-      <div class="rule-content">
-        <div class="rule-title-item">Desempate</div>
-        <div class="rule-subtitle">Empatou? O menor tempo leva a vitória.</div>
-      </div>
-    </div>
-
-    <div class="rule-item">
-      <div class="rule-icon-box">
-        <img src="Icons/Adicional+True.png">
-      </div>
-      <div class="rule-content">
-        <div class="rule-title-item">Desistir</div>
-        <div class="rule-subtitle">Desistir adiciona 120 segundos ao seu tempo final.</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="footer-version">
-    Zari! Versão 2.0.2
-  </div>
-</div>
-
-<div class="center">
-  <div class="center-container">
-    <img src="Icons/som.png" class="main-icon" />
-    <h1 class="main-title">Quiz de Sons</h1>
-    <p class="main-subtitle">Escute. Identifique. Única chance!</p>
-
-    <div class="card">
-      <div id="startArea">
-        <h3>Entre para começar</h3>
-        <input id="email" placeholder="Seu email corporativo" />
-        <button id="startBtn" class="start-btn">Jogar</button>
-        <p id="startMessage"></p>
-      </div>
-
-      <div id="gameArea" style="display:none;">
-        <audio id="audio"></audio>
-
-        <div class="progress-bar">
-          <div id="progressFill" class="progress-fill"></div>
+      <div class="card">
+        <div id="startArea">
+          <h3>Entre para começar</h3>
+          <input id="email" placeholder="Seu email corporativo" />
+          <button id="startBtn" class="start-btn">Jogar</button>
+          <p id="startMessage"></p>
         </div>
 
-        <input id="answer" placeholder="Qual é o som?" />
-        <button id="answerBtn" class="submit-btn">Enviar</button>
+        <div id="gameArea" style="display:none;">
+          <audio id="audio"></audio>
 
-        <div id="gameDivider" class="divider"></div>
+          <div class="progress-bar">
+            <div id="progressFill" class="progress-fill"></div>
+          </div>
 
-        <div id="actionsRow" class="actions">
-          <div id="skipBtn" class="action-card skip">
-            <div class="action-icon-box">
-              <img src="Icons/pular.png" class="action-icon">
+          <input id="answer" placeholder="Qual é o som?" />
+          <button id="answerBtn" class="submit-btn">Enviar</button>
+
+          <div id="gameDivider" class="divider"></div>
+
+          <div id="actionsRow" class="actions">
+            <div id="skipBtn" class="action-card skip">
+              <div class="action-icon-box">
+                <img src="Icons/pular.png" class="action-icon">
+              </div>
+              <div class="action-content">
+                <div class="action-title">Pular</div>
+                <div class="action-sub">Ouça novamente ao final</div>
+              </div>
             </div>
-            <div class="action-content">
-              <div class="action-title">Pular</div>
-              <div class="action-sub">Ouça novamente ao final</div>
+
+            <div id="giveUpBtn" class="action-card giveup">
+              <div class="action-icon-box">
+                <img src="Icons/Adicional+True.png" class="action-icon">
+              </div>
+              <div class="action-content">
+                <div class="action-title">Desistir</div>
+                <div class="action-sub">+120s ao seu tempo</div>
+              </div>
             </div>
           </div>
 
-          <div id="giveUpBtn" class="action-card giveup">
-            <div class="action-icon-box">
-              <img src="Icons/Adicional+True.png" class="action-icon">
-            </div>
-            <div class="action-content">
-              <div class="action-title">Desistir</div>
-              <div class="action-sub">+120s ao seu tempo</div>
-            </div>
-          </div>
+          <p id="gameMessage"></p>
         </div>
-
-        <p id="gameMessage"></p>
       </div>
     </div>
   </div>
-</div>
 
-<div class="right">
-  <div class="ranking-header">
-    <img src="Icons/trofeu.png" class="ranking-icon" />
-    <span class="ranking-title">RANKING</span>
+  <div class="right">
+    <div class="ranking-header">
+      <img src="Icons/trofeu.png" class="ranking-icon" />
+      <span class="ranking-title">RANKING</span>
+    </div>
+
+    <ul id="ranking"></ul>
   </div>
 
-  <ul id="ranking"></ul>
-</div>
+  <div class="footer-logo">
+    <img src="logo-teamsix.png" alt="Teamsix">
+  </div>
 
-<div class="footer-logo">
-  <img src="logo-teamsix.png" alt="Teamsix">
-</div>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      addDoc,
+      getDocs,
+      collection,
+      query,
+      where,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {
-  getFirestore,
-  doc,
-  getDoc,
-  addDoc,
-  getDocs,
-  collection,
-  query,
-  where,
-  serverTimestamp
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    const firebaseConfig = {
+      apiKey: "AIzaSyAkQPQArV3LX_iilC5WCyG_9-Q59MNWyVw",
+      authDomain: "quiz-de-sons.firebaseapp.com",
+      projectId: "quiz-de-sons"
+    };
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAkQPQArV3LX_iilC5WCyG_9-Q59MNWyVw",
-  authDomain: "quiz-de-sons.firebaseapp.com",
-  projectId: "quiz-de-sons"
-};
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+    const emailInput = document.getElementById("email");
+    const startBtn = document.getElementById("startBtn");
+    const startMessage = document.getElementById("startMessage");
+    const gameMessage = document.getElementById("gameMessage");
+    const startArea = document.getElementById("startArea");
+    const gameArea = document.getElementById("gameArea");
 
-const emailInput = document.getElementById("email");
-const startBtn = document.getElementById("startBtn");
-const startMessage = document.getElementById("startMessage");
-const gameMessage = document.getElementById("gameMessage");
-const startArea = document.getElementById("startArea");
-const gameArea = document.getElementById("gameArea");
+    const answerBtn = document.getElementById("answerBtn");
+    const skipBtn = document.getElementById("skipBtn");
+    const giveUpBtn = document.getElementById("giveUpBtn");
+    const answerInput = document.getElementById("answer");
+    const audio = document.getElementById("audio");
 
-const answerBtn = document.getElementById("answerBtn");
-const skipBtn = document.getElementById("skipBtn");
-const giveUpBtn = document.getElementById("giveUpBtn");
-const answerInput = document.getElementById("answer");
-const audio = document.getElementById("audio");
+    const rankingEl = document.getElementById("ranking");
+    const gameDivider = document.getElementById("gameDivider");
+    const actionsRow = document.getElementById("actionsRow");
+    const progressFill = document.getElementById("progressFill");
 
-const rankingEl = document.getElementById("ranking");
-const gameDivider = document.getElementById("gameDivider");
-const actionsRow = document.getElementById("actionsRow");
-const progressFill = document.getElementById("progressFill");
+    const DOMAINS = ["@teamsix.tech", "@innovsoftware.com.br"];
 
-const DOMAINS = ["@teamsix.tech", "@innovsoftware.com.br"];
+    let sounds = [
+      { docId: "1", file: "som101" },
+      { docId: "2", file: "som102" },
+      { docId: "3", file: "som103" },
+      { docId: "4", file: "som104" },
+      { docId: "5", file: "som105" },
+      { docId: "6", file: "som106" }
+    ];
 
-let sounds = [
-  { docId: "1", file: "som101" },
-  { docId: "2", file: "som102" },
-  { docId: "3", file: "som103" },
-  { docId: "4", file: "som104" },
-  { docId: "5", file: "som105" },
-  { docId: "6", file: "som106" }
-];
+    let current = 0;
+    let skipped = [];
+    let answered = new Set();
+    let extraTime = 0;
+    let correctCount = 0;
+    let gameStartTime = null;
+    let playerEmail = "";
 
-let current = 0;
-let skipped = [];
-let answered = new Set();
-let extraTime = 0;
-let correctCount = 0;
-let gameStartTime = null;
-let playerEmail = "";
-
-function isValidEmail(email) {
-  const isFormatValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  const isDomainValid = DOMAINS.some(domain => email.endsWith(domain));
-  return isFormatValid && isDomainValid;
-}
-
-function normalize(text) {
-  return (text || "")
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9\s]/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-function escapeRegex(text) {
-  return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
-
-function clearAndFocusAnswer() {
-  answerInput.value = "";
-  answerInput.focus();
-}
-
-function updateProgressBar() {
-  const total = sounds.length;
-  const completed = answered.size;
-  const percent = total > 0 ? (completed / total) * 100 : 0;
-  progressFill.style.width = `${percent}%`;
-}
-
-function playSound() {
-  const item = sounds[current];
-  audio.src = `Sons/${item.file}.mp3`;
-  audio.loop = true;
-  audio.currentTime = 0;
-  audio.play().catch(err => {
-    console.log("Erro ao tocar:", err);
-  });
-}
-
-async function validateCurrentAnswer(rawText) {
-  const item = sounds[current];
-  const soundRef = doc(db, "sounds", item.docId);
-  const soundSnap = await getDoc(soundRef);
-
-  if (!soundSnap.exists()) {
-    gameMessage.textContent = "Não foi possível validar este som no Firebase.";
-    return false;
-  }
-
-  const data = soundSnap.data();
-  const answers = Array.isArray(data.answers) ? data.answers : [];
-  const normalizedGuess = normalize(rawText);
-
-  if (!normalizedGuess) return false;
-
-  const matched = answers.some(answer => {
-    const normalizedAnswer = normalize(answer);
-    if (!normalizedAnswer) return false;
-
-    const regex = new RegExp(`(^|\\s)${escapeRegex(normalizedAnswer)}(?=\\s|$)`, "i");
-    return regex.test(normalizedGuess);
-  });
-
-  return matched;
-}
-
-async function alreadyPlayed(email) {
-  const q = query(collection(db, "ranking"), where("email", "==", email));
-  const snap = await getDocs(q);
-  return !snap.empty;
-}
-
-async function loadRanking() {
-  rankingEl.innerHTML = "";
-
-  const snap = await getDocs(collection(db, "ranking"));
-  const rankingData = [];
-
-  snap.forEach(docSnap => {
-    rankingData.push(docSnap.data());
-  });
-
-  rankingData.sort((a, b) => {
-    if ((b.score || 0) !== (a.score || 0)) {
-      return (b.score || 0) - (a.score || 0);
+    function isValidEmail(email) {
+      const isFormatValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      const isDomainValid = DOMAINS.some(domain => email.endsWith(domain));
+      return isFormatValid && isDomainValid;
     }
-    return (a.totalTime || 0) - (b.totalTime || 0);
-  });
 
-  if (rankingData.length === 0) {
-    rankingEl.innerHTML = "<li>Aguardando ranking...</li>";
-    return;
-  }
-
-  rankingData.forEach((item, index) => {
-    const prefix = (item.email || item.name || "jogador").split("@")[0];
-
-    let medalHtml = "";
-    if (index === 0) {
-      medalHtml =.innerHTML = `
-      <div class="rank-line-1">
-        ${medalHtml}
-        <span class="rank-name">${index + 1}. ${prefix}</span>
-      </div>
-      <div class="rank-line-2">
-        ${item.score} acertos • ${item.totalTime}s
-      </div>
-    `;
-
-    rankingEl.appendChild(li);
-  });
-}
-
-async function saveRanking() {
-  const normalTime = gameStartTime
-    ? Math.floor((Date.now() - gameStartTime) / 1000)
-    : 0;
-
-  const totalTime = normalTime + extraTime;
-  const playerName = playerEmail.split("@")[0];
-
-  await addDoc(collection(db, "ranking"), {
-    email: playerEmail,
-    name: playerName,
-    score: correctCount,
-    normalTime: normalTime,
-    extraTime: extraTime,
-    totalTime: totalTime,
-    createdAt: serverTimestamp()
-  });
-
-  await loadRanking();
-}
-
-function hideGameControls() {
-  answerInput.style.display = "none";
-  answerBtn.style.display = "none";
-  gameDivider.style.display = "none";
-  actionsRow.style.display = "none";
-}
-
-async function finishGame() {
-  audio.pause();
-  audio.currentTime = 0;
-
-  const normalTime = gameStartTime
-    ? Math.floor((Date.now() - gameStartTime) / 1000)
-    : 0;
-
-  const totalTime = normalTime + extraTime;
-  const playerName = playerEmail ? playerEmail.split("@")[0] : "jogador";
-
-  hideGameControls();
-  progressFill.style.width = "100%";
-
-  gameMessage.textContent =
-    `${playerName} ${correctCount} acertos em ${normalTime}s + ${extraTime}s de Desistência = ${totalTime}s`;
-
-  await saveRanking();
-}
-
-function next() {
-  let found = false;
-
-  for (let i = current + 1; i < sounds.length; i++) {
-    if (!answered.has(i)) {
-      current = i;
-      found = true;
-      break;
+    function normalize(text) {
+      return (text || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9\s]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
     }
-  }
 
-  if (!found && skipped.length > 0) {
-    current = skipped.shift();
+    function escapeRegex(text) {
+      return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    }
 
-    if (answered.has(current)) {
+    function clearAndFocusAnswer() {
+      answerInput.value = "";
+      answerInput.focus();
+    }
+
+    function updateProgressBar() {
+      const total = sounds.length;
+      const completed = answered.size;
+      const percent = total > 0 ? (completed / total) * 100 : 0;
+      progressFill.style.width = `${percent}%`;
+    }
+
+    function playSound() {
+      const item = sounds[current];
+      audio.src = `Sons/${item.file}.mp3`;
+      audio.loop = true;
+      audio.currentTime = 0;
+      audio.play().catch(err => {
+        console.log("Erro ao tocar:", err);
+      });
+    }
+
+    async function validateCurrentAnswer(rawText) {
+      const item = sounds[current];
+      const soundRef = doc(db, "sounds", item.docId);
+      const soundSnap = await getDoc(soundRef);
+
+      if (!soundSnap.exists()) {
+        gameMessage.textContent = "Não foi possível validar este som no Firebase.";
+        return false;
+      }
+
+      const data = soundSnap.data();
+      const answers = Array.isArray(data.answers) ? data.answers : [];
+      const normalizedGuess = normalize(rawText);
+
+      if (!normalizedGuess) return false;
+
+      const matched = answers.some(answer => {
+        const normalizedAnswer = normalize(answer);
+        if (!normalizedAnswer) return false;
+
+        const regex = new RegExp(`(^|\\s)${escapeRegex(normalizedAnswer)}(?=\\s|$)`, "i");
+        return regex.test(normalizedGuess);
+      });
+
+      return matched;
+    }
+
+    async function alreadyPlayed(email) {
+      const q = query(collection(db, "ranking"), where("email", "==", email));
+      const snap = await getDocs(q);
+      return !snap.empty;
+    }
+
+    async function loadRanking() {
+      rankingEl.innerHTML = "";
+
+      const snap = await getDocs(collection(db, "ranking"));
+      const rankingData = [];
+
+      snap.forEach(docSnap => {
+        rankingData.push(docSnap.data());
+      });
+
+      rankingData.sort((a, b) => {
+        if ((b.score || 0) !== (a.score || 0)) {
+          return (b.score || 0) - (a.score || 0);
+        }
+        return (a.totalTime || 0) - (b.totalTime || 0);
+      });
+
+      if (rankingData.length === 0) {
+        rankingEl.innerHTML = "<li>Aguardando ranking...</li>";
+        return;
+      }
+
+      rankingData.forEach((item, index) => {
+        const prefix = (item.email || item.name || "jogador").split("@")[0];
+
+        let medalHtml = "";
+        if (index === 0) {
+          medalHtml = `<img src="Icons/1.png" class.innerHTML = `
+          <div class="rank-line-1">
+            ${medalHtml}
+            <span class="rank-name">${index + 1}. ${prefix}</span>
+          </div>
+          <div class="rank-line-2">
+            ${item.score} acertos • ${item.totalTime}s
+          </div>
+        `;
+
+        rankingEl.appendChild(li);
+      });
+    }
+
+    async function saveRanking() {
+      const normalTime = gameStartTime
+        ? Math.floor((Date.now() - gameStartTime) / 1000)
+        : 0;
+
+      const totalTime = normalTime + extraTime;
+      const playerName = playerEmail.split("@")[0];
+
+      await addDoc(collection(db, "ranking"), {
+        email: playerEmail,
+        name: playerName,
+        score: correctCount,
+        normalTime: normalTime,
+        extraTime: extraTime,
+        totalTime: totalTime,
+        createdAt: serverTimestamp()
+      });
+
+      await loadRanking();
+    }
+
+    function hideGameControls() {
+      answerInput.style.display = "none";
+      answerBtn.style.display = "none";
+      gameDivider.style.display = "none";
+      actionsRow.style.display = "none";
+    }
+
+    async function finishGame() {
+      audio.pause();
+      audio.currentTime = 0;
+
+      const normalTime = gameStartTime
+        ? Math.floor((Date.now() - gameStartTime) / 1000)
+        : 0;
+
+      const totalTime = normalTime + extraTime;
+      const playerName = playerEmail ? playerEmail.split("@")[0] : "jogador";
+
+      hideGameControls();
+      progressFill.style.width = "100%";
+
+      gameMessage.textContent =
+        `${playerName} ${correctCount} acertos em ${normalTime}s + ${extraTime}s de Desistência = ${totalTime}s`;
+
+      await saveRanking();
+    }
+
+    function next() {
+      let found = false;
+
+      for (let i = current + 1; i < sounds.length; i++) {
+        if (!answered.has(i)) {
+          current = i;
+          found = true;
+          break;
+        }
+      }
+
+      if (!found && skipped.length > 0) {
+        current = skipped.shift();
+
+        if (answered.has(current)) {
+          next();
+          return;
+        }
+
+        found = true;
+      }
+
+      if (!found) {
+        finishGame();
+        return;
+      }
+
+      clearAndFocusAnswer();
+      updateProgressBar();
+      playSound();
+    }
+
+    async function submitAnswer() {
+      const raw = answerInput.value;
+
+      if (!raw.trim()) {
+        clearAndFocusAnswer();
+        gameMessage.textContent = "Digite uma resposta.";
+        return;
+      }
+
+      const isCorrect = await validateCurrentAnswer(raw);
+
+      if (isCorrect) {
+        answered.add(current);
+        correctCount++;
+        gameMessage.textContent = "Parabéns acertou!";
+        clearAndFocusAnswer();
+        next();
+      } else {
+        gameMessage.textContent = "Tente novamente!";
+        clearAndFocusAnswer();
+      }
+    }
+
+    async function startGame() {
+      const email = emailInput.value.trim().toLowerCase();
+
+      startMessage.textContent = "";
+
+      if (!isValidEmail(email)) {
+        startMessage.textContent = "Email inválido ou não permitido";
+        return;
+      }
+
+      try {
+        const hasPlayed = await alreadyPlayed(email);
+
+        if (hasPlayed) {
+          startMessage.textContent = "Usuário já participou. Consulte no Ranking.";
+          return;
+        }
+
+        playerEmail = email;
+        current = 0;
+        skipped = [];
+        answered = new Set();
+        extraTime = 0;
+        correctCount = 0;
+        gameStartTime = Date.now();
+        gameMessage.textContent = "";
+
+        startArea.style.display = "none";
+        gameArea.style.display = "block";
+
+        answerInput.style.display = "block";
+        answerBtn.style.display = "block";
+        gameDivider.style.display = "block";
+        actionsRow.style.display = "flex";
+
+        updateProgressBar();
+        playSound();
+        answerInput.focus();
+      } catch (error) {
+        console.error("Erro ao iniciar jogo:", error);
+        startMessage.textContent = "Não foi possível iniciar o jogo.";
+      }
+    }
+
+    startBtn.onclick = async () => {
+      await startGame();
+    };
+
+    emailInput.addEventListener("keydown", async (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        await startGame();
+      }
+    });
+
+    answerBtn.onclick = async () => {
+      await submitAnswer();
+    };
+
+    answerInput.addEventListener("keydown", async (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        await submitAnswer();
+      }
+    });
+
+    skipBtn.onclick = () => {
+      if (!skipped.includes(current)) {
+        skipped.push(current);
+      }
       next();
-      return;
-    }
+    };
 
-    found = true;
-  }
+    giveUpBtn.onclick = () => {
+      answered.add(current);
+      extraTime += 120;
+      next();
+    };
 
-  if (!found) {
-    finishGame();
-    return;
-  }
-
-  clearAndFocusAnswer();
-  updateProgressBar();
-  playSound();
-}
-
-async function submitAnswer() {
-  const raw = answerInput.value;
-
-  if (!raw.trim()) {
-    clearAndFocusAnswer();
-    gameMessage.textContent = "Digite uma resposta.";
-    return;
-  }
-
-  const isCorrect = await validateCurrentAnswer(raw);
-
-  if (isCorrect) {
-    answered.add(current);
-    correctCount++;
-    gameMessage.textContent = "Parabéns acertou!";
-    clearAndFocusAnswer();
-    next();
-  } else {
-    gameMessage.textContent = "Tente novamente!";
-    clearAndFocusAnswer();
-  }
-}
-
-async function startGame() {
-  const email = emailInput.value.trim().toLowerCase();
-
-  startMessage.textContent = "";
-
-  if (!isValidEmail(email)) {
-    startMessage.textContent = "Email inválido ou não permitido";
-    return;
-  }
-
-  try {
-    const hasPlayed = await alreadyPlayed(email);
-
-    if (hasPlayed) {
-      startMessage.textContent = "Usuário já participou. Consulte no Ranking.";
-      return;
-    }
-
-    playerEmail = email;
-    current = 0;
-    skipped = [];
-    answered = new Set();
-    extraTime = 0;
-    correctCount = 0;
-    gameStartTime = Date.now();
-    gameMessage.textContent = "";
-
-    startArea.style.display = "none";
-    gameArea.style.display = "block";
-
-    answerInput.style.display = "block";
-    answerBtn.style.display = "block";
-    gameDivider.style.display = "block";
-    actionsRow.style.display = "flex";
-
-    updateProgressBar();
-    playSound();
-    answerInput.focus();
-  } catch (error) {
-    console.error("Erro ao iniciar jogo:", error);
-    startMessage.textContent = "Não foi possível iniciar o jogo.";
-  }
-}
-
-startBtn.onclick = async () => {
-  await startGame();
-};
-
-emailInput.addEventListener("keydown", async (e) => {
-  if (e.key === "Enter") {
-    e.preventDefault();
-    await startGame();
-  }
-});
-
-answerBtn.onclick = async () => {
-  await submitAnswer();
-};
-
-answerInput.addEventListener("keydown", async (e) => {
-  if (e.key === "Enter") {
-    e.preventDefault();
-    await submitAnswer();
-  }
-});
-
-skipBtn.onclick = () => {
-  if (!skipped.includes(current)) {
-    skipped.push(current);
-  }
-  next();
-};
-
-giveUpBtn.onclick = () => {
-  answered.add(current);
-  extraTime += 120;
-  next();
-};
-
-loadRanking();
-</script>
-
+    loadRanking();
+  </script>
 </body>
 </html>
