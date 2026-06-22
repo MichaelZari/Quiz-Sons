@@ -498,10 +498,6 @@ button {
       <!-- ETAPA 2 -->
 <div id="gameArea" style="display:none;">
 <audio id="audio"></audio>
-  <button id="replayBtn" class="replay-btn">🔊</button>
-  <h3 class="replay-title">Ouvir novamente</h3>
-  <p class="replay-subtitle">Reproduza o som quantas vezes precisar.</p>
-
 
   <input id="answer" placeholder="Qual é o som?" />
 
@@ -578,23 +574,8 @@ function isValidEmail(email) {
   return isFormatValid && isDomainValid;
 }
 
-// ✅ botão jogar
-startBtn.onclick = () => {
-  const email = emailInput.value.trim().toLowerCase();
-
-  if (!isValidEmail(email)) {
-    gameMessage.textContent = "Email inválido ou não permitido";
-    return;
-  }
-
-  gameMessage.textContent = "Jogo iniciado!";
-
-  startArea.style.display = "none";
-  gameArea.style.display = "block";
-};
 
 // 👉 caminho do som (teste inicial)
-const replayBtn = document.getElementById("replayBtn");
 const answerBtn = document.getElementById("answerBtn");
 const skipBtn = document.getElementById("skipBtn");
 const giveUpBtn = document.getElementById("giveUpBtn");
@@ -610,7 +591,11 @@ let answered = new Set();
 function playSound() {
   const id = sounds[current];
   audio.src = `Sons/som${id}.mp3`;
-  audio.play();
+
+  audio.currentTime = 0;
+  audio.play().catch(err => {
+    console.log("Erro ao tocar:", err);
+  });
 }
 
 // iniciar primeiro som automaticamente
@@ -633,6 +618,9 @@ startBtn.onclick = () => {
 // enviar resposta (simples: só avança)
 answerBtn.onclick = () => {
   answered.add(current);
+  function saveRanking() {
+  console.log("Salvar ranking aqui");
+}
   next();
 };
 
@@ -676,9 +664,10 @@ function next() {
 
   // acabou tudo
   if (!found) {
-    gameMessage.textContent = "Finalizado!";
-    return;
-  }
+  gameMessage.textContent = "Finalizado!";
+  saveRanking(); // ✅ AQUI
+  return;
+}
 
   answerInput.value = "";
   playSound();
