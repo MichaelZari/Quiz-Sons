@@ -314,11 +314,6 @@ button {
   gap: 12px;
 }
 
-.actions {
-  display: flex;
-  gap: 12px;
-}
-
 .action-card {
   flex: 1;
   min-height: 108px;
@@ -382,45 +377,7 @@ button {
 .giveup {
   border: 2px solid #d63031;
 }
-
-/* cards */
-.action-card {
-  flex: 1;
-  padding: 16px;
-  border-radius: 16px;
-  height: 100px;
-  cursor: pointer;
-  border: 1px solid #eee;
-  text-align: left;
-  transition: 0.2s;
-}
-
-.action-card:hover {
-  transform: scale(1.03);
-}
-
-/* título */
-.action-title {
-  font-weight: 600;
-  margin-bottom: 6px;
-}
-
-/* subtexto */
-.action-sub {
-  font-size: 12px;
-  color: #777;
-}
-
-/* cor pular */
-.skip {
-  border: 2px solid #8e44ad;
-}
-
-/* cor desistir */
-.giveup {
-  border: 2px solid #d63031;
-} 
-  
+ 
   
 </style>
 </head>
@@ -557,33 +514,32 @@ button {
 
   <div class="divider"></div>
 
-  <div class="actions">
+<div class="actions">
 
-<div id="skipBtn" class="action-card skip">
-  <div class="action-icon-box">
-    <img src="Icons/pular.png" class="actionaction-content">
-    <div class="action-title">Pular</div>
-    <div class="action-sub">Ouça novamente ao final</div>
+  <div id="skipBtn" class="action-card skip">
+    <div class="action-icon-box">
+      <img src="Icons/pular.png" class="action-icon">
+    </div>
+
+    <div class="action-content">
+      <div class="action-title">Pular</div>
+      <div class="action-sub">Ouça novamente ao final</div>
+    </div>
   </div>
-</div>
 
-<div id="giveUpBtn" class="action-card giveup">
-  <div class="action-icon-box">
-    <img src="Icons/Adicional+Trueiv>
+  <div id="giveUpBtn" class="action-card giveup">
+    <div class="action-icon-box">
+      <img src="Icons/Adicional+True.png" class="action-icon">
+    </div>
 
-  <div class="action-content">
-    <div class="action-title">Desistir</div>
-    <div class="action-sub">+120s ao seu tempo</div>
-  </div>
-</div>
-
-  <div class="action-sub">+120s ao seu tempo</div>
-
-</div>
-
+    <div class="action-content">
+      <div class="action-title">Desistir</div>
+      <div class="action-sub">+120s ao seu tempo</div>
+    </div>
   </div>
 
 </div>
+
       <p id="gameMessage"></p>
 
     </div>
@@ -660,7 +616,6 @@ let current = 0;
 let skipped = [];
 let answered = new Set();
 let extraTime = 0;
-let startedEmail = "";
 
 function isValidEmail(email) {
   const isFormatValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
