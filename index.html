@@ -102,22 +102,6 @@ body {
   opacity: 0.85;
 }
 
-.footer-reset {
-  position: fixed;
-  bottom: 10px;
-  right: 10px;
-  z-index: 10;
-}
-
-.reset-panel {
-  display: none;
-  margin-top: 8px;
-}
-
-.reset-panel.active {
-  display: block;
-}
-
 button {
   margin-top: 10px;
   padding: 10px;
@@ -522,15 +506,6 @@ button {
   <ul id="ranking"></ul>
 </div>
 
-<div class="footer-reset">
-  <button id="toggleResetBtn">⚙ Reset</button>
-
-  <div id="resetPanel" class="reset-panel">
-    <input id="resetPasswordInput" type="password" placeholder="Senha" />
-    <button id="confirmResetBtn">Confirmar</button>
-  </div>
-</div>
-
 <div class="footer-logo">
   <img src="logo-teamsix.png" alt="Teamsix">
 </div>
@@ -544,7 +519,6 @@ import {
   addDoc,
   getDocs,
   collection,
-  deleteDoc,
   query,
   where,
   serverTimestamp
@@ -573,11 +547,6 @@ const answerInput = document.getElementById("answer");
 const audio = document.getElementById("audio");
 
 const rankingEl = document.getElementById("ranking");
-
-const toggleResetBtn = document.getElementById("toggleResetBtn");
-const resetPanel = document.getElementById("resetPanel");
-const resetPasswordInput = document.getElementById("resetPasswordInput");
-const confirmResetBtn = document.getElementById("confirmResetBtn");
 
 const gameDivider = document.getElementById("gameDivider");
 const actionsRow = document.getElementById("actionsRow");
@@ -696,7 +665,21 @@ async function loadRanking() {
 
     let medalHtml = "";
     if (index === 0) {
-      medalHtml = `<img src="Icons/1.png" classs="rank-line-1">
+      medalHtml = `Icons/1.png`;
+    } else if (index === 1) {
+      medalHtml = `Icons/2.png`;
+    } else if (index === 2) {
+      medalHtml = `Icons/3.png`;
+    }
+
+    const li = document.createElement("li");
+
+    if (index === 0) {
+      li.classList.add("rank-first");
+    }
+
+    li.innerHTML = `
+      <div class="rank-line-1">
         ${medalHtml}
         <span class="rank-name">${index + 1}. ${prefix}</span>
       </div>
@@ -707,44 +690,6 @@ async function loadRanking() {
 
     rankingEl.appendChild(li);
   });
-}
-
-async function getResetPassword() {
-  const cfgRef = doc(db, "config", "settings");
-  const cfgSnap = await getDoc(cfgRef);
-
-  if (!cfgSnap.exists()) return null;
-
-  const cfg = cfgSnap.data();
-  return cfg.resetPassword || null;
-}
-
-async function resetRanking() {
-  const password = resetPasswordInput.value.trim();
-
-  if (!password) {
-    return;
-  }
-
-  const firebasePassword = await getResetPassword();
-
-  if (!firebasePassword || password !== firebasePassword) {
-    resetPasswordInput.value = "";
-    return;
-  }
-
-  const snap = await getDocs(collection(db, "ranking"));
-  const deletions = [];
-
-  snap.forEach(docSnap => {
-    deletions.push(deleteDoc(doc(db, "ranking", docSnap.id)));
-  });
-
-  await Promise.all(deletions);
-
-  resetPasswordInput.value = "";
-  resetPanel.classList.remove("active");
-  await loadRanking();
 }
 
 async function saveRanking() {
@@ -907,14 +852,6 @@ giveUpBtn.onclick = () => {
   answered.add(current);
   extraTime += 120;
   next();
-};
-
-toggleResetBtn.onclick = () => {
-  resetPanel.classList.toggle("active");
-};
-
-confirmResetBtn.onclick = async () => {
-  await resetRanking();
 };
 
 loadRanking();
