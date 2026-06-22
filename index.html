@@ -67,6 +67,10 @@ body {
 
 .center-container {
   text-align: center;
+  width: 100%;
+  max-width: calc(100% - 30px);
+  padding: 0 15px;
+  box-sizing: border-box;
 }
 
 .main-icon {
@@ -91,10 +95,10 @@ body {
   background: white;
   padding: 30px;
   border-radius: 16px;
-  width: 380px;
+  width: 100%;
   text-align: center;
+  box-sizing: border-box;
 
-  /* 🔥 glow verde */
   box-shadow: 
     0 10px 25px rgba(0,0,0,0.1),
     0 0 25px rgba(0, 255, 90, 0.25);
@@ -277,6 +281,8 @@ button {
   border: 1px solid #ddd;
   font-size: 16px;
   margin-top: 10px;
+  box-sizing: border-box;
+  display: block;
 }
 
 /* botão enviar */
@@ -291,6 +297,8 @@ button {
   background: linear-gradient(90deg,#00ff5a,#009a3a);
   font-size: 18px;
   font-weight: 600;
+  box-sizing: border-box;
+  display: block;
 }
 
 /* linha */
@@ -306,18 +314,73 @@ button {
   gap: 12px;
 }
 
-.action-icon {
-  width: 28px;
-  height: 28px;
-  min-width: 28px;
+.actions {
+  display: flex;
+  gap: 12px;
+}
 
+.action-card {
+  flex: 1;
+  min-height: 108px;
+  padding: 16px;
+  border-radius: 16px;
+  cursor: pointer;
+  border: 1px solid #eee;
+  text-align: left;
+  transition: 0.2s;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-sizing: border-box;
+}
+
+.action-card:hover {
+  transform: scale(1.03);
+}
+
+.action-icon-box {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+  background: #f7f7f7;
+}
+
+.action-icon {
+  width: 70%;
+  height: 70%;
   object-fit: contain;
 }
 
-.action-header {
+.action-content {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.action-title {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.action-sub {
+  font-size: 12px;
+  color: #777;
+  line-height: 1.35;
+}
+
+.skip {
+  border: 2px solid #8e44ad;
+}
+
+.giveup {
+  border: 2px solid #d63031;
 }
 
 /* cards */
@@ -497,21 +560,21 @@ button {
   <div class="actions">
 
 <div id="skipBtn" class="action-card skip">
-
-<div class="action-header">
-  <img src="Icons/pular.png" class="action-icon">
-  <div class="action-title">Pular</div>
-</div>
-
-  <div class="action-sub">Ouça novamente ao final</div>
-
+  <div class="action-icon-box">
+    <img src="Icons/pular.png" class="actionaction-content">
+    <div class="action-title">Pular</div>
+    <div class="action-sub">Ouça novamente ao final</div>
+  </div>
 </div>
 
 <div id="giveUpBtn" class="action-card giveup">
+  <div class="action-icon-box">
+    <img src="Icons/Adicional+Trueiv>
 
-<div class="action-header">
-  <img src="Icons/Adicional+True.png" class="action-icon">
-  <div class="action-title">Desistir</div>
+  <div class="action-content">
+    <div class="action-title">Desistir</div>
+    <div class="action-sub">+120s ao seu tempo</div>
+  </div>
 </div>
 
   <div class="action-sub">+120s ao seu tempo</div>
@@ -733,13 +796,13 @@ startBtn.onclick = () => {
     return;
   }
 
-  startedEmail = email;
-  gameMessage.textContent = "Jogo iniciado!";
+  gameMessage.textContent = "";
+
   startArea.style.display = "none";
   gameArea.style.display = "block";
 
-  clearAndFocusAnswer();
   playSound();
+  answerInput.focus();
 };
 
 answerBtn.onclick = async () => {
