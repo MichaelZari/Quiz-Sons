@@ -728,31 +728,19 @@ async function loadRanking() {
 
     const scoreLabel = item.score === 1 ? "1 acerto" : `${item.score} acertos`;
 
-    if (index < 3) {
-      li.innerHTML = `
-        <div class="rank-row">
-          <img src="Icons/${index + 1}.png" class="rank-medal" alt="${index + 1}º lugar">
-          <div class="rank-text">
-            <div class="rank-name">${prefix}</div>
-          </div>
+    li.innerHTML = `
+      <div class="rank-row">
+        <div class="rank-index-circle">${index + 1}</div>
+        <div class="rank-text">
+          <div class="rank-name">${prefix}</div>
+          <div class="rank-subtitle">${scoreLabel} · ${item.totalTime}s</div>
         </div>
-      `;
-    } else {
-      li.innerHTML = `
-        <div class="rank-row">
-          <div class="rank-index-circle">${index + 1}</div>
-          <div class="rank-text">
-            <div class="rank-name">${prefix}</div>
-            <div class="rank-subtitle">- ${scoreLabel} · ${item.totalTime}s</div>
-          </div>
-        </div>
-      `;
-    }
+      </div>
+    `;
 
     rankingEl.appendChild(li);
   });
 }
-
     
     async function saveRanking() {
       const normalTime = gameStartTime
