@@ -377,7 +377,50 @@ button {
 .giveup {
   border: 2px solid #d63031;
 }
- 
+
+#ranking {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#ranking li {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: white;
+}
+
+#ranking li.rank-first {
+  border: 1px solid rgba(0,255,90,0.6);
+  box-shadow: 0 0 16px rgba(0,255,90,0.18);
+  background: rgba(0, 255, 90, 0.06);
+}
+
+.rank-line-1 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.rank-medal {
+  font-size: 18px;
+}
+
+.rank-name {
+  color: white;
+}
+
+.rank-line-2 {
+  font-size: 12px;
+  color: #bfbfbf;
+}
   
 </style>
 </head>
@@ -733,8 +776,28 @@ async function loadRanking() {
 
   rankingData.forEach((item, index) => {
     const prefix = (item.email || item.name || "jogador").split("@")[0];
+
+    let medal = "";
+    if (index === 0) medal = "🥇";
+    else if (index === 1) medal = "🥈";
+    else if (index === 2) medal = "🥉";
+
     const li = document.createElement("li");
-    li.textContent = `${index + 1}. ${prefix} | ${item.score} acertos | ${item.totalTime}s`;
+
+    if (index === 0) {
+      li.classList.add("rank-first");
+    }
+
+    li.innerHTML = `
+      <div class="rank-line-1">
+        <span class="rank-medal">${medal}</span>
+        <span class="rank-name">${index + 1}. ${prefix}</span>
+      </div>
+      <div class="rank-line-2">
+        ${item.score} acertos • ${item.totalTime}s
+      </div>
+    `;
+
     rankingEl.appendChild(li);
   });
 }
