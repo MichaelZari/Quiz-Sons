@@ -486,6 +486,7 @@ button {
         <h3>Entre para começar</h3>
         <input id="email" placeholder="Seu email corporativo" />
         <button id="startBtn" class="start-btn">Jogar</button>
+        <p id="startMessage" style="color:#c62828; margin-top:10px; min-height:20px;"></p>
       </div>
 
       <div id="gameArea" style="display:none;">
@@ -575,6 +576,7 @@ const startBtn = document.getElementById("startBtn");
 const gameMessage = document.getElementById("gameMessage");
 const startArea = document.getElementById("startArea");
 const gameArea = document.getElementById("gameArea");
+const startMessage = document.getElementById("startMessage");
 
 const answerBtn = document.getElementById("answerBtn");
 const skipBtn = document.getElementById("skipBtn");
@@ -861,18 +863,10 @@ async function submitAnswer() {
 startBtn.onclick = async () => {
   const email = emailInput.value.trim().toLowerCase();
 
+  startMessage.textContent = "";
+
   if (!isValidEmail(email)) {
-    gameMessage.textContent = "Email inválido ou não permitido";
-    return;
-  }
-
-  const hasPlayed = await alreadyPlayed(email);
-  if (hasPlayed) {
-    gameMessage.textContent = "Este e-mail já participou. Consulte o ranking ao lado.";
-    return;
-  }
-
-  playerEmail = email;
+    startMessage.textContent = ";    startMessage.textContent = "Email inválido ou não permitido";
   current = 0;
   skipped = [];
   answered = new Set();
@@ -892,6 +886,14 @@ startBtn.onclick = async () => {
   playSound();
   answerInput.focus();
 };
+    return;
+  }
+
+  const hasPlayed = await alreadyPlayed(email);
+  if (hasPlayed) {
+    startMessage.textContent = "Usuário já participou. Consulte no Ranking.";
+    return;
+  }
 
 answerBtn.onclick = async () => {
   await submitAnswer();
