@@ -268,32 +268,6 @@ button {
 }
 
 
- /* 🔊 botão ouvir grande */
-.replay-btn {
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  border: none;
-  font-size: 30px;
-  margin-top: 10px;
-
-  background: radial-gradient(circle, #00ff5a, #005522);
-  color: white;
-
-  box-shadow: 0 0 20px rgba(0,255,90,0.5);
-}
-
-.replay-title {
-  margin-top: 12px;
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.replay-subtitle {
-  font-size: 13px;
-  color: #777;
-  margin-bottom: 20px;
-}
 
 /* campo resposta */
 #answer {
@@ -583,94 +557,122 @@ button {
   <img src="logo-teamsix.png" alt="Teamsix">
 </div>
 
-<script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "SUA_API_KEY",
+  authDomain: "quiz-de-sons.firebaseapp.com",
+  projectId: "quiz-de-sons"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
 const emailInput = document.getElementById("email");
 const startBtn = document.getElementById("startBtn");
 const gameMessage = document.getElementById("gameMessage");
 const startArea = document.getElementById("startArea");
 const gameArea = document.getElementById("gameArea");
 
-// ✅ domínios permitidos
-const DOMAINS = ["@teamsix.tech", "@innovsoftware.com.br"];
-
-// ✅ valida email
-function isValidEmail(email) {
-  const isFormatValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  const isDomainValid = DOMAINS.some(domain => email.endsWith(domain));
-
-  return isFormatValid && isDomainValid;
-}
-
-
-// 👉 caminho do som (teste inicial)
 const answerBtn = document.getElementById("answerBtn");
 const skipBtn = document.getElementById("skipBtn");
 const giveUpBtn = document.getElementById("giveUpBtn");
 const answerInput = document.getElementById("answer");
 const audio = document.getElementById("audio");
-audio.loop = true;
 
-let sounds = [101,102,103,104,105,106];
+const DOMAINS = ["@teamsix.tech", "@innovsoftware.com.br"];
+
+let sounds = [
+  { docId: "1", file: "som101" },
+  { docId: "2", file: "som102" },
+  { docId: "3", file: "som103" },
+  { docId: "4", file: "som104" },
+  { docId: "5", file: "som105" },
+  { docId: "6", file: "som106" }
+];
+
 let current = 0;
 let skipped = [];
 let answered = new Set();
+let extraTime = 0;
+let startedEmail = "";
 
-// tocar som atual
+function isValidEmail(email) {
+  const isFormatValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const isDomainValid = DOMAINS.some(domain => email.endsWith(domain));
+  return isFormatValid && isDomainValid;
+}
+
+function normalize(text) {
+  return (text || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9\s]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function escapeRegex(text) {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function clearAndFocusAnswer() {
+  answerInput.value = "";
+  answerInput.focus();
+}
+
 function playSound() {
-  const id = sounds[current];
-  audio.src = `Sons/som${id}.mp3`;
-
+  const item = sounds[current];
+  audio.src = `Sons/${item.file}.mp3`;
   audio.loop = true;
-
   audio.currentTime = 0;
   audio.play().catch(err => {
     console.log("Erro ao tocar:", err);
   });
 }
 
-// iniciar primeiro som automaticamente
-startBtn.onclick = () => {
-  const email = emailInput.value.trim().toLowerCase();
+async function validateCurrentAnswer(rawText) {
+  const item = sounds[current];
+  const soundRef = doc(db, "sounds", item.docId);
+  const soundSnap = await getDoc(soundRef);
 
-  if (!isValidEmail(email)) {
-    gameMessage.textContent = "Email inválido ou não permitido";
-    return;
+  if (!soundSnap.exists()) {
+    gameMessage.textContent = "Não foi possível validar este som no Firebase.";
+    return false;
   }
 
-  gameMessage.textContent = "Jogo iniciado!";
+  const data = soundSnap.data();
+  const answers = Array.isArray(data.answers) ? data.answers : [];
+  const normalizedGuess = normalize(rawText);
 
-  startArea.style.display = "none";
-  gameArea.style.display = "block";
+  if (!normalizedGuess) return false;
 
-  playSound();
-};
+  const matched = answers.some(answer => {
+    const normalizedAnswer = normalize(answer);
+    if (!normalizedAnswer) return false;
 
-  function saveRanking() {
-  console.log("Salvar ranking aqui");
+    const regex = new RegExp(`(^|\\s)${escapeRegex(normalizedAnswer)}(?=\\s|$)`, "i");
+    return regex.test(normalizedGuess);
+  });
+
+  return matched;
 }
-  
-// enviar resposta (simples: só avança)
-answerBtn.onclick = () => {
-  answered.add(current);
-  next();
-};
 
-// pular
-skipBtn.onclick = () => {
-  skipped.push(current);
-  next();
-};
+function saveRanking() {
+  console.log("Salvar ranking aqui futuramente");
+}
 
-// desistir (considera como respondido)
-giveUpBtn.onclick = () => {
-  answered.add(current);
-  next();
-};
+function finishGame() {
+  audio.pause();
+  audio.currentTime = 0;
+  gameMessage.textContent = `Finalizado! Desistências: ${extraTime / 120}`;
+  saveRanking();
+}
 
-// lógica de avanço
 function next() {
-
-  // procura próximo não respondido
   let found = false;
 
   for (let i = current + 1; i < sounds.length; i++) {
@@ -681,7 +683,6 @@ function next() {
     }
   }
 
-  // se não achou → volta pros pulados
   if (!found && skipped.length > 0) {
     current = skipped.shift();
 
@@ -693,16 +694,77 @@ function next() {
     found = true;
   }
 
-  // acabou tudo
   if (!found) {
-  gameMessage.textContent = "Finalizado!";
-  saveRanking(); // ✅ AQUI
-  return;
+    finishGame();
+    return;
+  }
+
+  clearAndFocusAnswer();
+  playSound();
 }
 
-  answerInput.value = "";
+async function submitAnswer() {
+  const raw = answerInput.value;
+
+  if (!raw.trim()) {
+    clearAndFocusAnswer();
+    gameMessage.textContent = "Digite uma resposta.";
+    return;
+  }
+
+  const isCorrect = await validateCurrentAnswer(raw);
+
+  if (isCorrect) {
+    answered.add(current);
+    gameMessage.textContent = "Parabéns acertou!";
+    clearAndFocusAnswer();
+    next();
+  } else {
+    gameMessage.textContent = "Tente novamente!";
+    clearAndFocusAnswer();
+  }
+}
+
+startBtn.onclick = () => {
+  const email = emailInput.value.trim().toLowerCase();
+
+  if (!isValidEmail(email)) {
+    gameMessage.textContent = "Email inválido ou não permitido";
+    return;
+  }
+
+  startedEmail = email;
+  gameMessage.textContent = "Jogo iniciado!";
+  startArea.style.display = "none";
+  gameArea.style.display = "block";
+
+  clearAndFocusAnswer();
   playSound();
-}  
+};
+
+answerBtn.onclick = async () => {
+  await submitAnswer();
+};
+
+answerInput.addEventListener("keydown", async (e) => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    await submitAnswer();
+  }
+});
+
+skipBtn.onclick = () => {
+  if (!skipped.includes(current)) {
+    skipped.push(current);
+  }
+  next();
+};
+
+giveUpBtn.onclick = () => {
+  answered.add(current);
+  extraTime += 120;
+  next();
+};
 </script>
   
 </body>
