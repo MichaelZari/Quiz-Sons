@@ -578,7 +578,18 @@ button {
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  addDoc,
+  getDocs,
+  collection,
+  deleteDoc,
+  query,
+  where,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "SUA_API_KEY",
@@ -595,13 +606,19 @@ const gameMessage = document.getElementById("gameMessage");
 const startArea = document.getElementById("startArea");
 const gameArea = document.getElementById("gameArea");
 
-const rankingEl = document.getElementById("ranking");
-
 const answerBtn = document.getElementById("answerBtn");
 const skipBtn = document.getElementById("skipBtn");
 const giveUpBtn = document.getElementById("giveUpBtn");
 const answerInput = document.getElementById("answer");
 const audio = document.getElementById("audio");
+
+const rankingEl = document.getElementById("ranking");
+
+const toggleResetBtn = document.getElementById("toggleResetBtn");
+const resetPanel = document.getElementById("resetPanel");
+const resetPasswordInput = document.getElementById("resetPasswordInput");
+const confirmResetBtn = document.getElementById("confirmResetBtn");
+
 const gameDivider = document.getElementById("gameDivider");
 const actionsRow = document.getElementById("actionsRow");
 
@@ -623,10 +640,6 @@ let extraTime = 0;
 let correctCount = 0;
 let gameStartTime = null;
 let playerEmail = "";
-
-if (rankingEl && rankingEl.innerHTML.trim() === "") {
-  rankingEl.innerHTML = "<li>Aguardando ranking...</li>";
-}
 
 function isValidEmail(email) {
   const isFormatValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -690,8 +703,99 @@ async function validateCurrentAnswer(rawText) {
   return matched;
 }
 
-function saveRanking() {
-  console.log("Salvar ranking aqui futuramente");
+async function alreadyPlayed(email) {
+  const q = query(collection(db, "ranking"), where("email", "==", email));
+  const snap = await getDocs(q);
+  return !snap.empty;
+}
+
+async function loadRanking() {
+  rankingEl.innerHTML = "";
+
+  const snap = await getDocs(collection(db, "ranking"));
+  const rankingData = [];
+
+  snap.forEach(docSnap => {
+    rankingData.push(docSnap.data());
+  });
+
+  rankingData.sort((a, b) => {
+    if ((b.score || 0) !== (a.score || 0)) {
+      return (b.score || 0) - (a.score || 0);
+    }
+    return (a.totalTime || 0) - (b.totalTime || 0);
+  });
+
+  if (rankingData.length === 0) {
+    rankingEl.innerHTML = "<li>Aguardando ranking...</li>";
+    return;
+  }
+
+  rankingData.forEach((item, index) => {
+    const prefix = (item.email || item.name || "jogador").split("@")[0];
+    const li = document.createElement("li");
+    li.textContent = `${index + 1}. ${prefix} | ${item.score} acertos | ${item.totalTime}s`;
+    rankingEl.appendChild(li);
+  });
+}
+
+async function getResetPassword() {
+  const cfgRef = doc(db, "config", "settings");
+  const cfgSnap = await getDoc(cfgRef);
+
+  if (!cfgSnap.exists()) return null;
+
+  const cfg = cfgSnap.data();
+  return cfg.resetPassword || null;
+}
+
+async function resetRanking() {
+  const password = resetPasswordInput.value.trim();
+
+  if (!password) {
+    return;
+  }
+
+  const firebasePassword = await getResetPassword();
+
+  if (!firebasePassword || password !== firebasePassword) {
+    resetPasswordInput.value = "";
+    return;
+  }
+
+  const snap = await getDocs(collection(db, "ranking"));
+  const deletions = [];
+
+  snap.forEach(docSnap => {
+    deletions.push(deleteDoc(doc(db, "ranking", docSnap.id)));
+  });
+
+  await Promise.all(deletions);
+
+  resetPasswordInput.value = "";
+  resetPanel.classList.remove("active");
+  await loadRanking();
+}
+
+async function saveRanking() {
+  const normalTime = gameStartTime
+    ? Math.floor((Date.now() - gameStartTime) / 1000)
+    : 0;
+
+  const totalTime = normalTime + extraTime;
+  const playerName = playerEmail.split("@")[0];
+
+  await addDoc(collection(db, "ranking"), {
+    email: playerEmail,
+    name: playerName,
+    score: correctCount,
+    normalTime: normalTime,
+    extraTime: extraTime,
+    totalTime: totalTime,
+    createdAt: serverTimestamp()
+  });
+
+  await loadRanking();
 }
 
 function hideGameControls() {
@@ -701,7 +805,7 @@ function hideGameControls() {
   actionsRow.style.display = "none";
 }
 
-function finishGame() {
+async function finishGame() {
   audio.pause();
   audio.currentTime = 0;
 
@@ -715,9 +819,9 @@ function finishGame() {
   hideGameControls();
 
   gameMessage.textContent =
-    `@${playerName} ${correctCount} acertos - ${normalTime}s + ${extraTime}s = ${totalTime}s`;
+    `${playerName} ${correctCount} acertos em ${normalTime}s + ${extraTime}s de Desistência = ${totalTime}s`;
 
-  saveRanking();
+  await saveRanking();
 }
 
 function next() {
@@ -765,7 +869,7 @@ async function submitAnswer() {
   if (isCorrect) {
     answered.add(current);
     correctCount++;
-    gameMessage.textContent = "Parabéns, acertou!";
+    gameMessage.textContent = "Parabéns acertou!";
     clearAndFocusAnswer();
     next();
   } else {
@@ -774,11 +878,17 @@ async function submitAnswer() {
   }
 }
 
-startBtn.onclick = () => {
+startBtn.onclick = async () => {
   const email = emailInput.value.trim().toLowerCase();
 
   if (!isValidEmail(email)) {
     gameMessage.textContent = "Email inválido ou não permitido";
+    return;
+  }
+
+  const hasPlayed = await alreadyPlayed(email);
+  if (hasPlayed) {
+    gameMessage.textContent = "Este e-mail já participou. Consulte o ranking ao lado.";
     return;
   }
 
@@ -791,7 +901,6 @@ startBtn.onclick = () => {
   gameStartTime = Date.now();
 
   gameMessage.textContent = "";
-
   startArea.style.display = "none";
   gameArea.style.display = "block";
 
@@ -827,6 +936,16 @@ giveUpBtn.onclick = () => {
   extraTime += 120;
   next();
 };
+
+toggleResetBtn.onclick = () => {
+  resetPanel.classList.toggle("active");
+};
+
+confirmResetBtn.onclick = async () => {
+  await resetRanking();
+};
+
+loadRanking();
 </script>
   
 </body>
