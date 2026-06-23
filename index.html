@@ -38,10 +38,13 @@
       justify-content: flex-start;
     }
 
-    .right {
-      background: linear-gradient(180deg, #0a0a0a, #000);
-      justify-content: flex-start;
-    }
+.right {
+  background: linear-gradient(180deg, #0a0a0a, #000);
+  justify-content: flex-start;
+
+  height: 100vh;
+  overflow: hidden;
+}
 
     .center {
       width: 40%;
@@ -334,9 +337,13 @@
   margin: 0;
   padding: 0;
   width: 100%;
+
   display: flex;
   flex-direction: column;
   gap: 12px;
+
+  overflow-y: auto;
+  height: 100%;
 }
 
 #ranking li {
