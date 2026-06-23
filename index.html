@@ -884,11 +884,11 @@ async function loadRanking() {
       }
 
       try {
-  //      const hasPlayed = await alreadyPlayed(email);
-  //      if (hasPlayed) {
-  //        startMessage.textContent = "Usuário já participou. Consulte no Ranking.";
-  //        return;
-  //      }
+        const hasPlayed = await alreadyPlayed(email);
+       if (hasPlayed) {
+          startMessage.textContent = "Usuário já participou. Consulte no Ranking.";
+          return;
+        }
 
         playerEmail = email;
         current = 0;
