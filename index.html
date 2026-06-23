@@ -502,7 +502,7 @@
     <div class="center-container">
       <img src="Icons/som.png" class="main-icon" />
       <h1 class="main-title">Quiz de Sons</h1>
-      <p class="main-subtitle">Escute. Identifique. Única chance!</p>
+      <p class="main-subtitle">Escute. Identifique. Melhore seu tempo!</p>
 
       <div class="card">
         <div id="startArea">
@@ -705,11 +705,33 @@ async function loadRanking() {
   rankingEl.innerHTML = "";
 
   const snap = await getDocs(collection(db, "ranking"));
-  const rankingData = [];
+
+  const bestByEmail = new Map();
 
   snap.forEach(docSnap => {
-    rankingData.push(docSnap.data());
+    const item = docSnap.data();
+    const email = item.email;
+
+    const currentBest = bestByEmail.get(email);
+
+    if (!currentBest) {
+      bestByEmail.set(email, item);
+      return;
+    }
+
+    const isBetter =
+      (item.score || 0) > (currentBest.score || 0) ||
+      (
+        (item.score || 0) === (currentBest.score || 0) &&
+        (item.totalTime || 999999) < (currentBest.totalTime || 999999)
+      );
+
+    if (isBetter) {
+      bestByEmail.set(email, item);
+    }
   });
+
+  const rankingData = Array.from(bestByEmail.values());
 
   rankingData.sort((a, b) => {
     if ((b.score || 0) !== (a.score || 0)) {
@@ -735,7 +757,7 @@ async function loadRanking() {
 
     li.innerHTML = `
       <div class="rank-row">
-        <div class="rank-index-circle">${index + 1}º</div>
+        <div class="rank-index-circle">${index + 1}<sup>º</sup></div>
         <div class="rank-text">
           <div class="rank-name">${prefix}</div>
           <div class="rank-subtitle">${scoreLabel} · ${item.totalTime}s</div>
@@ -746,6 +768,7 @@ async function loadRanking() {
     rankingEl.appendChild(li);
   });
 }
+
     
     async function saveRanking() {
       const normalTime = gameStartTime
@@ -861,12 +884,11 @@ async function loadRanking() {
       }
 
       try {
-        const hasPlayed = await alreadyPlayed(email);
-
-        if (hasPlayed) {
-          startMessage.textContent = "Usuário já participou. Consulte no Ranking.";
-          return;
-        }
+  //      const hasPlayed = await alreadyPlayed(email);
+  //      if (hasPlayed) {
+  //        startMessage.textContent = "Usuário já participou. Consulte no Ranking.";
+  //        return;
+  //      }
 
         playerEmail = email;
         current = 0;
