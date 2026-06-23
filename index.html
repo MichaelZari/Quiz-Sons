@@ -813,7 +813,7 @@ async function loadRanking() {
       progressFill.style.width = "100%";
 
       gameMessage.textContent =
-        `${playerName} ${correctCount} acertos em ${normalTime}s + ${extraTime}s de Desistência = ${totalTime}s`;
+        `${playerName} ${correctCount} acerto(s) em ${normalTime}s + ${extraTime}s de Desistência = ${totalTime}s`;
 
       await saveRanking();
     }
