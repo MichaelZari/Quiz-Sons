@@ -428,6 +428,30 @@
       min-height: 22px;
       font-size: 14px;
     }
+
+  #ranking {
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+/* Scroll personalizado (Chrome, Edge, etc) */
+#ranking::-webkit-scrollbar {
+  width: 8px;
+}
+
+#ranking::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#ranking::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #00ff5a, #008f3a);
+  border-radius: 10px;
+}
+
+#ranking::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #00ff5a, #00c853);
+}
+    
   </style>
 </head>
 <body>
