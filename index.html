@@ -335,7 +335,7 @@
 #ranking {
   list-style: none;
   margin: 0;
-  padding: 0;
+  padding: 0 10px 10px 0; /* espaço pra scrollbar */
   width: 100%;
 
   display: flex;
@@ -343,11 +343,15 @@
   gap: 12px;
 
   overflow-y: auto;
+  overflow-x: hidden;
+
   height: 100%;
 }
-
+    
 #ranking li {
-  width: 100%;
+  width: 90%; 
+  margin: 0 auto; 
+  
   box-sizing: border-box;
   background: rgba(0, 255, 90, 0.05);
   border: 1px solid rgba(0, 255, 90, 0.18);
@@ -357,6 +361,7 @@
 }
 
 #ranking li.rank-first {
+  margin-top: 6px;
   border: 1px solid rgba(0,255,90,0.8);
   background: rgba(0,255,90,0.10);
 
