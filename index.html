@@ -335,16 +335,15 @@
 #ranking {
   list-style: none;
   margin: 0;
-  padding: 0 10px 10px 0; /* espaço pra scrollbar */
-  width: 100%;
+  padding: 0 10px 10px 0;
 
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 12px;
 
   overflow-y: auto;
   overflow-x: hidden;
-
   height: 100%;
 }
     
@@ -369,7 +368,7 @@
     0 0 25px rgba(0,255,90,0.35),
     0 8px 25px rgba(0,255,90,0.25);
 
-  transform: scale(1.02);
+  transform: scale(1.01);
 }
 
 .rank-row {
@@ -434,10 +433,6 @@
       font-size: 14px;
     }
 
-  #ranking {
-    overflow-y: auto;
-    overflow-x: hidden;
-  }
 
 /* Scroll personalizado (Chrome, Edge, etc) */
 #ranking::-webkit-scrollbar {
